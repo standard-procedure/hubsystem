@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :participants, only: [] do
+  resources :participants, only: [:index, :show] do
     resources :messages, only: [:create, :index]
   end
 
