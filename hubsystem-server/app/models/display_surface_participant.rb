@@ -1,0 +1,2 @@
+class DisplaySurfaceParticipant < Participant
+end

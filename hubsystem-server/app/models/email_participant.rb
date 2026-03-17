@@ -1,0 +1,2 @@
+class EmailParticipant < Participant
+end
