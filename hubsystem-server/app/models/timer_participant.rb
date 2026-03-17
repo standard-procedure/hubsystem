@@ -1,0 +1,2 @@
+class TimerParticipant < Participant
+end

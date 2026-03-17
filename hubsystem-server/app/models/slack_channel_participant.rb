@@ -1,0 +1,2 @@
+class SlackChannelParticipant < Participant
+end
