@@ -31,3 +31,6 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Using structure.sql — schema.rb is not used
+/db/schema.rb
+
