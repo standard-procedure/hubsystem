@@ -2,7 +2,8 @@ class MessagesController < ApplicationController
   before_action :authenticate_participant!
 
   def create
-    target = Participant.find(params[:participant_id])
+    target = find_participant(params[:participant_id])
+    return render json: { error: "Participant not found" }, status: :not_found unless target
 
     message = Message.new(
       from: @current_participant,
@@ -29,7 +30,8 @@ class MessagesController < ApplicationController
   end
 
   def index
-    target = Participant.find(params[:participant_id])
+    target = find_participant(params[:participant_id])
+    return render json: { error: "Participant not found" }, status: :not_found unless target
     messages = target.inbox_messages.includes(:parts, :from)
     render json: messages.map { |m| message_json(m) }
   end
@@ -40,6 +42,10 @@ class MessagesController < ApplicationController
   end
 
   private
+
+  def find_participant(id_or_slug)
+    Participant.find_by(slug: id_or_slug) || Participant.find_by(id: id_or_slug)
+  end
 
   def message_params
     params.require(:message).permit(:subject, parts: [:content_type, :body, :channel_hint])

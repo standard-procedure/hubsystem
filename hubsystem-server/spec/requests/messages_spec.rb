@@ -67,6 +67,28 @@ RSpec.describe "Messages", type: :request do
         expect(response).to have_http_status(:created)
       end
     end
+
+    context "when recipient is identified by slug" do
+      let(:slugged_recipient) { create(:human_participant, slug: "baz") }
+
+      it "accepts slug as participant_id and creates the message" do
+        post "/participants/#{slugged_recipient.slug}/messages",
+          params: valid_params,
+          headers: { "X-Hub-Token" => sender.token }
+
+        expect(response).to have_http_status(:created)
+        json = JSON.parse(response.body)
+        expect(json["to_id"]).to eq(slugged_recipient.id)
+      end
+
+      it "returns 404 for unknown slug" do
+        post "/participants/nobody-here/messages",
+          params: valid_params,
+          headers: { "X-Hub-Token" => sender.token }
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
   end
 
   describe "GET /participants/:participant_id/messages" do
