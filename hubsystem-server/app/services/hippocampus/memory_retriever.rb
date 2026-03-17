@@ -1,18 +1,25 @@
 module Hippocampus
   class MemoryRetriever
-    def initialize(embedding_provider: nil)
-      @embedding_provider = embedding_provider
-    end
-
-    def retrieve(agent:, query:, scope: nil, limit: 10)
-      embedding = @embedding_provider.embed(query)
+    def retrieve(agent:, query:, scope: nil, limit: 10, tier: :l1, paths: nil)
+      embedding = LLMProvider.embedding_provider.call(query)
       embedding_str = "[#{Array(embedding).map(&:to_f).join(',')}]"
 
       base = scope ? scoped_query(agent, scope) : unscoped_query(agent)
 
-      base
+      if paths.present?
+        paths_array = paths.is_a?(Array) ? paths : [ paths ]
+        base = base.where("paths @> ARRAY[?]::varchar[]", paths_array)
+      end
+
+      results = base
         .order(Arel.sql("embedding <=> '#{embedding_str}'"))
         .limit(limit)
+
+      case tier
+      when :l0 then results.pluck(:id, :summary).map { |id, s| { id: id, summary: s } }
+      when :l2 then results.select(:id, :summary, :excerpt, :content)
+      else results.select(:id, :summary, :excerpt)
+      end
     end
 
     private

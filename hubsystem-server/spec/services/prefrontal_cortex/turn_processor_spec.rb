@@ -1,8 +1,7 @@
 require "rails_helper"
 
 RSpec.describe PrefrontalCortex::TurnProcessor do
-  let(:llm_provider) { double("LlmProvider") }
-  let(:processor) { described_class.new(llm_provider: llm_provider) }
+  let(:processor) { described_class.new }
   let(:agent) do
     create(:agent_participant,
            description: "I am a helpful assistant.",
@@ -16,61 +15,57 @@ RSpec.describe PrefrontalCortex::TurnProcessor do
     msg
   end
   let(:memories) { [] }
+  let(:captured) { {} }
 
   before do
-    allow(llm_provider).to receive(:complete).and_return("I am here to help!")
+    allow(LLMProvider).to receive(:for_role).with(:main_turn).and_return(
+      ->(system_prompt, context) {
+        captured[:system_prompt] = system_prompt
+        captured[:context] = context
+        "I am here to help!"
+      }
+    )
+    # L0 retrieval inside build_system_prompt returns empty in clean test DB
   end
 
   describe "#process" do
     it "calls the LLM provider" do
-      expect(llm_provider).to receive(:complete).and_return("Response text")
+      expect(LLMProvider).to receive(:for_role).with(:main_turn).and_call_original
+      allow(LLMProvider).to receive(:for_role).with(:main_turn).and_return(
+        ->(_sp, _ctx) { "Response text" }
+      )
       processor.process(agent: agent, inbound_message: inbound_message, memories: memories)
     end
 
     it "includes the agent description in the system prompt" do
-      expect(llm_provider).to receive(:complete) do |system_prompt:, context:|
-        expect(system_prompt).to include("I am a helpful assistant.")
-        "Response"
-      end
       processor.process(agent: agent, inbound_message: inbound_message, memories: memories)
+      expect(captured[:system_prompt]).to include("I am a helpful assistant.")
     end
 
     it "includes the agent_class in the system prompt" do
-      expect(llm_provider).to receive(:complete) do |system_prompt:, context:|
-        expect(system_prompt).to include("HelpBot")
-        "Response"
-      end
       processor.process(agent: agent, inbound_message: inbound_message, memories: memories)
+      expect(captured[:system_prompt]).to include("HelpBot")
     end
 
     it "includes emotional state summary in the system prompt" do
-      expect(llm_provider).to receive(:complete) do |system_prompt:, context:|
-        expect(system_prompt).to include("happy")
-        expect(system_prompt).to include("80")
-        "Response"
-      end
       processor.process(agent: agent, inbound_message: inbound_message, memories: memories)
+      expect(captured[:system_prompt]).to include("happy")
+      expect(captured[:system_prompt]).to include("80")
     end
 
     it "includes the inbound message text in the context" do
-      expect(llm_provider).to receive(:complete) do |system_prompt:, context:|
-        expect(context).to include("Hello, agent!")
-        "Response"
-      end
       processor.process(agent: agent, inbound_message: inbound_message, memories: memories)
+      expect(captured[:context]).to include("Hello, agent!")
     end
 
     it "includes memories as bullet points in context" do
-      memories = [
-        build_stubbed(:memory, content: "The user prefers short answers."),
-        build_stubbed(:memory, content: "Previous topic was Ruby.")
+      memories_with_content = [
+        build_stubbed(:memory, content: "The user prefers short answers.", excerpt: nil, summary: nil),
+        build_stubbed(:memory, content: "Previous topic was Ruby.", excerpt: nil, summary: nil)
       ]
-      expect(llm_provider).to receive(:complete) do |system_prompt:, context:|
-        expect(context).to include("The user prefers short answers.")
-        expect(context).to include("Previous topic was Ruby.")
-        "Response"
-      end
-      processor.process(agent: agent, inbound_message: inbound_message, memories: memories)
+      processor.process(agent: agent, inbound_message: inbound_message, memories: memories_with_content)
+      expect(captured[:context]).to include("The user prefers short answers.")
+      expect(captured[:context]).to include("Previous topic was Ruby.")
     end
 
     it "creates and returns a reply Message" do
