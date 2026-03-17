@@ -38,6 +38,31 @@ RSpec.describe "Conversations", type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
     end
+
+    context "with participant_slugs format (CLI format)" do
+      let(:agent) { create(:agent_participant, slug: "aria") }
+
+      let(:slug_params) do
+        {
+          conversation: {
+            subject: "Hello from CLI",
+            participant_slugs: [agent.slug],
+            initial_message: "Hi there from CLI"
+          }
+        }
+      end
+
+      it "creates a conversation with the named participants and returns 201" do
+        post "/conversations",
+          params: slug_params,
+          headers: { "X-Hub-Token" => sender.token }
+
+        expect(response).to have_http_status(:created)
+        json = JSON.parse(response.body)
+        expect(json["subject"]).to eq("Hello from CLI")
+        expect(json["id"]).to be_present
+      end
+    end
   end
 
   describe "GET /conversations/:id/messages" do
