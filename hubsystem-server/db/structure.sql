@@ -217,7 +217,8 @@ CREATE TABLE public.messages (
     from_id bigint NOT NULL,
     to_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    flagged boolean DEFAULT false NOT NULL
 );
 
 
@@ -255,7 +256,8 @@ CREATE TABLE public.participants (
     token character varying,
     agent_class character varying,
     state character varying DEFAULT 'awake'::character varying,
-    emotion_parameters jsonb DEFAULT '{"happy": 75, "anxious": 10, "focused": 80, "exhausted": 0, "irritated": 10}'::jsonb
+    emotion_parameters jsonb DEFAULT '{"happy": 75, "anxious": 10, "focused": 80, "exhausted": 0, "irritated": 10}'::jsonb,
+    suspicion_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -619,6 +621,8 @@ ALTER TABLE ONLY public.memories
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260317200002'),
+('20260317200001'),
 ('20260317162542'),
 ('20260317162541'),
 ('20260317162540'),
