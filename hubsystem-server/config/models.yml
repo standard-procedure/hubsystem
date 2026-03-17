@@ -18,5 +18,14 @@ test:
   class_memory_eval: stub
   embedding:         stub
 
+integration:
+  <<: *default
+  security_eval:     stub
+  emotion_eval:      stub
+  path_generation:   stub
+  main_turn:         stub
+  class_memory_eval: stub
+  embedding:         stub
+
 production:
   <<: *default
