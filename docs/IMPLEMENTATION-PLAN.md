@@ -32,7 +32,10 @@ Implement and spec:
   - `SlackChannelParticipant`
   - `DisplaySurfaceParticipant`
   - `EmailParticipant`
-- `SecurityPass` (join: participant → group + capability)
+- `SecurityPass` (join: participant → group, with parameterised capability + scope)
+  - `capability: string` — e.g. "message", "read-documents", "bash", "tool-registration-in"
+  - `scope: jsonb` — e.g. `{ folders: ["contracts"] }` or `{}` (unscoped) or `{ folders: ["*"] }` (wildcard)
+  - One pass per capability. Multiple capabilities = multiple pass records.
 - `Group` (account/department/team scoping)
 - `Conversation` (with participants through `ConversationMembership`)
 - `Message` (from, to, conversation optional)
