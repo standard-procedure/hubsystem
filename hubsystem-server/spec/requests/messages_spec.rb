@@ -45,6 +45,28 @@ RSpec.describe "Messages", type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
     end
+
+    context "when recipient is an AgentParticipant" do
+      let(:agent) { create(:agent_participant) }
+      let(:pipeline) { instance_double(AgentPipeline) }
+
+      before do
+        allow(AgentPipeline).to receive(:new).and_return(pipeline)
+        allow(pipeline).to receive(:process)
+      end
+
+      it "calls AgentPipeline.process after creating the message" do
+        expect(pipeline).to receive(:process) do |msg|
+          expect(msg.to).to eq(agent)
+        end
+
+        post "/participants/#{agent.id}/messages",
+          params: valid_params,
+          headers: { "X-Hub-Token" => sender.token }
+
+        expect(response).to have_http_status(:created)
+      end
+    end
   end
 
   describe "GET /participants/:participant_id/messages" do

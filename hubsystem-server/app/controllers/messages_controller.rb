@@ -21,6 +21,7 @@ class MessagesController < ApplicationController
     end
 
     if message.save
+      AgentPipeline.new.process(message) if message.to.is_a?(AgentParticipant)
       render json: message_json(message), status: :created
     else
       render json: { errors: message.errors.full_messages }, status: :unprocessable_entity
