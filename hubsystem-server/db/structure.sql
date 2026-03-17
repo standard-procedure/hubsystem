@@ -148,7 +148,10 @@ CREATE TABLE public.memories (
     metadata jsonb DEFAULT '{}'::jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    embedding public.vector
+    embedding public.vector,
+    summary character varying,
+    excerpt text,
+    paths character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -487,6 +490,13 @@ CREATE INDEX index_memories_on_participant_id ON public.memories USING btree (pa
 
 
 --
+-- Name: index_memories_on_paths; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memories_on_paths ON public.memories USING gin (paths);
+
+
+--
 -- Name: index_message_parts_on_message_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -621,6 +631,8 @@ ALTER TABLE ONLY public.memories
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260317210002'),
+('20260317210001'),
 ('20260317200002'),
 ('20260317200001'),
 ('20260317162542'),
