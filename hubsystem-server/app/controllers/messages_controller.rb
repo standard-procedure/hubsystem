@@ -34,6 +34,11 @@ class MessagesController < ApplicationController
     render json: messages.map { |m| message_json(m) }
   end
 
+  def inbox
+    messages = @current_participant.inbox_messages.includes(:parts, :from)
+    render json: messages.map { |m| message_json(m) }
+  end
+
   private
 
   def message_params
@@ -45,6 +50,7 @@ class MessagesController < ApplicationController
       id: message.id,
       subject: message.subject,
       from_id: message.from_id,
+      from: message.from ? { id: message.from.id, name: message.from.name } : nil,
       to_id: message.to_id,
       conversation_id: message.conversation_id,
       parts: message.parts.map { |p|

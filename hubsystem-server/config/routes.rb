@@ -7,5 +7,7 @@ Rails.application.routes.draw do
     get :messages, on: :member
   end
 
+  get "/messages/inbox", to: "messages#inbox"
+
   get "up" => "rails/health#show", as: :rails_health_check
 end
