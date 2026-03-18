@@ -1,2 +1,0 @@
-class DisplaySurfaceParticipant < Participant
-end

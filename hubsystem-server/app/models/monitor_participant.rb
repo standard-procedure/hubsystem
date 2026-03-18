@@ -1,2 +1,0 @@
-class MonitorParticipant < Participant
-end

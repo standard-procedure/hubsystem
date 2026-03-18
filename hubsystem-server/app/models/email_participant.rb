@@ -1,2 +1,0 @@
-class EmailParticipant < Participant
-end

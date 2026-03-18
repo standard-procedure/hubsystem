@@ -12,14 +12,21 @@ Agents are not stateless functions. They are persistent individuals with identit
 
 ```
 hubsystem/
-├── AGENTS.md                  ← YOU ARE HERE
+├── AGENTS.md                  ← YOU ARE HERE (meta-level guidance)
 ├── CLAUDE.md                  ← Symlink to this file
 ├── README.md
 ├── docs/
 │   ├── ARCHITECTURE.md        ← Full system design
 │   ├── IMPLEMENTATION-PLAN.md ← Phased build plan (read before starting work)
 │   └── design.md              ← Original design document
-└── hubsystem-server/          ← Rails API server (Phase 1 — current)
+├── hubsystem-server/          ← Rails API + UI server (Phase 1 — current)
+│   ├── AGENTS.md              ← **Server-specific development guide**
+│   ├── CLAUDE.md              ← Symlink to server AGENTS.md
+│   └── spec/features/steps/
+│       ├── web/               ← Web UI step definitions (Playwright)
+│       └── api/               ← API step definitions (request specs)
+├── hubsystem-cli/             ← CLI client
+└── hubsystem-integration/     ← Integration tests
 ```
 
 ## Quick Orientation
@@ -28,7 +35,8 @@ hubsystem/
 |------|------|
 | Understand the overall design | `docs/ARCHITECTURE.md` |
 | Know what to build next | `docs/IMPLEMENTATION-PLAN.md` |
-| Work on the Rails server | `hubsystem-server/README.md` |
+| **Work on the Rails server** | **`hubsystem-server/AGENTS.md`** ← Start here for development |
+| Server tech stack & principles | `hubsystem-server/AGENTS.md` |
 
 ## Key Concepts
 

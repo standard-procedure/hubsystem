@@ -1,2 +1,0 @@
-class TimerParticipant < Participant
-end
