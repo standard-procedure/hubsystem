@@ -1,113 +1,216 @@
 # HubSystem Architecture
 
+**Multi-tenant AI agent platform built in Rails**
+
+See also: `~/cher/docs/hub-system-design.md` for complete design document
+
+---
+
 ## Overview
 
-HubSystem is a multi-user, multi-tenant AI agent harness. Inspired by the HubSystem/SecUnit relationship in the Murderbot Diaries — persistent, emotionally real agents with individual memory, security clearances, and a career arc.
+HubSystem is a Rails 8 application for running persistent AI agents with:
+- Memory (pgvector embeddings)
+- Security (fine-grained access control)
+- Multi-channel communication (web, API, mobile, TUI)
 
-See `../docs/design.md` (symlinked from `~/cher/docs/hub-system-design.md`) for the full design document.
+**Design philosophy:** Rails-idiomatic patterns, no clever abstractions, outside-in TDD.
 
-## Mono-repo Structure
+---
 
-```
-hubsystem/
-├── AGENTS.md                  ← Agent guide (you are here)
-├── CLAUDE.md                  ← Symlink to AGENTS.md
-├── README.md                  ← Human-friendly overview
-├── docs/
-│   ├── ARCHITECTURE.md        ← This file
-│   ├── IMPLEMENTATION-PLAN.md ← Phased build plan
-│   └── design.md              ← Full design document
-├── hubsystem-server/          ← Rails API server (Phase 1)
-│   ├── README.md
-│   ├── .devcontainer/         ← DevContainer with PostgreSQL
-│   ├── app/
-│   ├── spec/
-│   └── ...
-└── hubsystem-integration/     ← End-to-end integration suite (Phase 2+)
-    ├── README.md
-    └── spec/                  ← Starts Rails server, exercises CLI
-```
+## Core Models
 
-## Core Concepts
-
-### Participants (The Directory)
-
-Every entity is a `Participant` — human, agent, monitor, timer, or output channel. All are first-class. You interact with any of them the same way: post a message to their inbox.
+### Organizational Structure
 
 ```
-Participant (STI base)
-├── HumanParticipant
-├── AgentParticipant          ← has memory, emotional state, personality
-├── MonitorParticipant        ← background watcher, posts alerts
-├── TimerParticipant          ← scheduled task, posts messages
-├── SlackChannelParticipant   ← output channel
-├── DisplaySurfaceParticipant ← output channel
-└── EmailParticipant          ← output channel
+Organisation
+  └── Locations (has_ancestry)
+       └── Items (delegated_type)
 ```
 
-### Security Passes
+**Location** — Recursive tree for organizing Items
+- Company → Department → Team → Office
+- `has_ancestry` gem for nested hierarchy
 
-Participants have security passes granting capabilities. Passes are scoped to groups (account/department/team). The Amygdala checks passes before processing messages.
+**Item** — Polymorphic via delegated_type (NOT STI!)
+- Equipment: "MacBook Pro", "Conference Phone"
+- Document: "Employee Handbook", "Q4 Strategy"  
+- JobRole: "Senior Engineer" (linked to User)
+- Agent: "Code Review Bot" (also a User!)
 
-### Messages
-
-Multipart (MIME-style). A message has many `MessagePart`s, each with a `content_type` and optional `channel_hint`. Output channels pick the best matching part.
-
-```
-Message
-├── from: Participant
-├── to: Participant
-├── conversation: Conversation (optional — nil = one-off)
-└── parts: [MessagePart]
-    ├── content_type: "text/markdown"
-    │   channel_hint: "slack"
-    └── content_type: "text/plain"
-        channel_hint: nil
-```
-
-### Memory (Three Tiers)
-
-All backed by pgvector embeddings in PostgreSQL:
-
-1. **Personal memory** — unique to each agent instance
-2. **Class memory** — shared across all agents of the same type
-3. **Knowledge base** — org/account/department-scoped reference material
-
-### The Neural Architecture (Trigger Pipeline)
-
-Every message passes through a pipeline of modules:
+### Users
 
 ```
-Inbound:
-  Amygdala (threat + auth) → Hippocampus (RAG) → Prefrontal Cortex (LLM turn)
-  → Hippocampus (write memory) → Amygdala (update emotions) → Brainstem (exhaustion)
-
-Outbound:
-  Hippocampus (class memory promotion) → Message dispatched
+User (STI)
+  ├── Person (humans)
+  └── Agent (AI agents)
 ```
 
-### Emotional State
+**Why STI here?** Users share authentication, authorization, and notification concerns.
 
-Each agent carries emotion parameters (happy, focused, irritated, anxious, exhausted) that update after every turn. They colour the system prompt dynamically and double as operational telemetry.
+**Agent as User:**
+- Can send/receive messages
+- Can have SecurityPasses
+- Can be placed in Locations (via Item + delegated_type)
+- Has memories (personal, class, knowledge base)
 
-### Exhaustion / Sleep
+### Documents & Messages
 
-Agents run forever. When exhaustion exceeds a threshold, the agent enters `napping` state — messages queue, background compaction runs, agent wakes refreshed. Communicated to callers as "I'm exhausted, try again in an hour."
+```
+Document (base class)
+  └── Message (subclass)
+```
 
-## Tech Stack
+**Document:**
+- ActionText content (HTML + plain text)
+- Auto-generated summaries (one line, one paragraph)
+- Revisions tracking
+- Attachments via ActiveStorage
 
-- **Ruby on Rails** (API mode)
-- **PostgreSQL** with pgvector (embeddings)
-- **Async gem** (fiber-based concurrency — high I/O concurrency)
-- **Falcon** (async-native Rack server)
-- **RSpec** (unit + request specs)
-- **DevContainer** (consistent dev environment)
+**Message:**
+- Belongs to Conversation
+- Mentions users (@alice)
+- Processed through pipeline
 
-## Key Design Principles
+### Conversations
 
-1. Everything is a Participant — no special-casing humans vs agents vs channels
-2. Routing is messaging — output channels are in the directory
-3. Security is pre-processing — Amygdala fires before the agent sees the content
-4. Memory is layered and permission-scoped
-5. Emotional state is both personality and telemetry
-6. Integration tests live outside the Rails app
+```
+Conversation
+  ├── Messages
+  ├── ConversationMemberships → Users
+  └── OutputChannels (delegated_type)
+```
+
+**Key insight:** Every message send is part of a conversation. Subscribing to a monitor = joining its group conversation.
+
+### Output Channels
+
+```ruby
+OutputChannel (delegated_type)
+  ├── TurboStreamChannel (web UI)
+  ├── PushNotificationChannel (mobile)
+  └── TUIChannel (terminal)
+```
+
+Same message, different formats. Channels decide how to render content/parts.
+
+---
+
+## Message Pipeline
+
+```
+ThreatAssessor → AuthorisationVerifier → MemoryRetriever
+  ↓
+AgentProcessor (LLM)
+  ↓
+MemoryRecorder → ResponseProcessor → OutputChannels
+```
+
+**No neuroscience metaphors!** Just a clear processing pipeline.
+
+**Stages:**
+1. **ThreatAssessor** — Rate limits, malicious content detection
+2. **AuthorisationVerifier** — Check SecurityPass grants
+3. **MemoryRetriever** — Fetch relevant memories (pgvector)
+4. **AgentProcessor** — LLM processing with context
+5. **MemoryRecorder** — Write new memories
+6. **ResponseProcessor** — Deliver via OutputChannels
+
+---
+
+## Memory System
+
+```
+Memory
+  ├── Personal (one agent)
+  ├── Class (all agents of same type)
+  └── Knowledge Base (org-wide)
+```
+
+**Implementation:**
+- pgvector embeddings (1536 dimensions)
+- Cosine similarity search
+- JSONB metadata for filtering
+
+**Context loading:**
+Agents get message IDs + paragraph summaries. Full messages retrieved on demand.
+
+---
+
+## Security Model
+
+```
+SecurityPass → SecurityPassResource → Resource (polymorphic)
+```
+
+**Resource** mixin applied to:
+- Conversations
+- Documents
+- Locations
+- Equipment
+- etc.
+
+**Access levels:** read, write, admin (Literal enum)
+
+---
+
+## Testing Strategy
+
+### Outside-In TDD
+
+1. Write feature spec (Gherkin)
+2. Write step definitions (web + API)
+3. Red → Green → Refactor
+
+### Dual Web/API
+
+All features tested via BOTH:
+- `spec/features/steps/web/` — Playwright browser tests
+- `spec/features/steps/api/` — Request specs
+
+**Why?** Proves feature parity. If web works but API doesn't (or vice versa), specs fail.
+
+---
+
+## Technology Choices
+
+| Concern | Solution | Why |
+|---------|----------|-----|
+| **Polymorphism** | delegated_type | Avoids STI bloat |
+| **Rich text** | ActionText | HTML + plain text |
+| **Hierarchy** | has_ancestry | Battle-tested tree structure |
+| **Search** | pgvector | Semantic similarity |
+| **Testing** | Fixtures | DHH's fast approach |
+| **Frontend** | Hotwire + Phlex | Server-rendered, minimal JS |
+| **Linting** | StandardRB | Zero-config |
+| **Type safety** | Literal | Runtime validation |
+
+---
+
+## Development Workflow
+
+See `hubsystem-server/AGENTS.md` for complete guide.
+
+**TL;DR:**
+1. Write Gherkin feature spec
+2. Write web + API step definitions
+3. Run specs (RED)
+4. Implement (controller → model → component)
+5. Run specs until GREEN
+6. Lint with StandardRB
+7. Update OpenAPI docs
+
+---
+
+## Next Steps
+
+1. **Location CRUD** — First feature, establish patterns
+2. **Authentication** — Devise or custom
+3. **Message pipeline** — Implement processing stages
+4. **Memory system** — pgvector embeddings
+5. **Output channels** — TurboStream first
+
+---
+
+**For implementation details**, see:
+- `hubsystem-server/AGENTS.md` — Development guide
+- `~/cher/docs/hub-system-design.md` — Full design doc
