@@ -35,10 +35,6 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 RSpec.configure do |config|
-  # Use fixtures instead of factories (DHH's approach - loads once, fast rollback)
-  config.fixture_paths = [Rails.root.join('spec/fixtures')]
-  config.global_fixtures = :all
-  config.use_transactional_fixtures = true
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')

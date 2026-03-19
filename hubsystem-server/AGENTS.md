@@ -88,35 +88,10 @@ OPENAPI=1 bundle exec rspec spec/requests/
 - **Monitoring:** RailsPulse
 - **API Docs:** rspec-openapi (auto-generated)
 
-## DevContainer
 
-This project uses DevContainers. See parent `AGENTS.md` for workflow.
-
-**Inside container:**
-- Run commands normally: `bundle exec rspec`
-
-**Outside (host):**
-- Use devcontainer exec: `devcontainer exec --workspace-folder . bash -lc "bundle exec rspec"`
-
-## HubSystem-Specific Concepts
+d## HubSystem-Specific Concepts
 
 See `../docs/ARCHITECTURE.md` for full design.
-
-**Key models:**
-- **Participant** — Every entity (human, agent, monitor, timer, channel). All first-class.
-- **SecurityPass** — Capabilities scoped to groups
-- **Message** — Multipart MIME-style messages with `MessagePart`s
-- **Memory** — Three tiers: personal, class, knowledge base (pgvector embeddings)
-- **Emotional State** — JSONB on agents, updates every turn
-
-**Neural Architecture** (trigger pipeline):
-1. **Amygdala** — Threat detection + auth + emotional response
-2. **Hippocampus** — RAG memory retrieval
-3. **Prefrontal Cortex** — LLM processing
-4. **Hippocampus** — Write to memory
-5. **Brainstem** — Exhaustion tracking
-
-For implementation details, see `../docs/IMPLEMENTATION-PLAN.md`.
 
 ---
 
