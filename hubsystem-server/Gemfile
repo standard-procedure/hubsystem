@@ -54,6 +54,8 @@ group :development do
 end
 
 gem "omniauth"
+gem "doorkeeper"
+gem "ruby_llm"
 gem "omniauth-rails_csrf_protection"
 gem "async-cable"
 gem "async-job-adapter-active_job"
@@ -67,3 +69,4 @@ gem "noticed"
 gem "rails_pulse"
 gem "jsbundling-rails"
 gem "cssbundling-rails"
+gem "standard_procedure_has_attributes"

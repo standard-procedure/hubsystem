@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  has_many :identities, class_name: "User::Identity", dependent: :destroy
-  has_many :sessions, class_name: "User::Session", dependent: :destroy
+  include HasAttributes
+
   has_one_attached :photo
   validate :photo_is_an_image, if: -> { photo.attached? }
   normalizes :name, with: ->(s) { s.strip }
@@ -10,6 +10,11 @@ class User < ApplicationRecord
   normalizes :uid, with: ->(s) { s.strip.downcase }
   before_validation :generate_uid, if: -> { uid.blank? }
   validates :uid, presence: true, uniqueness: true
+  has_many :sessions, class_name: "User::Session", dependent: :destroy
+  enum :status, active: 0, deleted: -1
+
+  scope :system_administrators, -> { active.where(system_administrator: true) }
+  scope :in_order, -> { order :name }
 
   private def generate_uid
     self.uid = "#{name}-#{Time.now.to_i}".parameterize
