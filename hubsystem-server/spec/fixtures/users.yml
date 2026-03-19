@@ -1,0 +1,10 @@
+alice:
+  uid: alice
+  name: Alice Aardvark
+  type: User::Human
+
+bishop:
+  uid: bishop
+  name: Bishop
+  type: User::Synthetic
+  

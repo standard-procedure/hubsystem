@@ -1,0 +1,12 @@
+_fixture:
+  model_class: User::Session
+
+alice_session:
+  user: alice
+  ip_address: 127.0.0.1
+  user_agent: RSpec
+
+bishop_session:
+  user: bishop
+  ip_address: 127.0.0.1
+  user_agent: RSpec

@@ -1,0 +1,12 @@
+_fixture:
+  model_class: User::Identity
+
+alice_github:
+  user: alice
+  provider: github
+  uid: alice-github-123
+
+bishop_github:
+  user: bishop
+  provider: github
+  uid: bishop-github-456
