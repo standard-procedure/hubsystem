@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUBSYSTEM — Design System Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --case-950: hsl(38, 18%, 12%);
+    --case-900: hsl(38, 15%, 18%);
+    --case-800: hsl(38, 12%, 26%);
+    --case-700: hsl(38, 14%, 38%);
+    --case-600: hsl(38, 12%, 50%);
+    --case-500: hsl(38, 14%, 58%);
+    --case-400: hsl(38, 18%, 66%);
+    --case-300: hsl(38, 22%, 74%);
+    --case-200: hsl(38, 30%, 82%);
+    --case-100: hsl(38, 35%, 88%);
+    --case-50:  hsl(38, 40%, 92%);
+    --screen-950: hsl(160, 10%, 3%);
+    --screen-900: hsl(160, 10%, 5%);
+    --screen-800: hsl(160, 8%, 9%);
+    --screen-700: hsl(160, 7%, 14%);
+    --screen-600: hsl(160, 5%, 20%);
+    --phosphor-950: hsl(142, 70%, 5%);
+    --phosphor-900: hsl(142, 70%, 10%);
+    --phosphor-800: hsl(142, 65%, 18%);
+    --phosphor-700: hsl(142, 60%, 28%);
+    --phosphor-600: hsl(142, 55%, 38%);
+    --phosphor-500: hsl(142, 72%, 45%);
+    --phosphor-400: hsl(142, 70%, 55%);
+    --phosphor-300: hsl(142, 65%, 68%);
+    --amber-900: hsl(35, 80%, 10%);
+    --amber-800: hsl(35, 75%, 18%);
+    --amber-700: hsl(35, 70%, 28%);
+    --amber-600: hsl(35, 65%, 38%);
+    --amber-500: hsl(35, 90%, 50%);
+    --amber-400: hsl(35, 85%, 60%);
+    --amber-300: hsl(35, 75%, 72%);
+    --alert-900: hsl(0, 70%, 10%);
+    --alert-800: hsl(0, 65%, 18%);
+    --alert-700: hsl(0, 60%, 28%);
+    --alert-600: hsl(0, 55%, 38%);
+    --alert-500: hsl(0, 80%, 50%);
+    --alert-400: hsl(0, 75%, 60%);
+    --alert-300: hsl(0, 65%, 72%);
+    --cryo-900: hsl(200, 70%, 10%);
+    --cryo-800: hsl(200, 65%, 18%);
+    --cryo-700: hsl(200, 60%, 28%);
+    --cryo-600: hsl(200, 55%, 38%);
+    --cryo-500: hsl(200, 75%, 50%);
+    --cryo-400: hsl(200, 70%, 60%);
+    --text-bright: hsl(142, 8%, 92%);
+    --text-primary: hsl(142, 5%, 82%);
+    --text-secondary: hsl(142, 4%, 65%);
+    --text-muted: hsl(142, 3%, 48%);
+    --text-dim: hsl(142, 3%, 32%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: hsl(38, 10%, 22%); min-height: 100vh; }
+  body {
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.5;
+    color: var(--text-primary); min-height: 100vh;
+    display: flex; justify-content: center; padding: 32px 16px 48px;
+    background: radial-gradient(ellipse at 50% 0%, hsla(38,15%,30%,0.5) 0%, transparent 70%), hsl(38,10%,22%);
+  }
+  .crt-housing { width: 100%; max-width: 1240px; }
+  .crt-top {
+    background: linear-gradient(180deg, hsl(38,30%,86%) 0%, hsl(38,28%,82%) 40%, hsl(38,22%,76%) 100%);
+    border-radius: 18px 18px 0 0; padding: 20px 28px 14px;
+    border: 1px solid hsl(38,15%,68%); border-bottom: none;
+    box-shadow: inset 0 2px 0 hsla(38,40%,95%,0.6), inset 0 -1px 0 hsla(38,10%,50%,0.3);
+  }
+  .crt-top-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .crt-brand { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: hsl(38,10%,45%); letter-spacing: 0.25em; text-transform: uppercase; }
+  .crt-model { font-family: 'IBM Plex Sans', sans-serif; font-size: 9px; color: hsl(38,10%,52%); letter-spacing: 0.1em; text-transform: uppercase; }
+  .crt-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(180deg, hsl(38,25%,78%), hsl(38,20%,72%));
+    border: 1px solid hsl(38,12%,62%); border-radius: 3px; padding: 3px 10px;
+    box-shadow: inset 0 1px 0 hsla(38,40%,92%,0.5), 0 1px 2px hsla(38,10%,30%,0.2);
+  }
+  .crt-badge-led {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--phosphor-500);
+    box-shadow: 0 0 4px var(--phosphor-500), 0 0 8px hsla(142,72%,45%,0.3);
+    animation: pulse-phosphor 2s ease-in-out infinite;
+  }
+  .crt-badge-text { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: hsl(38,8%,38%); letter-spacing: 0.15em; text-transform: uppercase; }
+  .crt-vents { display: flex; gap: 3px; justify-content: center; margin-top: 10px; }
+  .crt-vent { width: 32px; height: 2px; background: hsl(38,10%,62%); border-radius: 1px; box-shadow: inset 0 1px 0 hsla(38,10%,40%,0.4); }
+  .crt-bezel {
+    background: hsl(38,8%,28%); padding: 12px;
+    border-left: 1px solid hsl(38,15%,68%); border-right: 1px solid hsl(38,15%,68%);
+    box-shadow: inset 0 0 20px hsla(0,0%,0%,0.5), inset 0 2px 4px hsla(0,0%,0%,0.3);
+  }
+  .crt-screen {
+    background: var(--screen-900); border-radius: 8px; position: relative; overflow: hidden;
+    box-shadow: inset 0 0 60px hsla(142,40%,10%,0.15), inset 0 0 120px hsla(0,0%,0%,0.4), 0 0 2px hsla(142,50%,30%,0.1);
+  }
+  .crt-screen::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 1px, hsla(0,0%,0%,0.06) 1px, hsla(0,0%,0%,0.06) 2px);
+    pointer-events: none; z-index: 100; border-radius: 8px;
+  }
+  .crt-screen::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, hsla(142,30%,50%,0.03) 0%, transparent 50%), radial-gradient(ellipse at center, transparent 50%, hsla(0,0%,0%,0.25) 100%);
+    pointer-events: none; z-index: 99; border-radius: 8px;
+  }
+  .screen-content { padding: 32px 28px 40px; position: relative; z-index: 1; }
+  .crt-bottom {
+    background: linear-gradient(180deg, hsl(38,22%,76%) 0%, hsl(38,28%,80%) 30%, hsl(38,30%,84%) 100%);
+    border-radius: 0 0 18px 18px; padding: 16px 28px 20px;
+    border: 1px solid hsl(38,15%,68%); border-top: none;
+    box-shadow: inset 0 1px 0 hsla(38,10%,50%,0.3), 0 4px 16px hsla(0,0%,0%,0.3), 0 2px 4px hsla(0,0%,0%,0.15);
+  }
+  .crt-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .crt-controls { display: flex; gap: 12px; align-items: center; }
+  .crt-knob {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(145deg, hsl(38,15%,72%), hsl(38,10%,58%));
+    border: 1px solid hsl(38,10%,48%); cursor: pointer; position: relative;
+    box-shadow: inset 0 1px 2px hsla(38,30%,85%,0.5), 0 1px 3px hsla(0,0%,0%,0.2);
+  }
+  .crt-knob::after { content: ''; position: absolute; top: 3px; left: 50%; transform: translateX(-50%); width: 1px; height: 6px; background: hsl(38,8%,42%); border-radius: 1px; }
+  .crt-knob--power::after { content: ''; width: 6px; height: 6px; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--phosphor-500); box-shadow: 0 0 4px var(--phosphor-500); }
+  .crt-label { font-family: 'IBM Plex Sans', sans-serif; font-size: 8px; color: hsl(38,8%,50%); text-transform: uppercase; letter-spacing: 0.12em; }
+  .crt-nameplate {
+    background: linear-gradient(180deg, hsl(42,35%,90%), hsl(42,30%,85%));
+    border: 1px solid hsl(38,15%,70%); border-radius: 2px; padding: 3px 14px;
+    box-shadow: inset 0 1px 0 hsla(42,40%,96%,0.6);
+  }
+  .crt-nameplate-text { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: hsl(38,15%,35%); letter-spacing: 0.2em; text-transform: uppercase; }
+
+  /* CURSOR */
+  .cursor {
+    display: inline-block; width: 10px; height: 1.15em;
+    background: var(--phosphor-500); vertical-align: text-bottom;
+    animation: cursor-blink 1s step-end infinite;
+    box-shadow: 0 0 4px hsla(142,72%,45%,0.6), 0 0 10px hsla(142,72%,45%,0.25);
+    margin-left: 2px;
+  }
+  .cursor--amber { background: var(--amber-500); box-shadow: 0 0 4px hsla(35,90%,50%,0.6), 0 0 10px hsla(35,90%,50%,0.25); }
+  .cursor--sm { width: 7px; height: 0.9em; }
+  @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* BOOT SEQUENCE */
+  .boot-line { font-size: 12px; color: var(--phosphor-500); text-shadow: 0 0 4px hsla(142,72%,45%,0.4); line-height: 1.8; opacity: 0; animation: boot-reveal 0.1s forwards; }
+  .boot-line--dim { color: var(--phosphor-700); text-shadow: none; }
+  @keyframes boot-reveal { to { opacity: 1; } }
+
+  /* HEADER */
+  .sys-header { border: 1px solid var(--screen-600); background: var(--screen-900); margin-bottom: 48px; border-radius: 2px; }
+  .sys-header-bar { background: var(--screen-800); border-bottom: 1px solid var(--screen-600); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .sys-header-bar span { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; }
+  .sys-header-content { padding: 32px 20px 24px; }
+  .sys-title { font-family: 'Share Tech Mono', monospace; font-size: 42px; color: var(--phosphor-500); letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 0 6px hsla(142,72%,45%,0.5), 0 0 20px hsla(142,72%,45%,0.2), 0 0 40px hsla(142,72%,45%,0.08); margin-bottom: 8px; line-height: 1; }
+  .sys-subtitle { font-size: 13px; color: var(--text-muted); letter-spacing: 0.05em; }
+  .sys-status-bar { height: 3px; background: linear-gradient(90deg, var(--phosphor-800), var(--phosphor-500), var(--phosphor-800)); background-size: 200% 100%; animation: sweep 3s ease-in-out infinite; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 56px; }
+  .section-label { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--phosphor-600); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+  .section-title { font-family: 'Share Tech Mono', monospace; font-size: 22px; color: var(--text-bright); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--screen-600); }
+  .section-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; max-width: 680px; line-height: 1.7; }
+
+  /* SWATCHES */
+  .palette-group { margin-bottom: 32px; }
+  .palette-group-label { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+  .palette-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .swatch { width: 88px; border-radius: 2px; overflow: hidden; border: 1px solid var(--screen-600); }
+  .swatch-color { height: 48px; }
+  .swatch-info { background: var(--screen-900); padding: 6px 8px; }
+  .swatch-name { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
+  .swatch-hex { font-size: 9px; color: var(--text-dim); margin-top: 1px; }
+  .case-swatch-color { position: relative; height: 48px; }
+  .case-swatch-color::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, hsla(0,0%,100%,0.12) 0%, transparent 40%, hsla(0,0%,0%,0.08) 100%); }
+
+  /* TYPOGRAPHY */
+  .type-specimen { margin-bottom: 20px; padding: 20px; background: var(--screen-800); border: 1px solid var(--screen-600); border-radius: 2px; }
+  .type-meta { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .type-display { font-family: 'Share Tech Mono', monospace; font-size: 32px; color: var(--phosphor-500); text-shadow: 0 0 4px hsla(142,72%,45%,0.4); letter-spacing: 0.1em; text-transform: uppercase; }
+  .type-mono { font-family: 'IBM Plex Mono', monospace; font-size: 18px; color: var(--text-primary); }
+  .type-body { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
+
+  /* PANELS */
+  .panel { background: var(--screen-900); border: 1px solid var(--screen-600); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
+  .panel-header { background: var(--screen-800); border-bottom: 1px solid var(--screen-600); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .panel-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.15em; }
+  .panel-controls { display: flex; gap: 8px; }
+  .panel-control { width: 8px; height: 8px; border-radius: 1px; background: var(--screen-600); cursor: pointer; transition: background 0.15s; }
+  .panel-control:hover { background: var(--text-muted); }
+  .panel-body { padding: 16px; }
+  .panel--active { border-color: var(--phosphor-700); box-shadow: 0 0 1px hsla(142,72%,45%,0.4), 0 0 8px hsla(142,72%,45%,0.12); }
+  .panel--alert { border-color: var(--alert-600); box-shadow: 0 0 1px hsla(0,80%,50%,0.4), 0 0 8px hsla(0,80%,50%,0.12); }
+  .panel--warning { border-color: var(--amber-600); box-shadow: 0 0 1px hsla(35,90%,50%,0.4), 0 0 8px hsla(35,90%,50%,0.12); }
+  .demo-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 16px; }
+
+  /* BUTTONS */
+  .btn { display: inline-flex; align-items: center; justify-content: center; font-family: 'Share Tech Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; border: 1px solid transparent; border-radius: 2px; cursor: pointer; transition: all 0.15s ease; height: 36px; padding: 0 16px; }
+  .btn-primary { background: var(--phosphor-600); color: var(--screen-950); border-color: var(--phosphor-500); }
+  .btn-primary:hover { background: var(--phosphor-500); box-shadow: 0 0 8px hsla(142,72%,45%,0.3); }
+  .btn-secondary { background: transparent; color: var(--text-secondary); border-color: var(--screen-600); }
+  .btn-secondary:hover { background: var(--screen-800); color: var(--text-bright); }
+  .btn-danger { background: var(--alert-800); color: var(--alert-400); border-color: var(--alert-600); }
+  .btn-danger:hover { background: var(--alert-700); box-shadow: 0 0 8px hsla(0,80%,50%,0.2); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border-color: transparent; }
+  .btn-ghost:hover { background: var(--screen-800); color: var(--text-primary); }
+  .btn-sm { height: 28px; padding: 0 10px; font-size: 10px; }
+  .btn-lg { height: 44px; padding: 0 24px; font-size: 13px; }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+
+  /* AGENT CARD */
+  .agent-card { background: var(--screen-900); border: 1px solid var(--screen-600); border-radius: 2px; overflow: hidden; }
+  .agent-card-inner { display: flex; }
+  .agent-card-accent { width: 3px; min-height: 100%; flex-shrink: 0; }
+  .agent-card-body { padding: 16px; flex: 1; }
+  .agent-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .agent-name { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.08em; }
+  .agent-model { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .agent-status-badge { font-family: 'Share Tech Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; padding: 3px 8px; border-radius: 2px; }
+  .badge-thinking { background: hsla(142,72%,45%,0.12); color: var(--phosphor-400); border: 1px solid var(--phosphor-700); animation: pulse-phosphor 2s ease-in-out infinite; }
+  .badge-awaiting { background: hsla(35,90%,50%,0.12); color: var(--amber-400); border: 1px solid var(--amber-700); }
+  .badge-error { background: hsla(0,80%,50%,0.12); color: var(--alert-400); border: 1px solid var(--alert-700); animation: flash-alert 1.2s ease-in-out infinite; }
+  .badge-idle { background: hsla(160,5%,35%,0.12); color: var(--text-muted); border: 1px solid var(--screen-600); }
+  .agent-task { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+  .agent-task-label { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+  .tool-call { background: var(--screen-800); border: 1px solid var(--screen-600); border-radius: 2px; padding: 8px 12px; font-size: 12px; margin-bottom: 12px; }
+  .tool-call-cmd { color: var(--cryo-400); }
+  .tool-call-result { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+  .agent-metrics { display: flex; gap: 16px; font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; margin-bottom: 12px; flex-wrap: wrap; }
+  .agent-metrics strong { color: var(--text-secondary); font-weight: 500; }
+  .agent-actions { display: flex; gap: 6px; }
+
+  /* PROGRESS */
+  .progress-track { background: var(--screen-800); height: 4px; border-radius: 1px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 1px; }
+  .progress-fill--phosphor { background: var(--phosphor-500); box-shadow: 0 0 4px hsla(142,72%,45%,0.3); }
+  .progress-fill--amber { background: var(--amber-500); box-shadow: 0 0 4px hsla(35,90%,50%,0.3); }
+  .progress-fill--alert { background: var(--alert-500); box-shadow: 0 0 4px hsla(0,80%,50%,0.3); }
+
+  /* READOUTS */
+  .readout { padding: 12px 16px; background: var(--screen-800); border: 1px solid var(--screen-600); border-radius: 2px; }
+  .readout-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .readout-value { font-family: 'Share Tech Mono', monospace; font-size: 28px; font-variant-numeric: tabular-nums; line-height: 1; margin-bottom: 6px; }
+  .readout-value--phosphor { color: var(--phosphor-500); text-shadow: 0 0 4px hsla(142,72%,45%,0.5), 0 0 12px hsla(142,72%,45%,0.2); }
+  .readout-value--amber { color: var(--amber-500); text-shadow: 0 0 4px hsla(35,90%,50%,0.5), 0 0 12px hsla(35,90%,50%,0.2); }
+  .readout-value--alert { color: var(--alert-500); text-shadow: 0 0 4px hsla(0,80%,50%,0.5), 0 0 12px hsla(0,80%,50%,0.2); }
+  .readout-value--cryo { color: var(--cryo-500); text-shadow: 0 0 4px hsla(200,75%,50%,0.5), 0 0 12px hsla(200,75%,50%,0.2); }
+  .readout-context { font-size: 11px; color: var(--text-muted); }
+
+  /* LOG */
+  .log-viewer { background: var(--screen-950); border: 1px solid var(--screen-600); border-radius: 2px; font-size: 12px; line-height: 1.7; max-height: 240px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--screen-600) var(--screen-950); }
+  .log-line { padding: 2px 12px; display: flex; gap: 12px; font-variant-numeric: tabular-nums; }
+  .log-line:nth-child(even) { background: hsla(160,8%,9%,0.6); }
+  .log-time { color: var(--text-dim); white-space: nowrap; min-width: 85px; }
+  .log-tag { font-weight: 500; white-space: nowrap; min-width: 55px; }
+  .log-tag--tool { color: var(--cryo-500); }
+  .log-tag--recv { color: var(--text-muted); }
+  .log-tag--think { color: var(--phosphor-500); }
+  .log-tag--warn { color: var(--amber-500); }
+  .log-tag--user { color: var(--text-bright); }
+  .log-msg { color: var(--text-secondary); }
+
+  /* INPUTS */
+  .input-field { background: var(--screen-950); border: 1px solid var(--screen-600); border-radius: 2px; color: var(--text-primary); font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 8px 12px; width: 100%; outline: none; transition: all 0.15s; }
+  .input-field::placeholder { color: var(--text-dim); }
+  .input-field:focus { border-color: var(--phosphor-600); box-shadow: 0 0 0 1px var(--phosphor-600), 0 0 8px hsla(142,72%,45%,0.1); }
+  .input-field--error { border-color: var(--alert-600); box-shadow: 0 0 0 1px var(--alert-600); }
+  .command-wrapper { display: flex; align-items: center; gap: 4px; background: var(--screen-950); padding-left: 12px; border-bottom: 2px solid var(--phosphor-700); transition: border-color 0.15s; }
+  .command-wrapper:focus-within { border-bottom-color: var(--phosphor-500); }
+  .command-prefix { color: var(--phosphor-500); font-family: 'IBM Plex Mono', monospace; font-size: 14px; }
+  .command-input { background: transparent; border: none; color: var(--text-primary); font-family: 'IBM Plex Mono', monospace; font-size: 14px; padding: 10px 12px 10px 0; width: 100%; outline: none; }
+
+  /* STATUS */
+  .status-bar { background: var(--screen-800); border: 1px solid var(--screen-600); border-radius: 2px; padding: 6px 16px; display: flex; align-items: center; gap: 24px; font-size: 11px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+  .status-item { display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
+  .status-dot { width: 6px; height: 6px; border-radius: 1px; }
+  .status-dot--green { background: var(--phosphor-500); box-shadow: 0 0 4px hsla(142,72%,45%,0.5); }
+  .status-dot--amber { background: var(--amber-500); box-shadow: 0 0 4px hsla(35,90%,50%,0.5); }
+  .status-dot--red { background: var(--alert-500); box-shadow: 0 0 4px hsla(0,80%,50%,0.5); animation: flash-alert 1.2s ease-in-out infinite; }
+  .status-dot--blue { background: var(--cryo-500); }
+  .status-matrix { display: grid; grid-template-columns: repeat(8, 14px); gap: 3px; }
+  .matrix-cell { width: 14px; height: 14px; border-radius: 1px; transition: all 0.2s; cursor: pointer; }
+  .matrix-cell:hover { transform: scale(1.3); z-index: 1; }
+  .matrix-cell--nominal { background: var(--phosphor-700); }
+  .matrix-cell--nominal:hover { background: var(--phosphor-500); box-shadow: 0 0 6px var(--phosphor-500); }
+  .matrix-cell--degraded { background: var(--amber-700); }
+  .matrix-cell--degraded:hover { background: var(--amber-500); box-shadow: 0 0 6px var(--amber-500); }
+  .matrix-cell--critical { background: var(--alert-700); animation: flash-alert 1.5s ease-in-out infinite; }
+  .matrix-cell--offline { background: var(--screen-600); }
+
+  /* ALERTS */
+  .alert-banner { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 2px; font-size: 12px; margin-bottom: 8px; }
+  .alert-banner--critical { background: var(--alert-900); border: 1px solid var(--alert-600); color: var(--alert-300); }
+  .alert-banner--warning { background: var(--amber-900); border: 1px solid var(--amber-600); color: var(--amber-300); }
+  .alert-banner--info { background: var(--cryo-900); border: 1px solid var(--cryo-600); color: var(--cryo-400); }
+  .alert-banner--success { background: var(--phosphor-950); border: 1px solid var(--phosphor-700); color: var(--phosphor-300); }
+  .alert-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* NAV */
+  .nav-rail { width: 64px; background: var(--screen-950); border: 1px solid var(--screen-600); border-radius: 2px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .nav-item { width: 48px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 2px; cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .nav-item:hover { background: var(--screen-800); }
+  .nav-item--active { border-left-color: var(--phosphor-500); }
+  .nav-icon { font-size: 18px; line-height: 1; }
+  .nav-item--active .nav-icon { color: var(--phosphor-500); }
+  .nav-item:not(.nav-item--active) .nav-icon { color: var(--text-muted); }
+  .nav-label { font-family: 'Share Tech Mono', monospace; font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+  .nav-item--active .nav-label { color: var(--phosphor-400); }
+
+  /* ANIMATIONS */
+  @keyframes sweep { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  @keyframes pulse-phosphor { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  @keyframes flash-alert { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* UTILS */
+  .flex { display: flex; } .gap-8 { gap: 8px; } .gap-12 { gap: 12px; } .gap-16 { gap: 16px; } .gap-24 { gap: 24px; }
+  .items-start { align-items: flex-start; } .items-center { align-items: center; } .flex-wrap { flex-wrap: wrap; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .mb-16 { margin-bottom: 16px; } .mb-24 { margin-bottom: 24px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-4, .demo-row { grid-template-columns: 1fr; }
+    .sys-title { font-size: 28px; }
+    .crt-top, .crt-bottom { padding-left: 16px; padding-right: 16px; }
+    .crt-bezel { padding: 8px; }
+    .screen-content { padding: 20px 16px 28px; }
+    body { padding: 16px 8px 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    .crt-screen::after, .crt-screen::before { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="crt-housing">
+  <div class="crt-top">
+    <div class="crt-top-inner">
+      <span class="crt-brand">HubSystem</span>
+      <div class="crt-badge"><div class="crt-badge-led"></div><span class="crt-badge-text">Power</span></div>
+      <span class="crt-model">Model MU/TH/UR 6000 — Interface Terminal</span>
+    </div>
+    <div class="crt-vents"><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div><div class="crt-vent"></div></div>
+  </div>
+  <div class="crt-bezel">
+    <div class="crt-screen">
+      <div class="screen-content">
+
+        <!-- BOOT -->
+        <div style="margin-bottom:40px">
+          <div class="boot-line" style="animation-delay:0.1s">HUBSYSTEM INTERFACE TERMINAL v1.0</div>
+          <div class="boot-line boot-line--dim" style="animation-delay:0.3s">MU/TH/UR 6000 BIOS rev 4.2.1</div>
+          <div class="boot-line boot-line--dim" style="animation-delay:0.5s">Memory test... 131072K OK</div>
+          <div class="boot-line boot-line--dim" style="animation-delay:0.7s">Initialising agent subsystem... 8 slots available</div>
+          <div class="boot-line boot-line--dim" style="animation-delay:0.9s">Network link established — latency 12ms</div>
+          <div class="boot-line" style="animation-delay:1.1s">SYSTEM READY<span class="cursor"></span></div>
+        </div>
+
+        <!-- HEADER -->
+        <div class="sys-header">
+          <div class="sys-status-bar"></div>
+          <div class="sys-header-bar"><span>Interface Systems Division</span><span>Design System v1.0 — Codename: MOTHER</span></div>
+          <div class="sys-header-content"><div class="sys-title">HubSystem</div><div class="sys-subtitle">Human ↔ Agent Interface Protocol — Design System Reference</div></div>
+        </div>
+
+        <!-- COLOURS -->
+        <div class="section">
+          <div class="section-label">01 — Chromatics</div>
+          <div class="section-title">Colour System</div>
+          <div class="section-desc">Two layers: the warm beige Case palette for the physical housing, and the dark Screen + Phosphor palette for the CRT display. The machine has a body and a mind.</div>
+
+          <div class="palette-group">
+            <div class="palette-group-label">Case — Physical Housing (Beige Plastic)</div>
+            <div class="palette-row">
+              <div class="swatch" style="border-color:var(--case-700)"><div class="case-swatch-color" style="background:var(--case-950)"></div><div class="swatch-info" style="background:var(--case-900)"><div class="swatch-name" style="color:var(--case-300)">950</div></div></div>
+              <div class="swatch" style="border-color:var(--case-700)"><div class="case-swatch-color" style="background:var(--case-800)"></div><div class="swatch-info" style="background:var(--case-900)"><div class="swatch-name" style="color:var(--case-300)">800</div></div></div>
+              <div class="swatch" style="border-color:var(--case-700)"><div class="case-swatch-color" style="background:var(--case-600)"></div><div class="swatch-info" style="background:var(--case-900)"><div class="swatch-name" style="color:var(--case-300)">600</div></div></div>
+              <div class="swatch" style="border-color:var(--case-700)"><div class="case-swatch-color" style="background:var(--case-400)"></div><div class="swatch-info" style="background:var(--case-900)"><div class="swatch-name" style="color:var(--case-300)">400</div></div></div>
+              <div class="swatch" style="border-color:var(--case-700)"><div class="case-swatch-color" style="background:var(--case-200)"></div><div class="swatch-info" style="background:var(--case-900)"><div class="swatch-name" style="color:var(--case-100)">200</div></div></div>
+              <div class="swatch" style="border-color:var(--case-700)"><div class="case-swatch-color" style="background:var(--case-50)"></div><div class="swatch-info" style="background:var(--case-900)"><div class="swatch-name" style="color:var(--case-100)">50</div></div></div>
+            </div>
+          </div>
+          <div class="palette-group">
+            <div class="palette-group-label">Screen — CRT Glass (Dark Interior)</div>
+            <div class="palette-row">
+              <div class="swatch"><div class="swatch-color" style="background:var(--screen-950)"></div><div class="swatch-info"><div class="swatch-name">950 Void</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--screen-900)"></div><div class="swatch-info"><div class="swatch-name">900 Base</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--screen-800)"></div><div class="swatch-info"><div class="swatch-name">800 Surface</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--screen-700)"></div><div class="swatch-info"><div class="swatch-name">700 Elevated</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--screen-600)"></div><div class="swatch-info"><div class="swatch-name">600 Border</div></div></div>
+            </div>
+          </div>
+          <div class="palette-group">
+            <div class="palette-group-label">Phosphor — Primary / Agent Activity</div>
+            <div class="palette-row">
+              <div class="swatch"><div class="swatch-color" style="background:var(--phosphor-900)"></div><div class="swatch-info"><div class="swatch-name">900</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--phosphor-700)"></div><div class="swatch-info"><div class="swatch-name">700</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--phosphor-500)"></div><div class="swatch-info"><div class="swatch-name">500 Brand</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--phosphor-400)"></div><div class="swatch-info"><div class="swatch-name">400</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--phosphor-300)"></div><div class="swatch-info"><div class="swatch-name">300</div></div></div>
+            </div>
+          </div>
+          <div class="palette-group">
+            <div class="palette-group-label">Amber / Alert / Cryo</div>
+            <div class="palette-row">
+              <div class="swatch"><div class="swatch-color" style="background:var(--amber-800)"></div><div class="swatch-info"><div class="swatch-name">Amber 800</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--amber-500)"></div><div class="swatch-info"><div class="swatch-name">Amber 500</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--alert-800)"></div><div class="swatch-info"><div class="swatch-name">Alert 800</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--alert-500)"></div><div class="swatch-info"><div class="swatch-name">Alert 500</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--cryo-800)"></div><div class="swatch-info"><div class="swatch-name">Cryo 800</div></div></div>
+              <div class="swatch"><div class="swatch-color" style="background:var(--cryo-500)"></div><div class="swatch-info"><div class="swatch-name">Cryo 500</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TYPOGRAPHY -->
+        <div class="section">
+          <div class="section-label">02 — Typographics</div>
+          <div class="section-title">Typography</div>
+          <div class="type-specimen"><div class="type-meta">Display — Share Tech Mono</div><div class="type-display">System Nominal<span class="cursor"></span></div></div>
+          <div class="type-specimen"><div class="type-meta">Primary — IBM Plex Mono</div><div class="type-mono">Agent-07 processing 12,847 tokens at 142 tok/s</div></div>
+          <div class="type-specimen"><div class="type-meta">Body — IBM Plex Sans</div><div class="type-body">The interface provides real-time monitoring of autonomous LLM agents. Human operators maintain override authority at all times through the command interface.</div></div>
+        </div>
+
+        <!-- PANELS -->
+        <div class="section">
+          <div class="section-label">03 — Containment</div>
+          <div class="section-title">Panels</div>
+          <div class="demo-row">
+            <div class="panel"><div class="panel-header"><span class="panel-title">Standard Panel</span><div class="panel-controls"><div class="panel-control"></div><div class="panel-control"></div></div></div><div class="panel-body"><div style="color:var(--text-muted);font-size:12px">Default container. Screen-900 background.</div></div></div>
+            <div class="panel panel--active"><div class="panel-header"><span class="panel-title">Active Panel</span><div class="panel-controls"><div class="panel-control" style="background:var(--phosphor-600)"></div><div class="panel-control"></div></div></div><div class="panel-body"><div style="color:var(--text-muted);font-size:12px">Phosphor border glow. Selected state.</div></div></div>
+          </div>
+          <div class="demo-row">
+            <div class="panel panel--warning"><div class="panel-header"><span class="panel-title" style="color:var(--amber-400)">▲ Warning</span></div><div class="panel-body"><div style="color:var(--text-muted);font-size:12px">Amber glow — attention required.</div></div></div>
+            <div class="panel panel--alert"><div class="panel-header"><span class="panel-title" style="color:var(--alert-400)">▲ Critical</span></div><div class="panel-body"><div style="color:var(--text-muted);font-size:12px">Alert glow — critical condition.</div></div></div>
+          </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="section">
+          <div class="section-label">04 — Controls</div>
+          <div class="section-title">Buttons</div>
+          <div class="mb-16"><div class="btn-group"><button class="btn btn-primary">Execute</button><button class="btn btn-secondary">Navigate</button><button class="btn btn-danger">Terminate</button><button class="btn btn-ghost">Cancel</button></div></div>
+          <div class="mb-16"><div class="btn-group"><button class="btn btn-sm btn-primary">Execute</button><button class="btn btn-sm btn-secondary">Navigate</button><button class="btn btn-sm btn-danger">Abort</button><button class="btn btn-sm btn-ghost">Cancel</button></div></div>
+          <div><div class="btn-group"><button class="btn btn-lg btn-primary">Confirm Override</button><button class="btn btn-lg btn-danger">Emergency Stop</button></div></div>
+        </div>
+
+        <!-- AGENTS -->
+        <div class="section">
+          <div class="section-label">05 — Operations</div>
+          <div class="section-title">Agent Status Cards</div>
+          <div class="demo-row" style="margin-bottom:16px">
+            <div class="agent-card"><div class="agent-card-inner"><div class="agent-card-accent" style="background:var(--phosphor-500);animation:pulse-phosphor 2s ease-in-out infinite"></div><div class="agent-card-body">
+              <div class="agent-header"><div><div class="agent-name">Agent-07 "Burke"</div><div class="agent-model">claude-sonnet-4</div></div><div class="agent-status-badge badge-thinking">Thinking</div></div>
+              <div class="agent-task"><div class="agent-task-label">Current Task</div>Reviewing PR #442 — security audit</div>
+              <div class="tool-call"><div class="tool-call-cmd">&gt; github.review_files(pr=442, focus="auth")</div><div class="tool-call-result">↳ 3 files analysed, 1 issue found</div></div>
+              <div class="agent-metrics"><span>Tokens: <strong>12.4k</strong>/128k</span><span>Elapsed: <strong>00:02:34</strong></span><span>Cost: <strong>$0.18</strong></span></div>
+              <div style="margin-bottom:12px"><div class="progress-track"><div class="progress-fill progress-fill--phosphor" style="width:65%"></div></div></div>
+              <div class="agent-actions"><button class="btn btn-sm btn-secondary">Pause</button><button class="btn btn-sm btn-danger">Interrupt</button><button class="btn btn-sm btn-ghost">View Log</button></div>
+            </div></div></div>
+            <div class="agent-card"><div class="agent-card-inner"><div class="agent-card-accent" style="background:var(--amber-500)"></div><div class="agent-card-body">
+              <div class="agent-header"><div><div class="agent-name">Agent-03 "Ripley"</div><div class="agent-model">claude-opus-4</div></div><div class="agent-status-badge badge-awaiting">Awaiting</div></div>
+              <div class="agent-task"><div class="agent-task-label">Current Task</div>Database migration — needs approval</div>
+              <div class="tool-call"><div class="tool-call-cmd" style="color:var(--amber-400)">&gt; Awaiting human confirmation</div><div class="tool-call-result">Migration will affect 3 production tables</div></div>
+              <div class="agent-actions"><button class="btn btn-sm btn-primary">Approve</button><button class="btn btn-sm btn-secondary">Review</button><button class="btn btn-sm btn-danger">Reject</button></div>
+            </div></div></div>
+          </div>
+          <div class="demo-row">
+            <div class="agent-card"><div class="agent-card-inner"><div class="agent-card-accent" style="background:var(--alert-500);animation:flash-alert 1.2s ease-in-out infinite"></div><div class="agent-card-body">
+              <div class="agent-header"><div><div class="agent-name">Agent-04 "Ash"</div><div class="agent-model">claude-sonnet-4</div></div><div class="agent-status-badge badge-error">Error</div></div>
+              <div class="agent-task"><div class="agent-task-label">Failed Task</div>API integration — auth token expired</div>
+              <div class="agent-actions"><button class="btn btn-sm btn-primary">Retry</button><button class="btn btn-sm btn-danger">Terminate</button></div>
+            </div></div></div>
+            <div class="agent-card"><div class="agent-card-inner"><div class="agent-card-accent" style="background:var(--text-dim)"></div><div class="agent-card-body">
+              <div class="agent-header"><div><div class="agent-name">Agent-01 "Dallas"</div><div class="agent-model">claude-haiku-4.5</div></div><div class="agent-status-badge badge-idle">Idle</div></div>
+              <div class="agent-task"><div class="agent-task-label">Last Task</div><span style="color:var(--text-dim)">Email triage — 14 min ago</span></div>
+              <div class="agent-actions"><button class="btn btn-sm btn-primary">Assign Task</button><button class="btn btn-sm btn-ghost">History</button></div>
+            </div></div></div>
+          </div>
+        </div>
+
+        <!-- READOUTS -->
+        <div class="section">
+          <div class="section-label">06 — Instrumentation</div>
+          <div class="section-title">Data Readouts</div>
+          <div class="grid-4" style="margin-bottom:24px">
+            <div class="readout"><div class="readout-label">Active Agents</div><div class="readout-value readout-value--phosphor">3</div><div class="readout-context">of 8 deployed</div></div>
+            <div class="readout"><div class="readout-label">Throughput</div><div class="readout-value readout-value--cryo">847</div><div class="readout-context">tok/s aggregate</div></div>
+            <div class="readout"><div class="readout-label">Pending</div><div class="readout-value readout-value--amber">2</div><div class="readout-context">awaiting approval</div></div>
+            <div class="readout"><div class="readout-label">Errors (24h)</div><div class="readout-value readout-value--alert">1</div><div class="readout-context">auth failure</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;max-width:500px">
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.08em">Context Window</span><span style="color:var(--text-secondary);font-size:11px;font-variant-numeric:tabular-nums">82,400 / 128,000</span></div><div class="progress-track"><div class="progress-fill progress-fill--phosphor" style="width:64%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.08em">Budget</span><span style="color:var(--text-secondary);font-size:11px;font-variant-numeric:tabular-nums">$2.40 / $10.00</span></div><div class="progress-track"><div class="progress-fill progress-fill--amber" style="width:24%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.08em">Rate Limit</span><span style="color:var(--text-secondary);font-size:11px;font-variant-numeric:tabular-nums">58 / 60 req/min</span></div><div class="progress-track"><div class="progress-fill progress-fill--alert" style="width:97%"></div></div></div>
+          </div>
+        </div>
+
+        <!-- LOG -->
+        <div class="section">
+          <div class="section-label">07 — Telemetry</div>
+          <div class="section-title">Log Viewer</div>
+          <div class="panel"><div class="panel-header"><span class="panel-title">Agent-07 Log</span><div class="flex gap-8"><button class="btn btn-sm btn-ghost" style="height:22px;padding:0 6px;font-size:9px">Filter ▾</button><button class="btn btn-sm btn-ghost" style="height:22px;padding:0 6px;font-size:9px">Export</button></div></div>
+            <div class="log-viewer">
+              <div class="log-line"><span class="log-time">00:02:28.102</span><span class="log-tag log-tag--user">[USER]</span><span class="log-msg">Review PR #442 for security issues</span></div>
+              <div class="log-line"><span class="log-time">00:02:28.445</span><span class="log-tag log-tag--think">[THINK]</span><span class="log-msg">Planning review strategy...</span></div>
+              <div class="log-line"><span class="log-time">00:02:29.201</span><span class="log-tag log-tag--tool">[TOOL]</span><span class="log-msg">github.list_files(pr=442)</span></div>
+              <div class="log-line"><span class="log-time">00:02:29.892</span><span class="log-tag log-tag--recv">[RECV]</span><span class="log-msg">12 files changed (+342, -89)</span></div>
+              <div class="log-line"><span class="log-time">00:02:30.103</span><span class="log-tag log-tag--think">[THINK]</span><span class="log-msg">3 files touch auth module. Focusing there.</span></div>
+              <div class="log-line"><span class="log-time">00:02:30.445</span><span class="log-tag log-tag--tool">[TOOL]</span><span class="log-msg">github.get_file(path="app/models/auth_token.rb")</span></div>
+              <div class="log-line"><span class="log-time">00:02:31.001</span><span class="log-tag log-tag--recv">[RECV]</span><span class="log-msg">284 lines retrieved</span></div>
+              <div class="log-line"><span class="log-time">00:02:31.445</span><span class="log-tag log-tag--think">[THINK]</span><span class="log-msg">Scanning for injection vulnerabilities...</span></div>
+              <div class="log-line"><span class="log-time">00:02:32.201</span><span class="log-tag log-tag--warn">[WARN]</span><span class="log-msg">Potential SQL injection at auth_token.rb:142</span></div>
+              <div class="log-line"><span class="log-time">00:02:34.103</span><span class="log-tag log-tag--think">[THINK]</span><span class="log-msg">Checking final file...<span class="cursor cursor--sm" style="margin-left:4px"></span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INPUTS -->
+        <div class="section">
+          <div class="section-label">08 — Interface</div>
+          <div class="section-title">Input Fields</div>
+          <div class="grid-2 mb-24">
+            <div><div style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Default</div><input class="input-field" placeholder="Enter agent name..."></div>
+            <div><div style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Error</div><input class="input-field input-field--error" value="invalid-token-format"></div>
+          </div>
+          <div style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Command Input</div>
+          <div class="command-wrapper" style="max-width:600px"><span class="command-prefix">&gt;</span><input class="command-input" placeholder="Enter command or instruction for agent..."></div>
+        </div>
+
+        <!-- ALERTS -->
+        <div class="section">
+          <div class="section-label">09 — Alerts</div>
+          <div class="section-title">Alert Banners</div>
+          <div class="alert-banner alert-banner--critical"><span class="alert-icon">▲</span><span><strong>BREACH</strong> — Agent-04 exceeded rate limit. Throttled 60s.</span></div>
+          <div class="alert-banner alert-banner--warning"><span class="alert-icon">▲</span><span><strong>CONTACT</strong> — Agent-03 requires human approval.</span></div>
+          <div class="alert-banner alert-banner--info"><span class="alert-icon">●</span><span><strong>SIGNAL</strong> — New model version available.</span></div>
+          <div class="alert-banner alert-banner--success"><span class="alert-icon">✓</span><span><strong>CLEAR</strong> — Security review complete. No critical issues.</span></div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="section">
+          <div class="section-label">10 — Diagnostics</div>
+          <div class="section-title">Status Elements</div>
+          <div class="mb-24">
+            <div class="status-bar">
+              <div class="status-item"><div class="status-dot status-dot--green"></div> Nominal</div>
+              <div class="status-item"><div class="status-dot status-dot--green"></div> 8 Agents</div>
+              <div class="status-item"><div class="status-dot status-dot--blue"></div> 3 Active</div>
+              <div class="status-item"><div class="status-dot status-dot--amber"></div> 1 Awaiting</div>
+              <div class="status-item"><div class="status-dot status-dot--red"></div> 1 Error</div>
+              <div class="status-item" style="margin-left:auto;color:var(--text-dim)">2026-03-19 14:32 UTC</div>
+            </div>
+          </div>
+          <div class="mb-24">
+            <div style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">System Matrix</div>
+            <div class="flex gap-24 items-start flex-wrap">
+              <div class="status-matrix">
+                <div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--degraded"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div>
+                <div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--critical"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--nominal"></div><div class="matrix-cell matrix-cell--offline"></div><div class="matrix-cell matrix-cell--nominal"></div>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:2">
+                <div class="flex gap-8 items-center"><div style="width:10px;height:10px;border-radius:1px;background:var(--phosphor-700)"></div> Nominal</div>
+                <div class="flex gap-8 items-center"><div style="width:10px;height:10px;border-radius:1px;background:var(--amber-700)"></div> Degraded</div>
+                <div class="flex gap-8 items-center"><div style="width:10px;height:10px;border-radius:1px;background:var(--alert-700)"></div> Critical</div>
+                <div class="flex gap-8 items-center"><div style="width:10px;height:10px;border-radius:1px;background:var(--screen-600)"></div> Offline</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">Navigation Rail</div>
+            <div class="flex gap-24 items-start">
+              <div class="nav-rail">
+                <div class="nav-item nav-item--active"><span class="nav-icon">◎</span><span class="nav-label">Agents</span></div>
+                <div class="nav-item"><span class="nav-icon">■</span><span class="nav-label">Tasks</span></div>
+                <div class="nav-item"><span class="nav-icon">⚙</span><span class="nav-label">System</span></div>
+                <div class="nav-item"><span class="nav-icon">☷</span><span class="nav-label">Logs</span></div>
+              </div>
+              <div style="color:var(--text-muted);font-size:12px;padding-top:8px;max-width:400px;line-height:1.8">64px fixed rail with phosphor accent on active. Collapses to bottom tab bar on mobile.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="border-top:1px solid var(--screen-600);padding-top:24px;margin-top:48px;text-align:center">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em">HubSystem Design System — Codename: MOTHER — v1.0</div>
+          <div style="font-size:10px;color:var(--screen-600);margin-top:8px">Classification: Crew Eyes Only</div>
+          <div style="margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--phosphor-700)">END OF TRANSMISSION<span class="cursor"></span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="crt-bottom">
+    <div class="crt-bottom-inner">
+      <div class="crt-controls">
+        <div class="crt-knob crt-knob--power"></div>
+        <div class="crt-knob"></div>
+        <div class="crt-knob"></div>
+        <span class="crt-label">Brightness · Contrast · V-Hold</span>
+      </div>
+      <div class="crt-nameplate"><span class="crt-nameplate-text">MU/TH/UR 6000</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

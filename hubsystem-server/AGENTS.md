@@ -22,6 +22,9 @@ See `docs/DEVELOPMENT-PROCESS.md`
 - **Monitoring:** RailsPulse
 - **API Docs:** rspec-openapi (auto-generated)
 
+## User Interface 
+
+The design system is called [mother](../docs/hubsystem-design-system-reference.html) implemented in `app/assets/mother.css`.  It is designed to look like the computers from the 1980s Aliens films.  
 
 ## Phlex Components
 
