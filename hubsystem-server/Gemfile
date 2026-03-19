@@ -38,7 +38,6 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 group :development, :test do
-  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
   gem "bundler-audit", require: false
   gem "brakeman", require: false
   gem "rspec-rails"
@@ -46,12 +45,12 @@ group :development, :test do
   gem "turnip"
   gem "playwright-ruby-client"
   gem "rspec-openapi"
-  gem "standard", require: false
-  gem "yaml-sort", require: false
+  gem "puma" # for javascript capybara tests
 end
 
 group :development do
-  gem "web-console"
+  gem "standard", require: false
+  gem "yaml-sort", require: false
 end
 
 gem "omniauth"
