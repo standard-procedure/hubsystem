@@ -174,13 +174,13 @@
 
 @layer base {
   html {
-    background: hsl(38, 10%, 22%);
+    background: var(--color-case-800);
   }
 
   body {
     font-family: var(--font-mono);
     color: var(--color-text-primary);
-    background: var(--color-case-200);
+    background: var(--color-case-800);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -191,6 +191,12 @@
   textarea,
   select {
     font-family: var(--font-mono);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: var(--color-case-950);
   }
 }
 
@@ -281,15 +287,71 @@
   }
 
   /* ---- CRT Housing ---- */
-  .crt-housing { width: 100%; max-width: 1240px; }
+  .crt-housing {
+    width: 100%;
+    max-width: 1240px;
+
+    /* Case chrome custom properties — light mode defaults */
+    --case-top-bg: linear-gradient(180deg, hsl(38, 30%, 86%) 0%, hsl(38, 28%, 82%) 40%, hsl(38, 22%, 76%) 100%);
+    --case-bottom-bg: linear-gradient(180deg, hsl(38, 22%, 76%) 0%, hsl(38, 28%, 80%) 30%, hsl(38, 30%, 84%) 100%);
+    --case-border: hsl(38, 15%, 68%);
+    --case-top-highlight: hsla(38, 40%, 95%, 0.6);
+    --case-top-shadow: hsla(38, 10%, 50%, 0.3);
+    --case-text: hsl(38, 10%, 45%);
+    --case-text-light: hsl(38, 10%, 52%);
+    --case-text-dark: hsl(38, 8%, 38%);
+    --case-badge-bg: linear-gradient(180deg, hsl(38, 25%, 78%), hsl(38, 20%, 72%));
+    --case-badge-border: hsl(38, 12%, 62%);
+    --case-badge-highlight: hsla(38, 40%, 92%, 0.5);
+    --case-vent: hsl(38, 10%, 62%);
+    --case-vent-shadow: hsla(38, 10%, 40%, 0.4);
+    --case-bezel-bg: hsl(38, 8%, 28%);
+    --case-knob-bg: linear-gradient(145deg, hsl(38, 15%, 72%), hsl(38, 10%, 58%));
+    --case-knob-border: hsl(38, 10%, 48%);
+    --case-knob-highlight: hsla(38, 30%, 85%, 0.5);
+    --case-knob-mark: hsl(38, 8%, 42%);
+    --case-label-color: hsl(38, 8%, 50%);
+    --case-nameplate-bg: linear-gradient(180deg, hsl(42, 35%, 90%), hsl(42, 30%, 85%));
+    --case-nameplate-border: hsl(38, 15%, 70%);
+    --case-nameplate-highlight: hsla(42, 40%, 96%, 0.6);
+    --case-nameplate-text: hsl(38, 15%, 35%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .crt-housing {
+      --case-top-bg: linear-gradient(180deg, hsl(38, 12%, 22%) 0%, hsl(38, 10%, 18%) 40%, hsl(38, 8%, 14%) 100%);
+      --case-bottom-bg: linear-gradient(180deg, hsl(38, 8%, 14%) 0%, hsl(38, 10%, 16%) 30%, hsl(38, 12%, 20%) 100%);
+      --case-border: hsl(38, 8%, 28%);
+      --case-top-highlight: hsla(38, 15%, 30%, 0.4);
+      --case-top-shadow: hsla(38, 5%, 10%, 0.5);
+      --case-text: hsl(38, 8%, 50%);
+      --case-text-light: hsl(38, 8%, 45%);
+      --case-text-dark: hsl(38, 6%, 42%);
+      --case-badge-bg: linear-gradient(180deg, hsl(38, 10%, 20%), hsl(38, 8%, 16%));
+      --case-badge-border: hsl(38, 6%, 26%);
+      --case-badge-highlight: hsla(38, 12%, 28%, 0.4);
+      --case-vent: hsl(38, 6%, 24%);
+      --case-vent-shadow: hsla(38, 5%, 10%, 0.5);
+      --case-bezel-bg: hsl(38, 5%, 10%);
+      --case-knob-bg: linear-gradient(145deg, hsl(38, 8%, 24%), hsl(38, 6%, 16%));
+      --case-knob-border: hsl(38, 5%, 12%);
+      --case-knob-highlight: hsla(38, 10%, 28%, 0.4);
+      --case-knob-mark: hsl(38, 5%, 20%);
+      --case-label-color: hsl(38, 6%, 38%);
+      --case-nameplate-bg: linear-gradient(180deg, hsl(42, 8%, 18%), hsl(42, 6%, 14%));
+      --case-nameplate-border: hsl(38, 6%, 24%);
+      --case-nameplate-highlight: hsla(42, 10%, 24%, 0.4);
+      --case-nameplate-text: hsl(38, 8%, 48%);
+    }
+  }
 
   .crt-top {
-    background: linear-gradient(180deg, hsl(38, 30%, 86%) 0%, hsl(38, 28%, 82%) 40%, hsl(38, 22%, 76%) 100%);
+    background: var(--case-top-bg);
     border-radius: 18px 18px 0 0;
     padding: 20px 28px 14px;
-    border: 1px solid hsl(38, 15%, 68%);
+    border: 1px solid var(--case-border);
     border-bottom: none;
-    box-shadow: inset 0 2px 0 hsla(38, 40%, 95%, 0.6), inset 0 -1px 0 hsla(38, 10%, 50%, 0.3);
+    box-shadow: inset 0 2px 0 var(--case-top-highlight), inset 0 -1px 0 var(--case-top-shadow);
   }
 
   .crt-top-inner {
@@ -303,7 +365,7 @@
   .crt-brand {
     font-family: var(--font-display);
     font-size: 11px;
-    color: hsl(38, 10%, 45%);
+    color: var(--case-text);
     letter-spacing: 0.25em;
     text-transform: uppercase;
   }
@@ -311,7 +373,7 @@
   .crt-model {
     font-family: var(--font-sans);
     font-size: 9px;
-    color: hsl(38, 10%, 52%);
+    color: var(--case-text-light);
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
@@ -320,11 +382,11 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(180deg, hsl(38, 25%, 78%), hsl(38, 20%, 72%));
-    border: 1px solid hsl(38, 12%, 62%);
+    background: var(--case-badge-bg);
+    border: 1px solid var(--case-badge-border);
     border-radius: 3px;
     padding: 3px 10px;
-    box-shadow: inset 0 1px 0 hsla(38, 40%, 92%, 0.5), 0 1px 2px hsla(38, 10%, 30%, 0.2);
+    box-shadow: inset 0 1px 0 var(--case-badge-highlight), 0 1px 2px hsla(38, 10%, 30%, 0.2);
   }
 
   .crt-badge-led {
@@ -339,7 +401,7 @@
   .crt-badge-text {
     font-family: var(--font-display);
     font-size: 9px;
-    color: hsl(38, 8%, 38%);
+    color: var(--case-text-dark);
     letter-spacing: 0.15em;
     text-transform: uppercase;
   }
@@ -354,16 +416,16 @@
   .crt-vent {
     width: 32px;
     height: 2px;
-    background: hsl(38, 10%, 62%);
+    background: var(--case-vent);
     border-radius: 1px;
-    box-shadow: inset 0 1px 0 hsla(38, 10%, 40%, 0.4);
+    box-shadow: inset 0 1px 0 var(--case-vent-shadow);
   }
 
   .crt-bezel {
-    background: hsl(38, 8%, 28%);
+    background: var(--case-bezel-bg);
     padding: 12px;
-    border-left: 1px solid hsl(38, 15%, 68%);
-    border-right: 1px solid hsl(38, 15%, 68%);
+    border-left: 1px solid var(--case-border);
+    border-right: 1px solid var(--case-border);
     box-shadow: inset 0 0 20px hsla(0, 0%, 0%, 0.5), inset 0 2px 4px hsla(0, 0%, 0%, 0.3);
   }
 
@@ -407,12 +469,12 @@
   }
 
   .crt-bottom {
-    background: linear-gradient(180deg, hsl(38, 22%, 76%) 0%, hsl(38, 28%, 80%) 30%, hsl(38, 30%, 84%) 100%);
+    background: var(--case-bottom-bg);
     border-radius: 0 0 18px 18px;
     padding: 16px 28px 20px;
-    border: 1px solid hsl(38, 15%, 68%);
+    border: 1px solid var(--case-border);
     border-top: none;
-    box-shadow: inset 0 1px 0 hsla(38, 10%, 50%, 0.3), 0 4px 16px hsla(0, 0%, 0%, 0.3), 0 2px 4px hsla(0, 0%, 0%, 0.15);
+    box-shadow: inset 0 1px 0 var(--case-top-shadow), 0 4px 16px hsla(0, 0%, 0%, 0.3), 0 2px 4px hsla(0, 0%, 0%, 0.15);
   }
 
   .crt-bottom-inner {
@@ -433,11 +495,11 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: linear-gradient(145deg, hsl(38, 15%, 72%), hsl(38, 10%, 58%));
-    border: 1px solid hsl(38, 10%, 48%);
+    background: var(--case-knob-bg);
+    border: 1px solid var(--case-knob-border);
     cursor: pointer;
     position: relative;
-    box-shadow: inset 0 1px 2px hsla(38, 30%, 85%, 0.5), 0 1px 3px hsla(0, 0%, 0%, 0.2);
+    box-shadow: inset 0 1px 2px var(--case-knob-highlight), 0 1px 3px hsla(0, 0%, 0%, 0.2);
   }
 
   .crt-knob::after {
@@ -448,7 +510,7 @@
     transform: translateX(-50%);
     width: 1px;
     height: 6px;
-    background: hsl(38, 8%, 42%);
+    background: var(--case-knob-mark);
     border-radius: 1px;
   }
 
@@ -467,23 +529,23 @@
   .crt-label {
     font-family: var(--font-sans);
     font-size: 8px;
-    color: hsl(38, 8%, 50%);
+    color: var(--case-label-color);
     text-transform: uppercase;
     letter-spacing: 0.12em;
   }
 
   .crt-nameplate {
-    background: linear-gradient(180deg, hsl(42, 35%, 90%), hsl(42, 30%, 85%));
-    border: 1px solid hsl(38, 15%, 70%);
+    background: var(--case-nameplate-bg);
+    border: 1px solid var(--case-nameplate-border);
     border-radius: 2px;
     padding: 3px 14px;
-    box-shadow: inset 0 1px 0 hsla(42, 40%, 96%, 0.6);
+    box-shadow: inset 0 1px 0 var(--case-nameplate-highlight);
   }
 
   .crt-nameplate-text {
     font-family: var(--font-display);
     font-size: 10px;
-    color: hsl(38, 15%, 35%);
+    color: var(--case-nameplate-text);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
