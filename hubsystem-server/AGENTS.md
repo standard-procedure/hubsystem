@@ -36,4 +36,4 @@ See `../docs/ARCHITECTURE.md` for full design.
 
 ---
 
-**For complete development standards**, see the full AGENTS.md at the template root.
+**For complete development standards**, see the full AGENTS.md at the application root.
