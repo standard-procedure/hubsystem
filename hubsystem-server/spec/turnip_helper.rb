@@ -2,7 +2,7 @@ require "rails_helper"
 
 OmniAuth.config.test_mode = true
 
-test_interface = ActiveSupport::StringInquirer.new(ENV.fetch("TEST_INTERFACE", "api"))
+test_interface = ActiveSupport::StringInquirer.new(ENV.fetch("TEST_INTERFACE", "web"))
 
 if test_interface.web?
   require "turnip/capybara"
@@ -25,25 +25,27 @@ elsif test_interface.api?
 end
 
 RSpec.configure do |config|
-  Dir["spec/*_steps.rb"].each do |step_file|
-    require_relative step_file
-    module_name = step_file.gsub("spec/", "").gsub(".rb", "").camelize
-    config.include module_name.constantize
-  end
-
-  if test_interface.web?
-    config.include ActionView::RecordIdentifier
-    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
-
-    Dir["spec/web/*_steps.rb"].each do |step_file|
-      require_relative step_file
+  config.before :all do
+    Dir["spec/features/steps/*_steps.rb"].each do |step_file|
+      require File.expand_path(step_file)
+      module_name = step_file.gsub("spec/features/steps/", "").gsub(".rb", "").camelize
+      config.include module_name.constantize
     end
 
-  elsif test_interface.api?
-    config.include ApiClient
+    if test_interface.web?
+      config.include ActionView::RecordIdentifier
+      Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
 
-    Dir["spec/api/*_steps.rb"].each do |step_file|
-      require_relative step_file
+      Dir["spec/features/steps/web/*_steps.rb"].each do |step_file|
+        require File.expand_path(step_file)
+      end
+
+    elsif test_interface.api?
+      config.include ApiClient
+
+      Dir["spec/features/steps/api/*_steps.rb"].each do |step_file|
+        require File.expand_path(step_file)
+      end
     end
   end
 

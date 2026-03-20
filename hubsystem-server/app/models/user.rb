@@ -26,6 +26,4 @@ class User < ApplicationRecord
   private def photo_is_an_image
     errors.add :photo, :invalid unless photo.blob.image?
   end
-
-  def authenticate(omniauth) = User::Identity.authenticate(omniauth).user
 end

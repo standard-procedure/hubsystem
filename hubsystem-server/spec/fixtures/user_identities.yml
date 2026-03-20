@@ -1,12 +1,12 @@
 _fixture:
   model_class: User::Identity
 
-alice_google:
+alice_developer:
   user: alice
-  provider: google
+  provider: developer
   uid: alice-google-123
 
-bob_apple:
+bob_developer:
   user: bob
-  provider: apple
+  provider: developer
   uid: bob-apple-456

@@ -17,7 +17,7 @@ RSpec.describe User::Human, type: :model do
   describe "associations" do
     it "has many identities" do
       alice = users(:alice)
-      expect(alice.identities).to include(user_identities(:alice_google))
+      expect(alice.identities).to include(user_identities(:alice_developer))
     end
 
     it "destroys dependent identities" do

@@ -2,30 +2,17 @@
 
 class Views::Sessions::New < Views::Base
   include Phlex::Rails::Helpers::FormWith
+  include Phlex::Rails::Helpers::Flash
 
   def view_template
     render Views::Layouts::Application.new(title: "HubSystem") do
       render_flash
       render Components::Panel.new(title: "Authentication Required", variant: :active) do
-        form_with url: "/session", class: "space-y-4" do |f|
-          div style: "margin-bottom: 16px;" do
-            render Components::InputField.new(
-              name: "email_address",
-              type: "email",
-              label: "Operator ID",
-              placeholder: "operator@weyland-yutani.com"
-            )
-          end
-          div style: "margin-bottom: 16px;" do
-            render Components::InputField.new(
-              name: "password",
-              type: "password",
-              label: "Access Code",
-              placeholder: "Enter access code..."
-            )
-          end
-          div do
-            render Components::Button.new(label: "Authenticate", variant: :primary, size: :lg)
+        Column do
+          if Rails.env.local?
+            Row justify: "end" do
+              render Components::Button.new(label: "Developer login", href: login_path("developer"), tag: :a, variant: :primary, size: :lg)
+            end
           end
         end
       end
@@ -35,7 +22,6 @@ class Views::Sessions::New < Views::Base
   private
 
   def render_flash
-    flash = helpers.flash
     if flash[:alert].present?
       render Components::AlertBanner.new(variant: :critical) do
         plain flash[:alert]
