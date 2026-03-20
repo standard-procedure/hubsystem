@@ -6,7 +6,7 @@ Quick reference for building UI components with [Phlex](https://www.phlex.fun) i
 
 ### Components
 
-Every component inherits from `Phlex::HTML` and implements `view_template`:
+Every component inherits from `Phlex::HTML` and implements `view_template` - there is a [base class](app/components/base.rb) defined:
 
 ```ruby
 class Components::Card < Phlex::HTML
@@ -162,7 +162,7 @@ end
 `vanish(&)` yields a block but discards its HTML output. Useful for declarative APIs:
 
 ```ruby
-class Table < Phlex::HTML
+class Table < Components::Base
   def initialize(rows)
     @rows = rows
     @columns = []
@@ -189,7 +189,7 @@ end
 
 ## Kits
 
-A Kit is a module that lets you render components with a method-call syntax instead of `render ComponentClass.new(...)`.
+A Kit is a module that lets you render components with a method-call syntax instead of `render ComponentClass.new(...)`.  This is configured in the [initialiser](config/initializers/phlex.rb).  This also includes several Phlex::Rails helpers.  
 
 ```ruby
 module Components
@@ -205,9 +205,7 @@ Kits do **not** work from ERB templates.
 
 ## Layouts
 
-Three approaches, from simplest to most flexible:
-
-### 1. Composition (recommended for HubSystem)
+Layouts are handled using composition, with a pre-defined [default layout](app/views/layouts/application.rb)
 
 ```ruby
 class Views::Articles::Index < Views::Base
@@ -219,48 +217,16 @@ class Views::Articles::Index < Views::Base
 end
 ```
 
-Set `layout false` in the controller.
-
-### 2. Inheritance via `around_template`
-
-```ruby
-class Views::Base < Phlex::HTML
-  def around_template
-    doctype
-    html do
-      head { title { page_title } }
-      body { super }
-    end
-  end
-
-  def page_title = "HubSystem"
-end
-```
-
-Subclasses override `view_template` and optionally `page_title`.
-
-### 3. Legacy Rails layout integration
-
-```ruby
-class Components::Layout < Components::Base
-  include Phlex::Rails::Layout
-end
-
-# In controller:
-layout { Components::Layout }
-```
+`layout false` is set in the [base controller](app/controllers/application_controller.rb).
 
 ## Rails Helpers
 
 **Never** `include` Rails helper modules directly — they can override core Phlex methods.
 
-### Route helpers (most common)
+### Base Component
 
-```ruby
-class Components::Base < Phlex::HTML
-  include Phlex::Rails::Helpers::Routes
-end
-```
+Route Helpers and `dom_id` are automatically included in the [base class](app/components/base.rb), as are several common Rails helper modules.  
+
 
 ### Custom helpers
 
@@ -275,21 +241,21 @@ Prefer converting helpers into Phlex components or plain methods on your base co
 
 ## Literal Properties (Type-Safe Props)
 
-Reduces initializer boilerplate with typed, defaulted properties:
+Reduces initialiser boilerplate with typed, defaulted properties.  Creates instance variables for each property, checks the type on initialisation and catches typos when accessing instance variables (`@nmae` will raise an error if the prop was called `@name`).
+
+The module is included in the [base class](app/components/base.rb), with a rich set of [in-built types](https://literal.fun/docs/built-in-types.html), plus extensions also included in the [Types module](app/components/types.rb).
 
 ```ruby
-class Components::Base < Phlex::HTML
-  extend Literal::Properties
-end
-
 class Components::Button < Components::Base
-  Size = _Union(:sm, :md, :lg)
-  Variant = _Union(:primary, :secondary, :danger, :ghost)
+  # Enum is an extended type
+  Size = Enum(:sm, :md, :lg)
+  Variant = Enum(:primary, :secondary, :danger, :ghost)
 
   prop :label, String
   prop :size, Size, default: :md
   prop :variant, Variant, default: :primary
   prop :disabled, _Boolean, default: false
+  prop :description, _String? # nilable
 
   def view_template
     button(class: "btn btn-#{@variant} btn-#{@size}", disabled: @disabled) { @label }

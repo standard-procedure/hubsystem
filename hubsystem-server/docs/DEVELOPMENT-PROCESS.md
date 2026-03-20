@@ -65,16 +65,31 @@ end
 Every feature **must** have a common steps module, even if it is empty.
 If a step is not relevant to the API (for example, navigation) then an empty step is used.
 
-### Development Workflow
+## Development Workflow
+
+Some steps will be performed by humans, others by coding agents, others by collaboration between the two.
+
+1. Understand the requirement and the user journeys (happy path, blank slate, alternative options, error handling)
+2. Write or amend the feature specifications with scenarios for each user journey
+3. Plan the implementation, starting with the user/client's perspective and working inwards
+4. Implement the code: for each step, write a failing test, make it pass, lint and refactor
+5. Run the full test suite and fix any regressions
+6. Commit the changes
+7. Perform a code review and fix issues:
+  * Do the specifications and tests actually meet the original request?
+  * Are there security/authorisation/data-leak risks?
+  * Is there duplication which can be consolidated?
+  * Is there scope for simplification or code removal?
+8. Commit and push
 
 ```bash
 # 1. Write feature spec (both web + API scenarios)
 # spec/features/my_feature.feature
 
 # 2. Write step definitions
-# spec/features/steps/my_steps.rb # if required
-# spec/features/steps/web/my_steps.rb
-# spec/features/steps/api/my_steps.rb
+# spec/features/steps/my_steps.rb # shared steps - always required to load the module into the test suite
+# spec/features/steps/web/my_steps.rb # web specific steps extending the feature module
+# spec/features/steps/api/my_steps.rb # API specific steps extending the feature module
 
 # 3. Run specs (RED)
 bundle exec rspec spec/features/my_feature.feature
