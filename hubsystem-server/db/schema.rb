@@ -201,10 +201,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_211702) do
     t.datetime "created_at", null: false
     t.json "data"
     t.string "name", null: false
+    t.integer "status", default: 0, null: false
+    t.boolean "system_administrator", default: false, null: false
     t.string "type", null: false
     t.string "uid", null: false
     t.datetime "updated_at", null: false
-    t.index ["uid"], name: "index_users_on_uid", unique: true
+    t.index ["status", "uid"], name: "index_users_on_status_and_uid", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

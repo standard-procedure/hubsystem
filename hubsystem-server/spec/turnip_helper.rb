@@ -1,6 +1,8 @@
 require "rails_helper"
 
-test_interface = ActiveSupport::StringInquirer.new(ENV.fetch("TEST_INTERFACE", "web"))
+OmniAuth.config.test_mode = true
+
+test_interface = ActiveSupport::StringInquirer.new(ENV.fetch("TEST_INTERFACE", "api"))
 
 if test_interface.web?
   require "turnip/capybara"
@@ -43,7 +45,10 @@ RSpec.configure do |config|
     Dir["spec/api/*_steps.rb"].each do |step_file|
       require_relative step_file
     end
+  end
 
+  config.after :each do
+    OmniAuth.config.mock_auth[:developer] = nil
   end
 
   config.around background_jobs: true do |example|

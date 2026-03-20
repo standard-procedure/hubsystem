@@ -1,0 +1,9 @@
+alice:
+  application: test_client
+  resource_owner_id: <%= users(:alice).id %>
+  token: ALICE123
+  
+bob:
+  application: test_client
+  resource_owner_id: <%= users(:bob).id %>
+  token: BOB123

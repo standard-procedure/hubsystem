@@ -21,20 +21,20 @@ RSpec.describe User::Identity, type: :model do
 
   describe "associations" do
     it "belongs to a user" do
-      identity = user_identities(:alice_github)
+      identity = user_identities(:alice_google)
       expect(identity.user).to eq(users(:alice))
     end
   end
 
   describe ".authenticate" do
     it "returns the identity matching provider and uid" do
-      omniauth = {"provider" => "github", "uid" => "alice-github-123"}
+      omniauth = {"provider" => "google", "uid" => "alice-google-123"}
       identity = User::Identity.authenticate(omniauth)
-      expect(identity).to eq(user_identities(:alice_github))
+      expect(identity).to eq(user_identities(:alice_google))
     end
 
     it "raises ActiveRecord::RecordNotFound for unknown credentials" do
-      omniauth = {"provider" => "github", "uid" => "unknown"}
+      omniauth = {"provider" => "google", "uid" => "unknown"}
       expect { User::Identity.authenticate(omniauth) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end

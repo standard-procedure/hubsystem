@@ -3,6 +3,11 @@ alice:
   name: Alice Aardvark
   type: User::Human
 
+bob:
+  uid: bob
+  name: Bob Badger
+  type: User::Human
+
 bishop:
   uid: bishop
   name: Bishop

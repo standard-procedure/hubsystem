@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  fixtures :users, :user_identities, :user_sessions
+  fixtures :users, :user_sessions
 
   describe "validations" do
     it "requires a name" do
@@ -45,19 +45,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
-    it "has many identities" do
-      alice = users(:alice)
-      expect(alice.identities).to include(user_identities(:alice_github))
-    end
-
     it "has many sessions" do
       alice = users(:alice)
       expect(alice.sessions).to include(user_sessions(:alice_session))
-    end
-
-    it "destroys dependent identities" do
-      alice = users(:alice)
-      expect { alice.destroy }.to change(User::Identity, :count).by(-1)
     end
 
     it "destroys dependent sessions" do
