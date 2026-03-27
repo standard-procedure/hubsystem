@@ -39,19 +39,29 @@ class Views::Dashboard::Show < Views::Base
       render Components::Panel.new(title: "Status and Fields") do
         Switcher do
           Column do
-            StatusMatrix do |matrix|
-              matrix.item state: :nominal, href: "#"
-              matrix.item state: :critical
-              12.times { matrix.item state: [:nominal, :warning, :offline].sample }
-              matrix.item state: :warning, href: "#"
-              matrix.item state: :offline
-            end
-            StatusBar do |status|
-              status.item label: "3 Active", state: :nominal
-              status.item label: "1 Scannin", state: :info
-              status.item label: "1 Awaiting", state: :warning
-              status.item label: "1 Error", state: :critical
-              status.item label: "1 Offline", state: :offline
+            Row justify: "start", align: "start", gap: 16 do
+              Navigation do |nav|
+                nav.item label: "Agents", active: true, href: "#"
+                nav.item label: "Channels", href: "#"
+                nav.item label: "System"
+                nav.item label: "Logs"
+              end
+              Column class: "grow-1", gap: 4 do
+                StatusMatrix do |matrix|
+                  matrix.item state: :nominal, href: "#"
+                  matrix.item state: :critical
+                  12.times { matrix.item state: [:nominal, :warning, :offline].sample }
+                  matrix.item state: :warning, href: "#"
+                  matrix.item state: :offline
+                end
+                StatusBar do |status|
+                  status.item label: "3 Active", state: :nominal
+                  status.item label: "1 Scannin", state: :info
+                  status.item label: "1 Awaiting", state: :warning
+                  status.item label: "1 Error", state: :critical
+                  status.item label: "1 Offline", state: :offline
+                end
+              end
             end
           end
           Column class: "basis-sm" do
