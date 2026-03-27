@@ -25,28 +25,16 @@ class Components::FlexContainer < Components::Base
     5 => "gap-5", 6 => "gap-6", 7 => "gap-7", 8 => "gap-8"
   }.freeze
 
-  prop :justify, Components::Types.Enum(*JUSTIFY.keys), default: "start"
-  prop :align, Components::Types.Enum(*ALIGN.keys), default: "stretch"
-  prop :gap, Components::Types.Enum(*GAP.keys), default: 1
+  prop :justify, Enum(*JUSTIFY.keys), default: "start"
+  prop :align, Enum(*ALIGN.keys), default: "stretch"
+  prop :gap, Enum(*GAP.keys), default: 2
   prop :attributes, Hash, :**, default: {}.freeze
 
   def view_template(&)
-    div class: "@container" do
-      div(**mix(class: flex_classes, **@attributes), &)
-    end
+    div(**mix(class: flex_classes, **@attributes), &)
   end
 
-  private
+  private def direction_classes = raise(NotImplementedError)
 
-  def direction_classes = raise NotImplementedError
-
-  def flex_classes
-    [
-      "flex",
-      *direction_classes,
-      JUSTIFY.fetch(@justify),
-      ALIGN.fetch(@align),
-      GAP.fetch(@gap)
-    ]
-  end
+  private def flex_classes = ["flex", *direction_classes, JUSTIFY.fetch(@justify), ALIGN.fetch(@align), GAP.fetch(@gap)]
 end

@@ -11,7 +11,9 @@ class Views::Sessions::New < Views::Base
         Column do
           if Rails.env.local?
             Row justify: "end" do
-              render Components::Button.new(label: "Developer login", href: login_path("developer"), tag: :a, variant: :primary, size: :lg)
+              form_with url: "/auth/developer", method: :post, data: {turbo: false} do |form|
+                render Components::Button.new(label: "Developer login", href: "/auth/developer", variant: :primary, size: :lg)
+              end
             end
           end
         end

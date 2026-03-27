@@ -2,6 +2,7 @@
 
 class Components::Base < Phlex::HTML
   extend Literal::Properties
+  extend Components::Types
   include ActionView::RecordIdentifier
   include Phlex::Rails::Helpers::Routes
 

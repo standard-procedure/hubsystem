@@ -4,7 +4,7 @@ RailsPulse.configure do |config|
   # ====================================================================================================
 
   # Enable or disable Rails Pulse
-  config.enabled = true
+  config.enabled = !Rails.env.local?
 
   # ====================================================================================================
   #                                               THRESHOLDS
@@ -14,23 +14,23 @@ RailsPulse.configure do |config|
 
   # Thresholds for an individual route
   config.route_thresholds = {
-    slow:      500,
+    slow: 500,
     very_slow: 1500,
-    critical:  3000
+    critical: 3000
   }
 
   # Thresholds for an individual request
   config.request_thresholds = {
-    slow:      700,
+    slow: 700,
     very_slow: 2000,
-    critical:  4000
+    critical: 4000
   }
 
   # Thresholds for an individual database query
   config.query_thresholds = {
-    slow:      100,
+    slow: 100,
     very_slow: 500,
-    critical:  1000
+    critical: 1000
   }
 
   # ====================================================================================================
@@ -67,9 +67,9 @@ RailsPulse.configure do |config|
   #   config.ignored_requests = ["GET /status", %r{POST /api/v1/.*}]
   #   config.ignored_queries  = ["SELECT 1", %r{FROM \"schema_migrations\"}]
 
-  config.ignored_routes   = []
+  config.ignored_routes = []
   config.ignored_requests = []
-  config.ignored_queries  = []
+  config.ignored_queries = []
 
   # ====================================================================================================
   #                                                 TAGGING
@@ -90,7 +90,7 @@ RailsPulse.configure do |config|
   # Example configuration:
   #   config.tags = ["ignored", "critical", "experimental", "deprecated", "external", "admin"]
 
-  config.tags = [ "ignored", "critical", "experimental" ]
+  config.tags = ["ignored", "critical", "experimental"]
 
   # ====================================================================================================
   #                                            DATABASE CONFIGURATION

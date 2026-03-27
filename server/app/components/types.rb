@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Components::Types
-  def self.Enum(*values) = proc { |v| values.flatten.include? v }
+  def Enum(*values) = proc { values.flatten.include?(it) }
 end

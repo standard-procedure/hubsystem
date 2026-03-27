@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+class Components::StatusBar < Components::Slotted
+  class Item < Literal::Data
+    extend Components::Types
+
+    STATUSES = {critical: "status-dot--red", warning: "status-dot--amber", info: "status-dot--blue", nominal: "status-dot--green", offline: "status-dot--dark"}.freeze
+
+    prop :state, Enum(STATUSES.keys), default: :nominal
+    prop :label, _String?
+    prop :contents, _Callable?
+
+    def dot_class = STATUSES[@state]
+  end
+
+  def initialize(...)
+    @items = []
+    super
+  end
+
+  def item(state: :nominal, label: nil, &contents)
+    @items << Item.new(state:, label:, contents:)
+  end
+
+  def view_template
+    div class: "status-bar" do
+      @items.each { |item| render_item(item) }
+    end
+  end
+
+  private def render_item item
+    div class: "status-item" do
+      div class: ["status-dot", item.dot_class]
+      item.contents&.call || plain(item.label.to_s)
+    end
+  end
+end

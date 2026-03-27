@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Components::Panel < Components::Base
-  VARIANTS = Components::Types.Enum(:default, :active, :warning, :alert)
-
   prop :title, _String?, default: nil
-  prop :variant, VARIANTS, default: :default
+  prop :variant, Enum(:default, :active, :warning, :alert), default: :default
   prop :controls, Integer, default: 3
 
   def view_template(&)
@@ -14,9 +12,7 @@ class Components::Panel < Components::Base
     end
   end
 
-  private
-
-  def render_header
+  private def render_header
     div class: "panel-header" do
       span(class: "panel-title") { @title }
       div class: "panel-controls" do
@@ -25,7 +21,7 @@ class Components::Panel < Components::Base
     end
   end
 
-  def panel_classes
+  private def panel_classes
     classes = ["panel"]
     classes << "panel--#{@variant}" unless @variant == :default
     classes.join(" ")
