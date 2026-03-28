@@ -17,8 +17,14 @@ module Synthetic
       response = evaluate(SYSTEM_PROMPT, content)
       parsed = JSON.parse(response)
       memories = parsed["memories"] || []
-      # Stub: log extracted memories but don't persist (no Memory model yet)
-      Rails.logger.info { "[Synthetic::MemoryProcessor] Extracted #{memories.size} memories for #{@synthetic.name}" }
+
+      memories.each do |memory|
+        @synthetic.memories.create!(
+          content: memory["content"],
+          tags: memory["tags"] || []
+        )
+      end
+
       Result.new(memories: memories)
     rescue JSON::ParserError
       Result.new(memories: [])

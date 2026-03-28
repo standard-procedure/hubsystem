@@ -38,6 +38,18 @@ When a synthetic receives a message, it passes through a [pipeline](app/modules/
 
 Processing modules (steps 1-2, 4-6) use a low-cost LLM (configured as `low` in [llm_models.yml](config/llm_models.yml)). The main response (step 3) uses a high-cost model (`high`).
 
+## Memory & Documents
+
+### Synthetic::Memory
+
+[Memories](app/models/synthetic/memory.rb) are private to each synthetic. They store facts, preferences, and observations extracted by the [memory processor](app/modules/synthetic/memory_processor.rb) during conversation. Each memory has `content` (text) and `tags` (JSON array) for topic-based retrieval.
+
+Search is tag-based (`.tagged_with`) and text-based (`.search`). Vector embeddings for semantic search will be added when the project migrates to PostgreSQL with pgvector.
+
+### Document
+
+[Documents](app/models/document.rb) are public knowledge — visible to all users. Any user (human or synthetic) can create documents. Like memories, they have `title`, `content`, and `tags` for search.
+
 ## Conversations
 
 [Conversations](app/models/conversation.rb) are exchanges between two users (human or synthetic). Each conversation has an initiator and a recipient.

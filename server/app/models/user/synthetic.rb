@@ -10,6 +10,7 @@ class User::Synthetic < User
   }.freeze
 
   has_one :llm_context, class_name: "LlmContext", foreign_key: :user_id, dependent: :destroy
+  has_many :memories, class_name: "Synthetic::Memory", foreign_key: :synthetic_id, dependent: :destroy, inverse_of: :synthetic
 
   EMOTIONS = %w[joy sadness fear anger surprise disgust anticipation trust].freeze
 

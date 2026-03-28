@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_28_212542) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_28_213948) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -51,6 +51,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_212542) do
     t.index ["initiator_id"], name: "index_conversations_on_initiator_id"
     t.index ["recipient_id", "status"], name: "index_conversations_on_recipient_id_and_status"
     t.index ["recipient_id"], name: "index_conversations_on_recipient_id"
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.integer "author_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.json "tags", default: [], null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_documents_on_author_id"
   end
 
   create_table "llm_context_messages", force: :cascade do |t|
@@ -267,6 +277,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_212542) do
     t.index ["summarizable_type", "summarizable_id"], name: "index_rails_pulse_summaries_on_summarizable"
   end
 
+  create_table "synthetic_memories", force: :cascade do |t|
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.integer "synthetic_id", null: false
+    t.json "tags", default: [], null: false
+    t.datetime "updated_at", null: false
+    t.index ["synthetic_id"], name: "index_synthetic_memories_on_synthetic_id"
+  end
+
   create_table "user_identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.json "data"
@@ -303,6 +322,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_212542) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "users", column: "initiator_id"
   add_foreign_key "conversations", "users", column: "recipient_id"
+  add_foreign_key "documents", "users", column: "author_id"
   add_foreign_key "llm_context_messages", "llm_context_tool_calls"
   add_foreign_key "llm_context_messages", "llm_contexts"
   add_foreign_key "llm_context_messages", "llm_models"
@@ -316,6 +336,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_212542) do
   add_foreign_key "rails_pulse_operations", "rails_pulse_queries", column: "query_id"
   add_foreign_key "rails_pulse_operations", "rails_pulse_requests", column: "request_id"
   add_foreign_key "rails_pulse_requests", "rails_pulse_routes", column: "route_id"
+  add_foreign_key "synthetic_memories", "users", column: "synthetic_id"
   add_foreign_key "user_identities", "users"
   add_foreign_key "user_sessions", "users"
 end

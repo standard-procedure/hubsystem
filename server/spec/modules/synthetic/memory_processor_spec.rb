@@ -9,12 +9,25 @@ RSpec.describe Synthetic::MemoryProcessor, type: :module do
   let(:processor) { described_class.new(bishop) }
 
   describe "#process" do
-    it "extracts memories from content" do
+    it "extracts and persists memories" do
       stub_llm_response('{"memories": [{"content": "Alice prefers morning meetings", "tags": ["alice", "preferences"]}]}')
-      result = processor.process("Alice said she likes morning meetings.")
-      expect(result.memories.size).to eq(1)
-      expect(result.memories.first["content"]).to eq("Alice prefers morning meetings")
-      expect(result.memories.first["tags"]).to include("alice")
+
+      expect {
+        result = processor.process("Alice said she likes morning meetings.")
+        expect(result.memories.size).to eq(1)
+      }.to change(Synthetic::Memory, :count).by(1)
+
+      memory = bishop.memories.last
+      expect(memory.content).to eq("Alice prefers morning meetings")
+      expect(memory.tags).to include("alice")
+    end
+
+    it "persists multiple memories" do
+      stub_llm_response('{"memories": [{"content": "Fact one", "tags": ["a"]}, {"content": "Fact two", "tags": ["b"]}]}')
+
+      expect {
+        processor.process("Lots of information here.")
+      }.to change(Synthetic::Memory, :count).by(2)
     end
 
     it "returns empty memories when nothing to remember" do
