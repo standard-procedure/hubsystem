@@ -184,7 +184,7 @@ Synthetics respond to messages automatically via Active Job:
 ```
 Human sends message → Message#after_create_commit
   → notify_synthetic_recipient
-    → SyntheticResponseJob.perform_later(message.id)
+    → User::Synthetic::MessageProcessorJob.perform_later(message.id)
       → Pipeline.new(synthetic).process(message.content)
         → Creates response Message
           → Turbo broadcast updates the human's screen
@@ -194,7 +194,7 @@ Human sends message → Message#after_create_commit
 
 | Job | Trigger | Action |
 |-----|---------|--------|
-| [SyntheticResponseJob](../app/jobs/synthetic_response_job.rb) | Message created where recipient is synthetic | Processes message through pipeline, creates response |
+| [User::Synthetic::MessageProcessorJob](../app/jobs/user/synthetic/message_processor_job.rb) | Message created where recipient is synthetic | Processes message through pipeline, creates response |
 | [SyntheticAcceptanceJob](../app/jobs/synthetic_acceptance_job.rb) | Conversation created where recipient is synthetic | Auto-accepts the request and responds to the subject |
 
 ### Queue Configuration

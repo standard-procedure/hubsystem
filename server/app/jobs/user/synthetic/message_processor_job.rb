@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SyntheticResponseJob < ApplicationJob
+class User::Synthetic::MessageProcessorJob < ApplicationJob
   queue_as :default
 
   def perform(message_id)
