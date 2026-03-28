@@ -265,26 +265,6 @@
 /* ------------------------------------------------------------------ */
 
 @layer components {
-  /* ---- CRT Scanline overlay ---- */
-  .crt-scanlines {
-    position: relative;
-  }
-
-  .crt-scanlines::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 1px,
-      hsla(0, 0%, 0%, 0.06) 1px,
-      hsla(0, 0%, 0%, 0.06) 2px
-    );
-    pointer-events: none;
-    z-index: 100;
-    border-radius: inherit;
-  }
 
   /* ---- CRT Housing ---- */
   .crt-housing {
@@ -346,12 +326,17 @@
   }
 
   .crt-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     background: var(--case-top-bg);
     border-radius: 18px 18px 0 0;
     padding: 20px 28px 14px;
     border: 1px solid var(--case-border);
     border-bottom: none;
     box-shadow: inset 0 2px 0 var(--case-top-highlight), inset 0 -1px 0 var(--case-top-shadow);
+    z-index: 1;
   }
 
   .crt-top-inner {
@@ -423,7 +408,7 @@
 
   .crt-bezel {
     background: var(--case-bezel-bg);
-    padding: 12px;
+    padding: 48px 12px;
     border-left: 1px solid var(--case-border);
     border-right: 1px solid var(--case-border);
     box-shadow: inset 0 0 20px hsla(0, 0%, 0%, 0.5), inset 0 2px 4px hsla(0, 0%, 0%, 0.3);
@@ -433,6 +418,7 @@
     background: var(--color-screen-900);
     border-radius: 8px;
     position: relative;
+    z-index: 0;
     overflow: hidden;
     box-shadow:
       inset 0 0 60px hsla(142, 40%, 10%, 0.15),
@@ -465,16 +451,20 @@
   .screen-content {
     padding: 32px 28px 40px;
     position: relative;
-    z-index: 1;
   }
 
   .crt-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: var(--case-bottom-bg);
     border-radius: 0 0 18px 18px;
     padding: 16px 28px 20px;
     border: 1px solid var(--case-border);
     border-top: none;
     box-shadow: inset 0 1px 0 var(--case-top-shadow), 0 4px 16px hsla(0, 0%, 0%, 0.3), 0 2px 4px hsla(0, 0%, 0%, 0.15);
+    z-index: 1;
   }
 
   .crt-bottom-inner {
