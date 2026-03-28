@@ -155,6 +155,10 @@ Synthetics have tools available during LLM processing, defined under `app/tools/
 | [ListConversationsTool](../app/tools/list_conversations_tool.rb) | List conversations and requests |
 | [StartConversationTool](../app/tools/start_conversation_tool.rb) | Send a conversation request to another user |
 | [SendMessageTool](../app/tools/send_message_tool.rb) | Send a message in an active conversation |
+| [CreateTaskTool](../app/tools/create_task_tool.rb) | Create a task (optionally as a subtask) |
+| [AssignTaskTool](../app/tools/assign_task_tool.rb) | Assign a task to a user |
+| [CompleteTaskTool](../app/tools/complete_task_tool.rb) | Mark a task as completed |
+| [ListTasksTool](../app/tools/list_tasks_tool.rb) | List tasks by status, assignee, or tags |
 
 ### Adding New Tools
 
@@ -223,8 +227,7 @@ No real LLM calls are made during tests. Each processing module is tested in iso
 
 ## Future Work
 
-- **Task tools** — hierarchical tasks with dependencies, assignable to other users
-- **Reminder/schedule tools** — send self messages on a delay or cron schedule
+- **Scheduled/repeating tasks** — tasks with cron-style `schedule` field that auto-create on completion
 - **Bash tool** — execute commands in a sandboxed workspace (`workspaces/{uid}/`)
 - **Compaction** — summarise and replace old LLM context messages when fatigue exceeds threshold
 - **Docker sandbox** — containerised bash execution per synthetic

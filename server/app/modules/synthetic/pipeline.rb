@@ -55,7 +55,11 @@ module Synthetic
         WriteDocumentTool.new(synthetic),
         ListConversationsTool.new(synthetic),
         StartConversationTool.new(synthetic),
-        SendMessageTool.new(synthetic)
+        SendMessageTool.new(synthetic),
+        CreateTaskTool.new(synthetic),
+        AssignTaskTool.new(synthetic),
+        CompleteTaskTool.new(synthetic),
+        ListTasksTool.new(synthetic)
       ]
     end
 

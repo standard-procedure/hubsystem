@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_28_213948) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -286,6 +286,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_213948) do
     t.index ["synthetic_id"], name: "index_synthetic_memories_on_synthetic_id"
   end
 
+  create_table "task_dependencies", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "dependency_id", null: false
+    t.integer "task_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dependency_id"], name: "index_task_dependencies_on_dependency_id"
+    t.index ["task_id", "dependency_id"], name: "index_task_dependencies_on_task_id_and_dependency_id", unique: true
+    t.index ["task_id"], name: "index_task_dependencies_on_task_id"
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.integer "assignee_id"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.integer "creator_id", null: false
+    t.text "description"
+    t.datetime "due_at"
+    t.integer "parent_id"
+    t.string "schedule"
+    t.integer "status", default: 0, null: false
+    t.string "subject", null: false
+    t.json "tags", default: [], null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignee_id", "status"], name: "index_tasks_on_assignee_id_and_status"
+    t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
+    t.index ["creator_id", "status"], name: "index_tasks_on_creator_id_and_status"
+    t.index ["creator_id"], name: "index_tasks_on_creator_id"
+    t.index ["due_at"], name: "index_tasks_on_due_at"
+    t.index ["parent_id"], name: "index_tasks_on_parent_id"
+  end
+
   create_table "user_identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.json "data"
@@ -337,6 +368,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_213948) do
   add_foreign_key "rails_pulse_operations", "rails_pulse_requests", column: "request_id"
   add_foreign_key "rails_pulse_requests", "rails_pulse_routes", column: "route_id"
   add_foreign_key "synthetic_memories", "users", column: "synthetic_id"
+  add_foreign_key "task_dependencies", "tasks"
+  add_foreign_key "task_dependencies", "tasks", column: "dependency_id"
+  add_foreign_key "tasks", "tasks", column: "parent_id"
+  add_foreign_key "tasks", "users", column: "assignee_id"
+  add_foreign_key "tasks", "users", column: "creator_id"
   add_foreign_key "user_identities", "users"
   add_foreign_key "user_sessions", "users"
 end

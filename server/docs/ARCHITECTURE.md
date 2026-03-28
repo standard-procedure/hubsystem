@@ -66,6 +66,26 @@ State transitions use [RESTful nested resources](DEVELOPMENT-PATTERNS.md#restful
 
 Messages have a `read_at` timestamp. When a user views a conversation, all messages from the other participant are marked as read.
 
+## Tasks
+
+[Tasks](app/models/task.rb) are shared work items that any user (human or synthetic) can create, assign, and complete.
+
+### Hierarchy
+
+Tasks form a tree via `parent_id`. When all children of a task are completed (or cancelled), the parent auto-completes upward recursively. Cancelling a task cascades downward to cancel all its children.
+
+### Dependencies
+
+[TaskDependency](app/models/task_dependency.rb) records cross-task dependencies. A task with incomplete dependencies is blocked and cannot be completed.
+
+### Notifications
+
+On completion or cancellation, the task creator receives a message via an active conversation with the assignee.
+
+### Reminders
+
+Tasks with a `due_at` timestamp are picked up by [TaskReminderJob](app/jobs/task_reminder_job.rb), which runs every minute via SolidQueue's recurring job config, sending reminder messages to assignees.
+
 ### Dashboard
 
 The dashboard shows a [status matrix](app/components/status_matrix.rb) of the current user's conversations:
