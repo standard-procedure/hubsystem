@@ -2,6 +2,7 @@
 
 module ConversationSteps
   include ActiveSupport::Testing::TimeHelpers
+  include Wait
 
   # --- Authentication ---
 
@@ -27,38 +28,47 @@ module ConversationSteps
     # Fixture alice_bob_active covers this
   end
 
-  # --- Navigation ---
+  # --- Navigation (browser-driven) ---
 
   step "I view the dashboard" do
-    visit root_path
+    find("a[title='Dashboard']").click
   end
 
   step "I view my dashboard" do
-    visit root_path
+    find("a[title='Dashboard']").click
   end
 
   step "I view my messages" do
-    visit conversations_path
+    find("a[title='Messages']").click
   end
 
   step "I view my archived messages" do
-    visit conversations_path(archived: true)
+    click_on "Archived"
   end
 
   step "I view the conversation request" do
     conversation = conversations(:bob_alice_requested)
-    visit conversation_path(conversation)
+    if page.has_css?(".status-matrix")
+      find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
+    else
+      click_on "Quick question"
+    end
   end
 
   step "I click on the conversation with Bob" do
     conversation = conversations(:alice_bob_active)
-    visit conversation_path(conversation)
+    if page.has_css?(".status-matrix")
+      find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
+    else
+      click_on "Catch up"
+    end
   end
 
   # --- Actions ---
 
   step "I ask Bob to start a conversation" do
-    visit new_conversation_path
+    find("a[title='Messages']").click
+    click_on "New Conversation"
     find("label", text: "Bob Badger").click
     fill_in "conversation[subject]", with: "Hi Bob"
     click_on "Send Request"
@@ -66,15 +76,17 @@ module ConversationSteps
   end
 
   step "Bob accepts the request" do
-    @bob_identity = user_identities(:bob_developer)
     conversation = @current_conversation || conversations(:bob_alice_requested)
-    # Accept via direct model update (simulating Bob's action)
+    # Simulating Bob's action in the background
     conversation.update!(status: :active)
   end
 
   step "I send Bob a message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    visit conversation_path(conversation)
+    # After Bob accepts, we need to refresh the page to see the message form
+    wait_until { conversation.reload.active? }
+    find("a[title='Messages']").click
+    click_on conversation.subject
     fill_in "message[content]", with: "How are you?"
     click_on "Send"
   end
@@ -146,7 +158,6 @@ module ConversationSteps
   end
 
   step "the conversation with Bob should not be visible in the conversation matrix" do
-    # After a day, closed conversations are no longer shown
     expect(page).not_to have_css(".matrix-cell--offline")
   end
 
@@ -154,27 +165,31 @@ module ConversationSteps
 
   step "Bob should receive my message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
+    wait_until { conversation.messages.where(sender: users(:alice)).where("content LIKE ?", "%How are you?%").exists? }
     expect(conversation.messages.where(sender: users(:alice)).last.content).to eq("How are you?")
   end
 
   step "I should receive Bob's message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    visit conversation_path(conversation)
+    wait_until { conversation.messages.where(sender: users(:bob)).where("content LIKE ?", "%I'm good%").exists? }
+    # Navigate to the conversation to see the new message
+    find("a[title='Messages']").click
+    click_on conversation.subject
     expect(page).to have_content("I'm good, thanks!")
   end
 
   step "Bob should receive my rejection" do
     conversation = conversations(:bob_alice_requested)
-    expect(conversation.reload).to be_closed
+    wait_until { conversation.reload.closed? }
   end
 
   step "the conversation should be closed" do
     conversation = @current_conversation || conversations(:bob_alice_requested)
-    expect(conversation.reload).to be_closed
+    wait_until { conversation.reload.closed? }
   end
 
   step "I return to my dashboard a day later" do
     travel_to 2.days.from_now
-    visit root_path
+    find("a[title='Dashboard']").click
   end
 end
