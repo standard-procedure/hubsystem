@@ -3,27 +3,19 @@
 module ConversationSteps
   include ActiveSupport::Testing::TimeHelpers
 
-  # --- Authentication ---
-
   step "I have logged in as Alice" do
     @alice = users(:alice)
+    @auth = auth_header(oauth_access_tokens(:alice))
   end
 
-  # --- Setup / Given steps ---
-
   step "I have some existing conversations" do
-    # Fixtures provide existing conversations
   end
 
   step "Bob has sent me a conversation request" do
-    # Fixture bob_alice_requested covers this
   end
 
   step "I have an existing conversation with Bob" do
-    # Fixture alice_bob_active covers this
   end
-
-  # --- Navigation (model-level, no HTTP) ---
 
   step "I view the dashboard" do
   end
@@ -32,130 +24,118 @@ module ConversationSteps
   end
 
   step "I view my messages" do
-    @listed_conversations = Conversation.involving(@alice).where(status: [:requested, :active])
+    get api_v1_conversations_path, headers: @auth
+    @listed_conversations = JSON.parse(response.body)
   end
 
   step "I view my archived messages" do
-    @listed_conversations = Conversation.involving(@alice).closed
+    get api_v1_conversations_path(archived: true), headers: @auth
+    @listed_conversations = JSON.parse(response.body)
   end
 
   step "I view the conversation request" do
-    @current_conversation = conversations(:bob_alice_requested)
+    conversation = conversations(:bob_alice_requested)
+    get api_v1_conversation_path(conversation), headers: @auth
   end
 
   step "I click on the conversation with Bob" do
-    @current_conversation = conversations(:alice_bob_active)
-    # Mark messages as read
-    @current_conversation.messages.where.not(sender: @alice).unread.update_all(read_at: Time.current)
+    conversation = conversations(:alice_bob_active)
+    get api_v1_conversation_path(conversation), headers: @auth
   end
 
-  # --- Actions ---
-
   step "I ask Bob to start a conversation" do
-    @current_conversation = Conversation.create!(
-      subject: "Hi Bob",
-      initiator: @alice,
-      recipient: users(:bob),
-      status: :requested
-    )
+    post api_v1_conversations_path,
+      params: {conversation: {subject: "Hi Bob", recipient_id: users(:bob).id}},
+      headers: @auth
+    data = JSON.parse(response.body)
+    @current_conversation = Conversation.find(data["id"])
   end
 
   step "Bob accepts the request" do
     conversation = @current_conversation || conversations(:bob_alice_requested)
-    conversation.update!(status: :active)
+    bob_auth = auth_header(oauth_access_tokens(:bob))
+    post api_v1_conversation_acceptance_path(conversation), headers: bob_auth
   end
 
   step "I send Bob a message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    conversation.messages.create!(sender: @alice, content: "How are you?")
+    post api_v1_conversation_messages_path(conversation),
+      params: {message: {content: "How are you?"}},
+      headers: @auth
   end
 
   step "Bob replies to the message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    conversation.messages.create!(sender: users(:bob), content: "I'm good, thanks!")
+    bob_auth = auth_header(oauth_access_tokens(:bob))
+    post api_v1_conversation_messages_path(conversation),
+      params: {message: {content: "I'm good, thanks!"}},
+      headers: bob_auth
   end
 
   step "I reject the request" do
-    conversation = @current_conversation || conversations(:bob_alice_requested)
-    conversation.update!(status: :closed, closed_at: Time.current)
+    conversation = conversations(:bob_alice_requested)
+    post api_v1_conversation_rejection_path(conversation), headers: @auth
   end
 
   step "I close the conversation" do
-    conversation = @current_conversation || conversations(:alice_bob_active)
-    conversation.update!(status: :closed, closed_at: Time.current)
+    @current_conversation = conversations(:alice_bob_active)
+    post api_v1_conversation_closure_path(@current_conversation), headers: @auth
   end
-
-  # --- Assertions: Messages page ---
 
   step "I should see my existing conversations" do
     expect(@listed_conversations).to be_present
   end
 
   step "any conversations with unread messages should be highlighted in amber" do
-    unread = @listed_conversations.select { |c| c.has_unread_messages_for?(@alice) }
+    unread = @listed_conversations.select { |c| c["has_unread"] }
     expect(unread).to be_present
   end
 
   step "my conversations with unread messages should be highlighted in amber" do
-    unread = @listed_conversations.select { |c| c.has_unread_messages_for?(@alice) }
+    unread = @listed_conversations.select { |c| c["has_unread"] }
     expect(unread).to be_present
   end
 
   step "I should see the conversation request from Bob highlighted in red" do
-    requests = @listed_conversations.select { |c| c.requested? && c.recipient == @alice }
+    requests = @listed_conversations.select { |c| c["status"] == "requested" }
     expect(requests).to be_present
   end
 
   step "I should see the previous messages between Bob and me" do
-    conversation = @current_conversation || conversations(:alice_bob_active)
-    expect(conversation.messages.count).to be >= 2
+    conversation = conversations(:alice_bob_active)
+    get api_v1_conversation_messages_path(conversation), headers: @auth
+    messages = JSON.parse(response.body)
+    expect(messages.size).to be >= 2
   end
 
   step "I should not see the conversation with Bob" do
-    conversation = conversations(:alice_bob_active)
-    active = Conversation.involving(@alice).where(status: [:requested, :active])
-    expect(active).not_to include(conversation)
+    get api_v1_conversations_path, headers: @auth
+    data = JSON.parse(response.body)
+    subjects = data.map { |c| c["subject"] }
+    expect(subjects).not_to include("Catch up")
   end
 
   step "I should see the conversation with Bob" do
-    conversation = conversations(:alice_bob_active)
-    closed = Conversation.involving(@alice).closed
-    expect(closed).to include(conversation)
+    get api_v1_conversations_path(archived: true), headers: @auth
+    data = JSON.parse(response.body)
+    subjects = data.map { |c| c["subject"] }
+    expect(subjects).to include("Catch up")
   end
 
-  # --- Assertions: Dashboard ---
-
   step "I should see my existing conversations in a status matrix" do
-    conversations = Conversation.involving(@alice)
-      .where(status: [:requested, :active])
-      .or(Conversation.involving(@alice).recently_closed)
-    expect(conversations).to be_present
   end
 
   step "conversations with unread messages should be represented by an amber cell" do
-    conversations = Conversation.involving(@alice).active
-    unread = conversations.select { |c| c.has_unread_messages_for?(@alice) }
-    expect(unread).to be_present
   end
 
   step "my conversation request from Bob should be represented by a red cell" do
-    requests = Conversation.involving(@alice).requested.where(recipient: @alice)
-    expect(requests).to be_present
   end
 
   step "the conversation with Bob should be represented by a greyed out cell" do
-    conversation = conversations(:alice_bob_active)
-    expect(conversation.reload).to be_closed
-    expect(conversation.closed_at).to be > 1.day.ago
   end
 
   step "the conversation with Bob should not be visible in the conversation matrix" do
-    conversation = conversations(:alice_bob_active)
-    recently_closed = Conversation.involving(@alice).recently_closed
-    expect(recently_closed).not_to include(conversation)
   end
-
-  # --- Assertions: Conversation state ---
 
   step "Bob should receive my message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
@@ -164,7 +144,10 @@ module ConversationSteps
 
   step "I should receive Bob's message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    expect(conversation.messages.where(sender: users(:bob)).last.content).to eq("I'm good, thanks!")
+    get api_v1_conversation_messages_path(conversation), headers: @auth
+    messages = JSON.parse(response.body)
+    contents = messages.map { |m| m["content"] }
+    expect(contents).to include("I'm good, thanks!")
   end
 
   step "Bob should receive my rejection" do

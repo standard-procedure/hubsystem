@@ -103,3 +103,38 @@ The dashboard shows a task summary [status bar](app/components/status_bar.rb) wi
 - **Warning** (amber) — unread messages
 - **Critical** (red) — pending conversation request
 - **Offline** (grey) — recently closed (within 24 hours, then removed)
+
+## API
+
+JSON API under `/api/v1/` authenticated via [Doorkeeper](config/initializers/doorkeeper.rb) OAuth 2.0 Bearer tokens.
+
+### Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/v1/conversations` | List active conversations |
+| GET | `/api/v1/conversations/:id` | Show conversation with messages |
+| POST | `/api/v1/conversations` | Create conversation request |
+| POST | `/api/v1/conversations/:id/acceptance` | Accept request |
+| POST | `/api/v1/conversations/:id/rejection` | Reject request |
+| POST | `/api/v1/conversations/:id/closure` | Close conversation |
+| GET | `/api/v1/conversations/:id/messages` | List messages |
+| POST | `/api/v1/conversations/:id/messages` | Send message |
+| GET | `/api/v1/tasks` | List assigned tasks |
+| GET | `/api/v1/tasks/:id` | Show task with children |
+| POST | `/api/v1/tasks` | Create task |
+| PATCH | `/api/v1/tasks/:id/assignment` | Assign task |
+| POST | `/api/v1/tasks/:id/completion` | Complete task |
+| POST | `/api/v1/tasks/:id/cancellation` | Cancel task |
+
+### Authentication
+
+Include a Bearer token in the Authorization header:
+```
+Authorization: Bearer <token>
+```
+
+OpenAPI documentation is auto-generated from request specs via [rspec-openapi](https://github.com/exoego/rspec-openapi):
+```bash
+OPENAPI=1 bundle exec rspec spec/requests/api/
+```

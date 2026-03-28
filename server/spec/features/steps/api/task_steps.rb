@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
 module TaskSteps
-  # --- Authentication ---
-
   step "I have logged in as Alice" do
     @alice = users(:alice)
+    @auth = auth_header(oauth_access_tokens(:alice))
   end
-
-  # --- Setup ---
 
   step "there are tasks assigned to me" do
     @assigned_task = Task.create!(creator: users(:bob), assignee: @alice, subject: "Review the docs")
@@ -28,66 +25,74 @@ module TaskSteps
     @current_task = Task.create!(creator: @alice, subject: subject)
   end
 
-  # --- Navigation (model-level) ---
-
   step "I view my tasks" do
-    @listed_tasks = Task.assigned_to(@alice).where.not(status: [:completed, :cancelled])
+    get api_v1_tasks_path, headers: @auth
+    @listed_tasks = JSON.parse(response.body)
   end
 
   step "I switch to the created tab" do
-    @listed_tasks = Task.created_by(@alice)
+    get api_v1_tasks_path(created: true), headers: @auth
+    @listed_tasks = JSON.parse(response.body)
   end
 
   step "I view that task" do
+    get api_v1_task_path(@current_task), headers: @auth
   end
 
   step "I view the first assigned task" do
+    get api_v1_task_path(@assigned_task), headers: @auth
   end
 
-  # --- Actions ---
-
   step "I create a new task called :subject" do |subject|
-    Task.create!(creator: @alice, subject: subject)
+    post api_v1_tasks_path, params: {task: {subject: subject}}, headers: @auth
+    data = JSON.parse(response.body)
+    @created_task = Task.find(data["id"])
   end
 
   step "I create a new task called :subject with a due date" do |subject|
-    Task.create!(creator: @alice, subject: subject, due_at: 1.day.from_now)
+    post api_v1_tasks_path, params: {task: {subject: subject, due_at: 1.day.from_now.iso8601}}, headers: @auth
+    data = JSON.parse(response.body)
+    @created_task = Task.find(data["id"])
   end
 
   step "I create a repeating task called :subject with schedule :schedule" do |subject, schedule|
-    Task.create!(creator: @alice, subject: subject, schedule: schedule)
+    post api_v1_tasks_path, params: {task: {subject: subject, schedule: schedule}}, headers: @auth
+    data = JSON.parse(response.body)
+    @created_task = Task.find(data["id"])
   end
 
   step "I add a subtask called :subject" do |subject|
-    Task.create!(creator: @alice, subject: subject, parent: @current_task)
+    post api_v1_tasks_path, params: {task: {subject: subject, parent_id: @current_task.id}}, headers: @auth
   end
 
   step "I assign the task to Bob" do
-    @current_task.update!(assignee: users(:bob))
+    patch api_v1_task_assignment_path(@current_task), params: {assignee_id: users(:bob).id}, headers: @auth
   end
 
   step "I complete the task" do
     task = @assigned_task || @current_task
-    task.complete!
+    post api_v1_task_completion_path(task), headers: @auth
   end
 
   step "I cancel the task" do
     task = @assigned_task || @current_task
-    task.cancel!
+    post api_v1_task_cancellation_path(task), headers: @auth
   end
 
-  # --- Assertions ---
-
   step "I should see tasks assigned to me" do
-    expect(@listed_tasks).to be_present
+    subjects = @listed_tasks.map { |t| t["subject"] }
+    expect(subjects).to include("Review the docs")
+    expect(subjects).to include("Fix the bug")
   end
 
   step "completed tasks should not be shown" do
-    expect(@listed_tasks.completed).to be_empty
+    subjects = @listed_tasks.map { |t| t["subject"] }
+    expect(subjects).not_to include("Done task")
   end
 
   step "I should see tasks I have created" do
-    expect(@listed_tasks).to be_present
+    subjects = @listed_tasks.map { |t| t["subject"] }
+    expect(subjects).to include("Bob should review")
   end
 
   step "I should see the task :subject" do |subject|

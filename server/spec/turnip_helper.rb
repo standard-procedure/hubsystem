@@ -42,6 +42,7 @@ RSpec.configure do |config|
 
     elsif test_interface.api?
       config.include ApiClient
+      config.include Rails.application.routes.url_helpers
 
       Dir["spec/features/steps/api/*_steps.rb"].each do |step_file|
         require File.expand_path(step_file)

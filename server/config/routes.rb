@@ -18,6 +18,23 @@ Rails.application.routes.draw do
 
   resources :messages, only: [:index]
 
+  namespace :api do
+    namespace :v1 do
+      resources :conversations, only: [:index, :show, :create] do
+        resources :messages, only: [:index, :create], controller: "conversations/messages"
+        resource :acceptance, only: [:create], controller: "conversation_acceptances"
+        resource :rejection, only: [:create], controller: "conversation_rejections"
+        resource :closure, only: [:create], controller: "conversation_closures"
+      end
+
+      resources :tasks, only: [:index, :show, :create] do
+        resource :assignment, only: [:update], controller: "task_assignments"
+        resource :completion, only: [:create], controller: "task_completions"
+        resource :cancellation, only: [:create], controller: "task_cancellations"
+      end
+    end
+  end
+
   resource :session
   match "/auth/:provider/callback", to: "sessions#create", via: [:get, :post], as: :login
   match "/logout", to: "sessions#destroy", via: [:get, :post], as: :logout

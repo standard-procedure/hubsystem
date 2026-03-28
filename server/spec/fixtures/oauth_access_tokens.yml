@@ -1,9 +1,12 @@
+_fixture:
+  model_class: Doorkeeper::AccessToken
+
 alice:
-  application: test_client
-  resource_owner_id: <%= users(:alice).id %>
+  application_id: <%= ActiveRecord::FixtureSet.identify(:test_client) %>
+  resource_owner_id: <%= ActiveRecord::FixtureSet.identify(:alice) %>
   token: ALICE123
-  
+
 bob:
-  application: test_client
-  resource_owner_id: <%= users(:bob).id %>
+  application_id: <%= ActiveRecord::FixtureSet.identify(:test_client) %>
+  resource_owner_id: <%= ActiveRecord::FixtureSet.identify(:bob) %>
   token: BOB123

@@ -1,5 +1,9 @@
+_fixture:
+  model_class: Doorkeeper::Application
+
 test_client:
   name: Test Client
   uid: CLIENT_ID
   secret: CLIENT_SECRET
-  scopes: read, write
+  redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
+  scopes: "read write"

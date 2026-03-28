@@ -2,6 +2,6 @@
 
 module TaskSteps
   def self.included(base)
-    base.fixtures :users, :user_sessions, :user_identities
+    base.fixtures :users, :user_sessions, :user_identities, :oauth_applications, :oauth_access_tokens
   end
 end
