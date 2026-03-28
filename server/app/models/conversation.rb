@@ -35,6 +35,6 @@ class Conversation < ApplicationRecord
   end
 
   def notify_synthetic_recipient
-    SyntheticAcceptanceJob.perform_later(id) if recipient.is_a?(User::Synthetic)
+    User::Synthetic::ConversationAcceptanceJob.perform_later(id) if recipient.is_a?(User::Synthetic)
   end
 end

@@ -195,7 +195,7 @@ Human sends message → Message#after_create_commit
 | Job | Trigger | Action |
 |-----|---------|--------|
 | [User::Synthetic::MessageProcessorJob](../app/jobs/user/synthetic/message_processor_job.rb) | Message created where recipient is synthetic | Processes message through pipeline, creates response |
-| [SyntheticAcceptanceJob](../app/jobs/synthetic_acceptance_job.rb) | Conversation created where recipient is synthetic | Auto-accepts the request and responds to the subject |
+| [User::Synthetic::ConversationAcceptanceJob](../app/jobs/user/synthetic/conversation_acceptance_job.rb) | Conversation created where recipient is synthetic | Auto-accepts the request and responds to the subject |
 
 ### Queue Configuration
 

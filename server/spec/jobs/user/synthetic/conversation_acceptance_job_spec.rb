@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SyntheticAcceptanceJob, type: :job do
+RSpec.describe User::Synthetic::ConversationAcceptanceJob, type: :job do
   fixtures :users
 
   let(:bishop) { users(:bishop) }
