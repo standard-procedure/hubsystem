@@ -24,7 +24,7 @@ class Components::CrtMonitor < Components::Base
       div class: "crt-top-inner" do
         span(class: "crt-brand") { @brand }
         if @user
-          a href: helpers.logout_path, class: "crt-badge" do
+          a href: logout_path, class: "crt-badge" do
             div class: "crt-badge-led"
             span(class: "crt-badge-text") { "Power" }
           end
@@ -50,8 +50,8 @@ class Components::CrtMonitor < Components::Base
     div class: "crt-bottom" do
       div class: "crt-bottom-inner" do
         div class: "crt-controls" do
-          nav_knob :dashboard, "Dashboard", helpers.root_path
-          nav_knob :messages, "Messages", helpers.messages_path
+          nav_knob :dashboard, "Dashboard", root_path
+          nav_knob :messages, "Messages", messages_path
           nav_knob :system, "System"
         end
         div class: "crt-nameplate" do
