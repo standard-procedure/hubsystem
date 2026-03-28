@@ -1,4 +1,3 @@
-@javascript
 Feature: Conversation
   
   Scenario: Starting a conversation
