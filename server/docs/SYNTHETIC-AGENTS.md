@@ -35,8 +35,22 @@ Emotions are adjusted by the [emotional processor](../app/modules/synthetic/emot
 Each synthetic has one [LlmContext](../app/models/llm_context.rb) record managed by [RubyLLM](https://rubyllm.com/rails/) (`acts_as_chat`). This carries the full message history — it is the synthetic's internal working memory, separate from [Conversation](../app/models/conversation.rb) messages visible to both participants.
 
 Related models:
-- `LlmContext::Message` — individual messages in the context
+- `LlmContext::Message` — individual messages in the context (tracks `input_tokens`, `output_tokens`, `cached_tokens`)
 - `LlmContext::ToolCall` — tool invocations made by the LLM
+
+### Fatigue and Sleep (Compaction)
+
+The [capacity evaluator](../app/modules/synthetic/capacity_evaluator.rb) calculates fatigue as a percentage of the model's context window used, based on actual token counts from message records (with a fallback estimate for messages without token data).
+
+When fatigue reaches 80%+, the pipeline triggers the [compactor](../app/modules/synthetic/compactor.rb) — the synthetic "sleeps":
+
+1. Messages are partitioned into a compaction zone (older) and recent (last 20, kept intact)
+2. The compaction zone is summarised by the low-cost LLM into a narrative with extracted facts
+3. Extracted facts are persisted as `Synthetic::Memory` records tagged with `"compaction"` — these survive future compaction cycles
+4. Old messages are deleted and replaced with a single summary message: `[Context summary from earlier interactions]`
+5. Fatigue is recalculated to reflect the smaller context
+
+The synthetic wakes up with a compressed context but intact knowledge — important facts live permanently in memories, while the narrative summary preserves conversational continuity.
 
 ## Processing Pipeline
 
@@ -228,6 +242,5 @@ No real LLM calls are made during tests. Each processing module is tested in iso
 ## Future Work
 
 - **Bash tool** — execute commands in a sandboxed workspace (`workspaces/{uid}/`)
-- **Compaction** — summarise and replace old LLM context messages when fatigue exceeds threshold
 - **Docker sandbox** — containerised bash execution per synthetic
 - **pgvector** — semantic search for memories and documents after PostgreSQL migration

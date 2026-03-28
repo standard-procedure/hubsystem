@@ -7,8 +7,7 @@ RSpec.describe Synthetic::CapacityEvaluator, type: :module do
 
   let(:bishop) { users(:bishop) }
   let(:evaluator) { described_class.new(bishop) }
-
-  before { bishop.ensure_llm_context }
+  let(:context) { bishop.ensure_llm_context }
 
   describe "#process" do
     it "returns low fatigue for empty context" do
@@ -18,26 +17,52 @@ RSpec.describe Synthetic::CapacityEvaluator, type: :module do
       expect(bishop.reload.fatigue).to eq(0)
     end
 
-    it "calculates fatigue based on message count" do
-      context = bishop.llm_context
-      50.times do |i|
-        context.llm_context_messages.create!(role: "user", content: "Message #{i}", llm_context: context)
+    context "with real token data" do
+      it "calculates fatigue from actual token counts" do
+        5.times do |i|
+          context.llm_context_messages.create!(
+            role: "user", content: "Message #{i}",
+            input_tokens: 1000, output_tokens: 500,
+            llm_context: context
+          )
+        end
+
+        result = evaluator.process
+        # Should be > 0 and < compaction threshold
+        expect(result.fatigue).to be > 0
+        expect(result.needs_compaction).to be false
       end
 
-      result = evaluator.process
-      expect(result.fatigue).to eq(25) # 50 * 500 / 100_000 * 100 = 25%
-      expect(result.needs_compaction).to be false
+      it "flags compaction when tokens approach context window" do
+        # Create enough tokens to exceed 80% of whatever context window is configured
+        window = context.llm_model&.context_window || 100_000
+        tokens_needed = (window * 0.85).to_i
+        messages_needed = [tokens_needed / 2000, 1].max # 1000 input + 1000 output per message
+
+        messages_needed.times do |i|
+          context.llm_context_messages.create!(
+            role: "user", content: "Message #{i}",
+            input_tokens: 1000, output_tokens: 1000,
+            llm_context: context
+          )
+        end
+
+        result = evaluator.process
+        expect(result.fatigue).to be >= 80
+        expect(result.needs_compaction).to be true
+      end
     end
 
-    it "flags compaction needed at high fatigue" do
-      context = bishop.llm_context
-      170.times do |i|
-        context.llm_context_messages.create!(role: "user", content: "Message #{i}", llm_context: context)
-      end
+    context "without token data (fallback)" do
+      it "estimates from message count" do
+        50.times do |i|
+          context.llm_context_messages.create!(role: "user", content: "Message #{i}", llm_context: context)
+        end
 
-      result = evaluator.process
-      expect(result.fatigue).to eq(85)
-      expect(result.needs_compaction).to be true
+        result = evaluator.process
+        expect(result.fatigue).to be > 0
+        expect(result.needs_compaction).to be false
+      end
     end
   end
 end

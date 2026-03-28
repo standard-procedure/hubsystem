@@ -39,8 +39,9 @@ module Synthetic
       # 6. Emotional processing of outgoing response
       @emotional_processor.process_outgoing(response_text)
 
-      # 7. Capacity evaluation
-      @capacity_evaluator.process
+      # 7. Capacity evaluation and compaction
+      capacity = @capacity_evaluator.process
+      Compactor.new(synthetic).compact! if capacity.needs_compaction
 
       response_text
     end

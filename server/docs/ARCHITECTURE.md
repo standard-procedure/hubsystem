@@ -18,7 +18,7 @@ Synthetics maintain eight emotions as integer percentages (0-100): joy, sadness,
 
 #### Fatigue
 
-A synthetic's fatigue (0-100) represents how full its LLM context is. The [capacity evaluator](app/modules/synthetic/capacity_evaluator.rb) updates this after each message. At 80%+, compaction (context summarisation) is needed.
+A synthetic's fatigue (0-100) represents how full its LLM context is, calculated from actual token counts against the model's context window. The [capacity evaluator](app/modules/synthetic/capacity_evaluator.rb) updates this after each message. At 80%+, the [compactor](app/modules/synthetic/compactor.rb) triggers — the synthetic "sleeps", summarising older messages and extracting key facts into permanent [memories](app/models/synthetic/memory.rb).
 
 #### LLM Context
 

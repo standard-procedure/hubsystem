@@ -108,5 +108,43 @@ RSpec.describe Synthetic::Pipeline, type: :module do
       pipeline.process("Hello")
       expect(call_order).to eq([:threat, :emotion_in, :governor, :memory, :emotion_out, :capacity])
     end
+
+    it "triggers compaction when capacity evaluator flags it" do
+      mock_context
+
+      allow_any_instance_of(Synthetic::ThreatAssessor).to receive(:process)
+        .and_return(Synthetic::ThreatAssessor::Result.new(status: :safe, reason: "OK"))
+      allow_any_instance_of(Synthetic::EmotionalProcessor).to receive(:process_incoming).and_return({})
+      allow_any_instance_of(Synthetic::EmotionalProcessor).to receive(:process_outgoing).and_return({})
+      allow_any_instance_of(Synthetic::Governor).to receive(:process)
+        .and_return(Synthetic::Governor::Result.new(approved: true, reason: "OK"))
+      allow_any_instance_of(Synthetic::MemoryProcessor).to receive(:process)
+        .and_return(Synthetic::MemoryProcessor::Result.new(memories: []))
+      allow_any_instance_of(Synthetic::CapacityEvaluator).to receive(:process)
+        .and_return(Synthetic::CapacityEvaluator::Result.new(fatigue: 85, needs_compaction: true))
+
+      expect_any_instance_of(Synthetic::Compactor).to receive(:compact!)
+
+      pipeline.process("Hello after many messages")
+    end
+
+    it "does not trigger compaction when fatigue is low" do
+      mock_context
+
+      allow_any_instance_of(Synthetic::ThreatAssessor).to receive(:process)
+        .and_return(Synthetic::ThreatAssessor::Result.new(status: :safe, reason: "OK"))
+      allow_any_instance_of(Synthetic::EmotionalProcessor).to receive(:process_incoming).and_return({})
+      allow_any_instance_of(Synthetic::EmotionalProcessor).to receive(:process_outgoing).and_return({})
+      allow_any_instance_of(Synthetic::Governor).to receive(:process)
+        .and_return(Synthetic::Governor::Result.new(approved: true, reason: "OK"))
+      allow_any_instance_of(Synthetic::MemoryProcessor).to receive(:process)
+        .and_return(Synthetic::MemoryProcessor::Result.new(memories: []))
+      allow_any_instance_of(Synthetic::CapacityEvaluator).to receive(:process)
+        .and_return(Synthetic::CapacityEvaluator::Result.new(fatigue: 30, needs_compaction: false))
+
+      expect_any_instance_of(Synthetic::Compactor).not_to receive(:compact!)
+
+      pipeline.process("Normal message")
+    end
   end
 end
