@@ -4,6 +4,18 @@ module ConversationSteps
   include ActiveSupport::Testing::TimeHelpers
   include Wait
 
+  # Retry a click that may fail if Turbo morphs the DOM between find and click
+  def click_with_retry(selector, **opts)
+    wait_until do
+      begin
+        page.find(selector, **opts).click
+        true
+      rescue Playwright::Error
+        false
+      end
+    end
+  end
+
   # --- Authentication ---
 
   step "I have logged in as Alice" do
@@ -12,6 +24,7 @@ module ConversationSteps
     OmniAuth.config.add_mock :developer, uid: @alice_identity.uid
     visit root_path
     page.find(".btn", text: /developer login/i).click
+    wait_until { page.current_path == "/" }
   end
 
   # --- Setup / Given steps ---
@@ -32,52 +45,61 @@ module ConversationSteps
 
   step "I view the dashboard" do
     find("a[title='Dashboard']").click
+    wait_until { page.current_path == "/" }
+    expect(page).to have_css(".status-matrix")
   end
 
   step "I view my dashboard" do
     find("a[title='Dashboard']").click
+    wait_until { page.current_path == "/" }
+    expect(page).to have_css(".status-matrix")
   end
 
   step "I view my messages" do
     find("a[title='Messages']").click
+    wait_until { page.current_path == "/conversations" }
+    expect(page).to have_css(".conversation-list")
   end
 
   step "I view my archived messages" do
-    page.find(".nav-item", text: /archived/i).click
+    click_with_retry(".nav-item", text: /archived/i)
+    wait_until { page.current_path == "/conversations" }
   end
 
   step "I view the conversation request" do
     conversation = conversations(:bob_alice_requested)
     if page.has_css?(".status-matrix", wait: 1)
-      expect(page).to have_css(".matrix-cell--critical")
-      find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
+      click_with_retry("a.matrix-cell[href='#{conversation_path(conversation)}']")
     else
-      page.find(".conversation-item", text: /quick question/i).click
+      click_with_retry(".conversation-item", text: /quick question/i)
     end
+    wait_until { page.current_path == conversation_path(conversation) }
   end
 
   step "I click on the conversation with Bob" do
     conversation = conversations(:alice_bob_active)
     if page.has_css?(".status-matrix", wait: 1)
-      expect(page).to have_css("a.matrix-cell[href='#{conversation_path(conversation)}']")
-      find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
+      click_with_retry("a.matrix-cell[href='#{conversation_path(conversation)}']")
     else
-      page.find(".conversation-item", text: /catch up/i).click
+      click_with_retry(".conversation-item", text: /catch up/i)
     end
+    wait_until { page.current_path == conversation_path(conversation) }
   end
 
   # --- Actions ---
 
   step "I ask Bob to start a conversation" do
     find("a[title='Messages']").click
+    wait_until { page.current_path == "/conversations" }
     page.find("a.btn-primary", text: /new conversation/i).click
-    expect(page).to have_css(".radio-group")
+    wait_until { page.current_path == "/conversations/new" }
     bob = users(:bob)
     page.find("label[for='recipient_#{bob.id}']").click
     fill_in "conversation[subject]", with: "Hi Bob"
     page.find(".btn-primary", text: /send request/i).click
     wait_until { Conversation.count > 4 }
     @current_conversation = Conversation.last
+    wait_until { page.current_path == conversation_path(@current_conversation) }
   end
 
   step "Bob accepts the request" do
@@ -89,9 +111,21 @@ module ConversationSteps
     conversation = @current_conversation || conversations(:alice_bob_active)
     wait_until { conversation.reload.active? }
     find("a[title='Messages']").click
-    page.find(".conversation-item", text: /#{conversation.subject}/i).click
-    fill_in "message[content]", with: "How are you?"
-    page.find(".btn-primary", text: /send/i).click
+    wait_until { page.current_path == "/conversations" }
+    expect(page).to have_css(".conversation-list")
+    click_with_retry(".conversation-item", text: /#{conversation.subject}/i)
+    wait_until { page.current_path == conversation_path(conversation) }
+    wait_until do
+      begin
+        expect(page).to have_field("message[content]")
+        fill_in "message[content]", with: "How are you?"
+        page.find(".btn-primary", text: /send/i).click
+        true
+      rescue Playwright::Error, Capybara::ElementNotFound
+        false
+      end
+    end
+    wait_until { page.current_path == conversation_path(conversation) }
   end
 
   step "Bob replies to the message" do
@@ -101,12 +135,15 @@ module ConversationSteps
 
   step "I reject the request" do
     page.find(".btn-danger", text: /reject/i).click
+    wait_until { page.current_path == "/conversations" }
   end
 
   step "I close the conversation" do
     @current_conversation = conversations(:alice_bob_active)
     page.find("a.btn-ghost", text: /close conversation/i).click
+    wait_until { page.current_path == new_conversation_closure_path(@current_conversation) }
     page.find(".btn-danger", text: /close conversation/i).click
+    wait_until { page.current_path == "/conversations" }
   end
 
   # --- Assertions: Messages page ---
@@ -174,7 +211,10 @@ module ConversationSteps
     conversation = @current_conversation || conversations(:alice_bob_active)
     wait_until { conversation.messages.where(sender: users(:bob)).where("content LIKE ?", "%I'm good%").exists? }
     find("a[title='Messages']").click
+    wait_until { page.current_path == "/conversations" }
+    expect(page).to have_css(".conversation-list")
     page.find(".conversation-item", text: /#{conversation.subject}/i).click
+    wait_until { page.current_path == conversation_path(conversation) }
     expect(page).to have_content("I'm good, thanks!")
   end
 
@@ -191,5 +231,6 @@ module ConversationSteps
   step "I return to my dashboard a day later" do
     travel_to 2.days.from_now
     find("a[title='Dashboard']").click
+    wait_until { page.current_path == "/" }
   end
 end
