@@ -97,7 +97,7 @@ RSpec.describe Components::CrtMonitor, type: :component do
 
       expect(knobs[1].name).to eq("a")
       expect(knobs[1]["title"]).to eq("Messages")
-      expect(knobs[1]["href"]).to eq("/messages")
+      expect(knobs[1]["href"]).to eq("/conversations")
     end
 
     it "renders System as a non-link knob" do

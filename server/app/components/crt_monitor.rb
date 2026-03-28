@@ -51,7 +51,7 @@ class Components::CrtMonitor < Components::Base
       div class: "crt-bottom-inner" do
         div class: "crt-controls" do
           nav_knob :dashboard, "Dashboard", root_path
-          nav_knob :messages, "Messages", messages_path
+          nav_knob :messages, "Messages", conversations_path
           nav_knob :system, "System"
         end
         div class: "crt-nameplate" do

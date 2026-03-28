@@ -11,6 +11,8 @@ class User < ApplicationRecord
   before_validation :generate_uid, if: -> { uid.blank? }
   validates :uid, presence: true, uniqueness: true
   has_many :sessions, class_name: "User::Session", dependent: :destroy
+  has_many :initiated_conversations, class_name: "Conversation", foreign_key: :initiator_id, dependent: :destroy, inverse_of: :initiator
+  has_many :received_conversations, class_name: "Conversation", foreign_key: :recipient_id, dependent: :destroy, inverse_of: :recipient
   enum :status, active: 0, deleted: -1
 
   scope :system_administrators, -> { active.where(system_administrator: true) }

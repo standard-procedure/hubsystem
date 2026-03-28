@@ -12,6 +12,7 @@ class Views::Layouts::Application < Views::Base
   prop :title, String
   prop :subtitle, String, default: ""
   prop :user, _Any?, default: nil
+  prop :active_nav, Enum(:dashboard, :messages, :system), default: :dashboard
   prop :lang, String, default: "en"
   prop :head, _Callable?
   prop :attributes, Hash, :**, default: {}.freeze
@@ -21,7 +22,7 @@ class Views::Layouts::Application < Views::Base
     html(lang: @lang) do
       head { render_head }
       body do
-        render Components::CrtMonitor.new(brand: @title, user: @user), &
+        render Components::CrtMonitor.new(brand: @title, user: @user, active_nav: @active_nav), &
       end
     end
   end

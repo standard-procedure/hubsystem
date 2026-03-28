@@ -8,8 +8,18 @@ bob:
   name: Bob Badger
   type: User::Human
 
+charlie:
+  uid: charlie
+  name: Charlie Cheetah
+  type: User::Human
+
+dave:
+  uid: dave
+  name: Dave Dolphin
+  type: User::Human
+
 bishop:
   uid: bishop
   name: Bishop
   type: User::Synthetic
-  
+
