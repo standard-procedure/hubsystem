@@ -177,6 +177,34 @@ end
 
 Register in `Synthetic::Pipeline#tools` to make it available during processing.
 
+## Agent Loop
+
+Synthetics respond to messages automatically via Active Job:
+
+```
+Human sends message → Message#after_create_commit
+  → notify_synthetic_recipient
+    → SyntheticResponseJob.perform_later(message.id)
+      → Pipeline.new(synthetic).process(message.content)
+        → Creates response Message
+          → Turbo broadcast updates the human's screen
+```
+
+### Jobs
+
+| Job | Trigger | Action |
+|-----|---------|--------|
+| [SyntheticResponseJob](../app/jobs/synthetic_response_job.rb) | Message created where recipient is synthetic | Processes message through pipeline, creates response |
+| [SyntheticAcceptanceJob](../app/jobs/synthetic_acceptance_job.rb) | Conversation created where recipient is synthetic | Auto-accepts the request and responds to the subject |
+
+### Queue Configuration
+
+- **Development:** `async-job-adapter-active_job` (in-process, non-blocking)
+- **Production:** `solid_queue` (database-backed, runs via `bin/jobs`)
+- **Test:** `:inline` (synchronous — jobs execute immediately in specs)
+
+No separate agent process is needed. The web server handles job execution in development (async adapter), and `solid_queue` runs as a separate worker in production (`Procfile: worker: bin/jobs`).
+
 ## Testing
 
 All LLM calls are mocked in specs using `spec/support/llm_mock.rb`:
@@ -195,7 +223,6 @@ No real LLM calls are made during tests. Each processing module is tested in iso
 
 ## Future Work
 
-- **Agent loop** — Async fiber-based runner processing messages from conversations
 - **Task tools** — hierarchical tasks with dependencies, assignable to other users
 - **Reminder/schedule tools** — send self messages on a delay or cron schedule
 - **Bash tool** — execute commands in a sandboxed workspace (`workspaces/{uid}/`)

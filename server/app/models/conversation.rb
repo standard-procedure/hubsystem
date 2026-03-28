@@ -10,6 +10,7 @@ class Conversation < ApplicationRecord
   enum :status, requested: 0, active: 1, closed: 2
 
   after_update_commit :broadcast_refresh
+  after_create_commit :notify_synthetic_recipient
 
   validates :subject, presence: true
   validate :participants_are_different
@@ -31,5 +32,9 @@ class Conversation < ApplicationRecord
     if initiator_id.present? && initiator_id == recipient_id
       errors.add(:recipient_id, "must be different from initiator")
     end
+  end
+
+  def notify_synthetic_recipient
+    SyntheticAcceptanceJob.perform_later(id) if recipient.is_a?(User::Synthetic)
   end
 end
