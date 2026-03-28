@@ -2,7 +2,7 @@
 
 class Components::CrtMonitor < Components::Base
   prop :brand, String, default: "HubSystem"
-  prop :model, String, default: "Model MU/TH/UR 6000 — Interface Terminal"
+  prop :user, _Any?, default: nil
 
   def view_template(&)
     div class: "crt-housing" do
@@ -22,11 +22,12 @@ class Components::CrtMonitor < Components::Base
     div class: "crt-top" do
       div class: "crt-top-inner" do
         span(class: "crt-brand") { @brand }
-        div class: "crt-badge" do
-          div class: "crt-badge-led"
-          span(class: "crt-badge-text") { "Power" }
+        if @user
+          a href: helpers.logout_path, class: "crt-badge" do
+            div class: "crt-badge-led"
+            span(class: "crt-badge-text") { "Power" }
+          end
         end
-        span(class: "crt-model") { @model }
       end
       div class: "crt-vents" do
         12.times { div(class: "crt-vent") }

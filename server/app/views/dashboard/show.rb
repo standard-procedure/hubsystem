@@ -4,7 +4,7 @@ class Views::Dashboard::Show < Views::Base
   prop :user, User
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem") do
+    render Views::Layouts::Application.new(title: "HubSystem", user: @user) do
       Components::SystemPanel(title: "Welcome back #{@user}", subtitle: "Human \u2194 Agent Interface Protocol") do
         Terminal do |terminal|
           terminal.bright_line { "HUBSYSTEM INTERFACE TERMINAL v1.0" }
