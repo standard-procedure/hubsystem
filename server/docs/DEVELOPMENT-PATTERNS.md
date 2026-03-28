@@ -17,6 +17,60 @@ click_on "Developer login" # Does a fake authentication
 expect(page).to have_text "I am logged in"
 ```
 
+## Writing Web Steps
+
+Web steps must simulate real browser interaction. Use `visit` only for the initial page load (e.g. login). After that, navigate entirely through clicks — links, buttons, and nav controls.
+
+### Navigation
+
+Use the CRT Monitor knobs (identified by `title` attribute) and in-page links:
+
+```ruby
+find("a[title='Dashboard']").click    # CRT Monitor nav knob
+find("a[title='Messages']").click     # CRT Monitor nav knob
+click_on "Archived"                   # In-page nav item
+click_on "New Conversation"           # In-page button/link
+click_on "Catch up"                   # Conversation link by subject text
+```
+
+On the dashboard, conversations appear as status matrix cells without text. Click them by href:
+
+```ruby
+find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
+```
+
+### Forms
+
+Use `fill_in` for text fields and `find("label", text: "...").click` for radio buttons styled as buttons:
+
+```ruby
+find("label", text: "Bob Badger").click
+fill_in "conversation[subject]", with: "Hi Bob"
+click_on "Send Request"
+```
+
+### Simulating other users
+
+When another user acts (e.g. Bob accepts a request), update the model directly. Then use `wait_until` before navigating to see the result:
+
+```ruby
+# Bob acts in the background
+conversation.update!(status: :active)
+
+# Alice navigates to see the change
+wait_until { conversation.reload.active? }
+find("a[title='Messages']").click
+click_on conversation.subject
+```
+
+`wait_until` (from `spec/support/wait.rb`) polls a condition block until it returns truthy, with a 20-second timeout.
+
+### What NOT to do
+
+- Do not use `visit` after the initial login — click through the UI instead
+- Do not check model state as a substitute for asserting what the page shows
+- Do not use `page.driver` or other Capybara internals
+
 ## RESTful State Transitions
 
 State changes on resources are modelled as nested singular resources, each with its own controller. This keeps controllers focused and avoids custom actions.
