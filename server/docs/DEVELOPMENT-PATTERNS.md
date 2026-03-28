@@ -47,37 +47,79 @@ page.find("label[for='recipient_#{bob.id}']").click
 page.find(".btn-danger", text: /reject/i).click
 ```
 
+### Waiting for Turbo navigation
+
+Turbo Drive can double-trigger navigations during tests, detaching DOM elements between `find` and `click`. **Always** wait for the path to settle after clicking a navigation link:
+
+```ruby
+find("a[title='Messages']").click
+wait_until { page.current_path == "/conversations" }
+```
+
+`wait_until` (from `spec/support/wait.rb`) polls a condition block until it returns truthy, with a 20-second timeout.
+
+### click_with_retry
+
+For navigation clicks that are prone to Turbo morph issues, use `click_with_retry` which rescues `Playwright::Error` and retries:
+
+```ruby
+def click_with_retry(selector, **opts)
+  wait_until do
+    begin
+      page.find(selector, **opts).click
+      true
+    rescue Playwright::Error
+      false
+    end
+  end
+end
+```
+
+Use this for clicking links and buttons where Turbo may replace the DOM between find and click. Do **not** use it for form submissions where a retry could cause duplicate actions — use the form interaction pattern below instead.
+
 ### Navigation
 
-Use the CRT Monitor knobs (identified by `title` attribute) and in-page links:
+Use the CRT Monitor knobs (identified by `title` attribute) and in-page links, always followed by a path wait:
 
 ```ruby
-find("a[title='Dashboard']").click    # CRT Monitor nav knob
-find("a[title='Messages']").click     # CRT Monitor nav knob
-page.find(".nav-item", text: /archived/i).click  # In-page nav item
+find("a[title='Dashboard']").click              # CRT Monitor nav knob
+wait_until { page.current_path == "/" }
+
+find("a[title='Messages']").click               # CRT Monitor nav knob
+wait_until { page.current_path == "/conversations" }
+
+click_with_retry(".nav-item", text: /archived/i) # In-page nav item
+wait_until { page.current_path == "/conversations" }
 ```
 
-On the dashboard, conversations appear as status matrix cells without text. Click them by href:
+On the dashboard, conversations appear as status matrix cells without text. Click them by href using `click_with_retry`:
 
 ```ruby
-find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
-```
-
-When clicking matrix cells after Turbo Drive navigation, wait for the target element to be present first to avoid stale element references:
-
-```ruby
-expect(page).to have_css("a.matrix-cell[href='#{conversation_path(conversation)}']")
-find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
+click_with_retry("a.matrix-cell[href='#{conversation_path(conversation)}']")
+wait_until { page.current_path == conversation_path(conversation) }
 ```
 
 ### Forms
 
-Use `fill_in` for text fields and click labels for styled radio buttons (see [Radio buttons](#radio-buttons-styled-as-buttons) below):
+Turbo can detach form elements mid-interaction. Wrap the entire fill-and-submit sequence in a `wait_until` block that retries on `Playwright::Error`:
+
+```ruby
+wait_until do
+  begin
+    expect(page).to have_field("message[content]")
+    fill_in "message[content]", with: "How are you?"
+    page.find(".btn-primary", text: /send/i).click
+    true
+  rescue Playwright::Error, Capybara::ElementNotFound
+    false
+  end
+end
+```
+
+For radio buttons styled as buttons, click the label by `for` attribute (see [Radio buttons](#radio-buttons-styled-as-buttons)):
 
 ```ruby
 page.find("label[for='recipient_#{bob.id}']").click
-fill_in "conversation[subject]", with: "Hi Bob"
-page.find(".btn-primary", text: /send request/i).click
 ```
 
 ### Simulating other users
@@ -91,10 +133,10 @@ conversation.update!(status: :active)
 # Alice navigates to see the change
 wait_until { conversation.reload.active? }
 find("a[title='Messages']").click
-page.find(".conversation-item", text: /#{conversation.subject}/i).click
+wait_until { page.current_path == "/conversations" }
+click_with_retry(".conversation-item", text: /#{conversation.subject}/i)
+wait_until { page.current_path == conversation_path(conversation) }
 ```
-
-`wait_until` (from `spec/support/wait.rb`) polls a condition block until it returns truthy, with a 20-second timeout.
 
 ### What NOT to do
 
@@ -102,6 +144,7 @@ page.find(".conversation-item", text: /#{conversation.subject}/i).click
 - Do not check model state as a substitute for asserting what the page shows
 - Do not use `page.driver` or other Capybara internals
 - Do not use `click_on` with exact text when CSS `text-transform` is in play — use `page.find` with a regex or CSS selector
+- Do not click navigation links without a subsequent `wait_until { page.current_path == ... }` — Turbo double-triggers cause stale element references
 
 ## Radio Buttons Styled as Buttons
 
