@@ -12,8 +12,13 @@ class Views::Conversations::New < Views::Base
         form_with url: conversations_path, method: :post do |form|
           Column gap: 12 do
             div do
-              label(for: "conversation_recipient_id") { "Recipient" }
-              form.select :recipient_id, @users.map { |u| [u.name, u.id] }, {}, id: "conversation_recipient_id", class: "input"
+              p(class: "field-label") { "Choose recipient" }
+              div class: "radio-group" do
+                @users.each do |u|
+                  input type: "radio", name: "conversation[recipient_id]", value: u.id, id: "recipient_#{u.id}", required: true
+                  label(for: "recipient_#{u.id}") { u.name }
+                end
+              end
             end
             Input name: "conversation[subject]", label: "Subject", placeholder: "What's this about?", type: "text", required: true
             Row justify: "end" do

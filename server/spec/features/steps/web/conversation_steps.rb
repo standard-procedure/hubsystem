@@ -59,7 +59,7 @@ module ConversationSteps
 
   step "I ask Bob to start a conversation" do
     visit new_conversation_path
-    select "Bob Badger", from: "conversation_recipient_id"
+    find("label", text: "Bob Badger").click
     fill_in "conversation[subject]", with: "Hi Bob"
     click_on "Send Request"
     @current_conversation = Conversation.last
@@ -74,7 +74,7 @@ module ConversationSteps
 
   step "I send Bob a message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    visit conversation_path(conversation) unless current_path == conversation_path(conversation)
+    visit conversation_path(conversation)
     fill_in "message[content]", with: "How are you?"
     click_on "Send"
   end

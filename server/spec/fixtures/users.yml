@@ -18,8 +18,23 @@ dave:
   name: Dave Dolphin
   type: User::Human
 
+eve:
+  uid: eve
+  name: Eve Eagle
+  type: User::Human
+
+frank:
+  uid: frank
+  name: Frank Falcon
+  type: User::Human
+
 bishop:
   uid: bishop
   name: Bishop
+  type: User::Synthetic
+
+ash:
+  uid: ash
+  name: Ash
   type: User::Synthetic
 
