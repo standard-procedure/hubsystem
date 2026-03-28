@@ -265,35 +265,73 @@ end
 
 ## Testing
 
-Phlex components are plain Ruby objects. Test them by calling `.call`:
+Specs live in `spec/components/` and use RSpec. Components that use Rails route helpers need a view context — use `view_context.render(...)` to render them.
+
+### Test helper pattern
+
+Define these helpers in your spec (or extract to a shared module):
 
 ```ruby
-# Simple assertion
-output = Components::Card.new(title: "Test").call
-assert_equal '<article class="card"><h2>Test</h2></article>', output
+def controller
+  @controller ||= ActionView::TestCase::TestController.new
+end
 
-# With Nokogiri for complex HTML
-fragment = Nokogiri::HTML5.fragment(output)
-assert fragment.at_css("h2")&.text == "Test"
+def view_context
+  controller.view_context
+end
+
+def render(component, &block)
+  view_context.render(component, &block)
+end
+
+def render_fragment(component, &block)
+  Nokogiri::HTML5.fragment(render(component, &block))
+end
 ```
 
-### Rails integration in tests
+### Writing specs
+
+Use `render_fragment` to get a Nokogiri fragment, then query with CSS selectors:
 
 ```ruby
-module ComponentTestHelper
-  def render(...)
-    view_context.render(...)
+RSpec.describe Components::CrtMonitor, type: :component do
+  fixtures :users
+
+  # ... helper methods above ...
+
+  it "renders the brand name" do
+    html = render_fragment(described_class.new(brand: "TestBrand"))
+
+    expect(html.at_css(".crt-brand").text).to eq("TestBrand")
   end
 
-  def view_context
-    controller.view_context
-  end
+  it "renders a logout link when a user is set" do
+    html = render_fragment(described_class.new(user: users(:alice)))
+    badge = html.at_css("a.crt-badge")
 
-  def controller
-    @controller ||= ActionView::TestCase::TestController.new
+    expect(badge).to be_present
+    expect(badge["href"]).to eq("/logout")
   end
 end
 ```
+
+### Simple components (no Rails helpers)
+
+Components that don't use route helpers or other Rails view helpers can be tested with `.call` directly:
+
+```ruby
+output = Components::Card.new(title: "Test").call
+fragment = Nokogiri::HTML5.fragment(output)
+expect(fragment.at_css("h2").text).to eq("Test")
+```
+
+### Tips
+
+- Use `at_css` for single elements, `css` for collections
+- Check element names with `.name` (e.g. `expect(node.name).to eq("a")`)
+- Check attributes with `node["href"]`, `node["class"]`, `node["title"]`
+- Use `include` matcher for class checks: `expect(node["class"]).to include("active")`
+- Fixtures are loaded with `fixtures :users` — see `spec/fixtures/`
 
 ## Helpers Reference
 
