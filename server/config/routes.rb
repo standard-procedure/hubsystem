@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root "dashboard#show"
+  resources :messages, only: [:index]
 
   resource :session
   match "/auth/:provider/callback", to: "sessions#create", via: [:get, :post], as: :login

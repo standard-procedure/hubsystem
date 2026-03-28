@@ -3,6 +3,7 @@
 class Components::CrtMonitor < Components::Base
   prop :brand, String, default: "HubSystem"
   prop :user, _Any?, default: nil
+  prop :active_nav, Enum(:dashboard, :messages, :system), default: :dashboard
 
   def view_template(&)
     div class: "crt-housing" do
@@ -35,14 +36,23 @@ class Components::CrtMonitor < Components::Base
     end
   end
 
+  def nav_knob(name, label, href = nil)
+    css = "crt-knob"
+    css += " crt-knob--power" if @active_nav == name
+    if href
+      a(href: href, class: css, title: label)
+    else
+      div(class: css, title: label)
+    end
+  end
+
   def render_bottom
     div class: "crt-bottom" do
       div class: "crt-bottom-inner" do
         div class: "crt-controls" do
-          div(class: "crt-knob crt-knob--power")
-          div(class: "crt-knob")
-          div(class: "crt-knob")
-          span(class: "crt-label") { "Brightness · Contrast · V-Hold" }
+          nav_knob :dashboard, "Dashboard", helpers.root_path
+          nav_knob :messages, "Messages", helpers.messages_path
+          nav_knob :system, "System"
         end
         div class: "crt-nameplate" do
           span(class: "crt-nameplate-text") { "MU/TH/UR 6000" }
