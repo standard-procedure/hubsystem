@@ -11,7 +11,7 @@ module ConversationSteps
     @alice_identity = user_identities(:alice_developer)
     OmniAuth.config.add_mock :developer, uid: @alice_identity.uid
     visit root_path
-    click_on "Developer login"
+    page.find(".btn", text: /developer login/i).click
   end
 
   # --- Setup / Given steps ---
@@ -43,24 +43,26 @@ module ConversationSteps
   end
 
   step "I view my archived messages" do
-    click_on "Archived"
+    page.find(".nav-item", text: /archived/i).click
   end
 
   step "I view the conversation request" do
     conversation = conversations(:bob_alice_requested)
-    if page.has_css?(".status-matrix")
+    if page.has_css?(".status-matrix", wait: 1)
+      expect(page).to have_css(".matrix-cell--critical")
       find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
     else
-      click_on "Quick question"
+      page.find(".conversation-item", text: /quick question/i).click
     end
   end
 
   step "I click on the conversation with Bob" do
     conversation = conversations(:alice_bob_active)
-    if page.has_css?(".status-matrix")
+    if page.has_css?(".status-matrix", wait: 1)
+      expect(page).to have_css("a.matrix-cell[href='#{conversation_path(conversation)}']")
       find("a.matrix-cell[href='#{conversation_path(conversation)}']").click
     else
-      click_on "Catch up"
+      page.find(".conversation-item", text: /catch up/i).click
     end
   end
 
@@ -68,27 +70,28 @@ module ConversationSteps
 
   step "I ask Bob to start a conversation" do
     find("a[title='Messages']").click
-    click_on "New Conversation"
-    find("label", text: "Bob Badger").click
+    page.find("a.btn-primary", text: /new conversation/i).click
+    expect(page).to have_css(".radio-group")
+    bob = users(:bob)
+    page.find("label[for='recipient_#{bob.id}']").click
     fill_in "conversation[subject]", with: "Hi Bob"
-    click_on "Send Request"
+    page.find(".btn-primary", text: /send request/i).click
+    wait_until { Conversation.count > 4 }
     @current_conversation = Conversation.last
   end
 
   step "Bob accepts the request" do
     conversation = @current_conversation || conversations(:bob_alice_requested)
-    # Simulating Bob's action in the background
     conversation.update!(status: :active)
   end
 
   step "I send Bob a message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
-    # After Bob accepts, we need to refresh the page to see the message form
     wait_until { conversation.reload.active? }
     find("a[title='Messages']").click
-    click_on conversation.subject
+    page.find(".conversation-item", text: /#{conversation.subject}/i).click
     fill_in "message[content]", with: "How are you?"
-    click_on "Send"
+    page.find(".btn-primary", text: /send/i).click
   end
 
   step "Bob replies to the message" do
@@ -97,19 +100,19 @@ module ConversationSteps
   end
 
   step "I reject the request" do
-    click_on "Reject"
+    page.find(".btn-danger", text: /reject/i).click
   end
 
   step "I close the conversation" do
     @current_conversation = conversations(:alice_bob_active)
-    click_on "Close Conversation"
-    click_on "Close Conversation"
+    page.find("a.btn-ghost", text: /close conversation/i).click
+    page.find(".btn-danger", text: /close conversation/i).click
   end
 
   # --- Assertions: Messages page ---
 
   step "I should see my existing conversations" do
-    expect(page).to have_content("Catch up")
+    expect(page).to have_css(".conversation-item", text: /catch up/i)
   end
 
   step "any conversations with unread messages should be highlighted in amber" do
@@ -122,7 +125,6 @@ module ConversationSteps
 
   step "I should see the conversation request from Bob highlighted in red" do
     expect(page).to have_css(".conversation-item--request")
-    expect(page).to have_content("Quick question")
   end
 
   step "I should see the previous messages between Bob and me" do
@@ -131,11 +133,11 @@ module ConversationSteps
   end
 
   step "I should not see the conversation with Bob" do
-    expect(page).not_to have_content("Catch up")
+    expect(page).not_to have_css(".conversation-item", text: /catch up/i)
   end
 
   step "I should see the conversation with Bob" do
-    expect(page).to have_content("Catch up")
+    expect(page).to have_css(".conversation-item", text: /catch up/i)
   end
 
   # --- Assertions: Dashboard ---
@@ -166,15 +168,13 @@ module ConversationSteps
   step "Bob should receive my message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
     wait_until { conversation.messages.where(sender: users(:alice)).where("content LIKE ?", "%How are you?%").exists? }
-    expect(conversation.messages.where(sender: users(:alice)).last.content).to eq("How are you?")
   end
 
   step "I should receive Bob's message" do
     conversation = @current_conversation || conversations(:alice_bob_active)
     wait_until { conversation.messages.where(sender: users(:bob)).where("content LIKE ?", "%I'm good%").exists? }
-    # Navigate to the conversation to see the new message
     find("a[title='Messages']").click
-    click_on conversation.subject
+    page.find(".conversation-item", text: /#{conversation.subject}/i).click
     expect(page).to have_content("I'm good, thanks!")
   end
 

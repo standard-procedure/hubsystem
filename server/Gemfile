@@ -43,7 +43,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "capybara"
   gem "turnip"
-  gem "playwright-ruby-client"
+  gem "capybara-playwright-driver"
   gem "rspec-openapi"
   gem "puma" # for javascript capybara tests
 end

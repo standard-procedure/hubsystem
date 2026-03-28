@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class Conversation < ApplicationRecord
+  include Turbo::Broadcastable
+
   belongs_to :initiator, class_name: "User"
   belongs_to :recipient, class_name: "User"
   has_many :messages, dependent: :destroy
 
   enum :status, requested: 0, active: 1, closed: 2
+
+  after_update_commit :broadcast_refresh
 
   validates :subject, presence: true
   validate :participants_are_different

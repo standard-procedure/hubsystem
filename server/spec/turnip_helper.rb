@@ -6,7 +6,7 @@ test_interface = ActiveSupport::StringInquirer.new(ENV.fetch("TEST_INTERFACE", "
 
 if test_interface.web?
   require "turnip/capybara"
-  require "playwright"
+  require "capybara/playwright"
 
   Capybara.register_driver :chromium do |app|
     Capybara::Playwright::Driver.new(app, browser_type: :chromium, headless: true, viewport: {width: 1600, height: 1600})
