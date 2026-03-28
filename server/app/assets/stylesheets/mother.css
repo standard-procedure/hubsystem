@@ -975,6 +975,14 @@
     .crt-bezel { padding: 8px; }
     .screen-content { padding: 20px 16px 28px; }
   }
+
+  @media (max-width: 480px) {
+    .crt-top { padding: 12px 12px 8px; border-radius: 0; }
+    .crt-bottom { padding: 10px 12px 14px; border-radius: 0; }
+    .crt-bezel { padding: 4px; }
+    .screen-content { padding: 12px 8px 20px; }
+    .crt-housing { border-radius: 0; }
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1043,6 +1051,10 @@
 
 @media (max-width: 900px) {
   body { padding: 16px 8px 32px; }
+}
+
+@media (max-width: 480px) {
+  body { padding: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
