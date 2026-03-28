@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_28_134002) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_28_212542) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -51,6 +51,70 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_134002) do
     t.index ["initiator_id"], name: "index_conversations_on_initiator_id"
     t.index ["recipient_id", "status"], name: "index_conversations_on_recipient_id_and_status"
     t.index ["recipient_id"], name: "index_conversations_on_recipient_id"
+  end
+
+  create_table "llm_context_messages", force: :cascade do |t|
+    t.integer "cache_creation_tokens"
+    t.integer "cached_tokens"
+    t.text "content"
+    t.json "content_raw"
+    t.datetime "created_at", null: false
+    t.integer "input_tokens"
+    t.integer "llm_context_id", null: false
+    t.integer "llm_context_tool_call_id"
+    t.integer "llm_model_id"
+    t.integer "output_tokens"
+    t.string "role", null: false
+    t.text "thinking_signature"
+    t.text "thinking_text"
+    t.integer "thinking_tokens"
+    t.datetime "updated_at", null: false
+    t.index ["llm_context_id"], name: "index_llm_context_messages_on_llm_context_id"
+    t.index ["llm_context_tool_call_id"], name: "index_llm_context_messages_on_llm_context_tool_call_id"
+    t.index ["llm_model_id"], name: "index_llm_context_messages_on_llm_model_id"
+    t.index ["role"], name: "index_llm_context_messages_on_role"
+  end
+
+  create_table "llm_context_tool_calls", force: :cascade do |t|
+    t.json "arguments", default: {}
+    t.datetime "created_at", null: false
+    t.integer "llm_context_message_id", null: false
+    t.string "name", null: false
+    t.text "thought_signature"
+    t.string "tool_call_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["llm_context_message_id"], name: "index_llm_context_tool_calls_on_llm_context_message_id"
+    t.index ["name"], name: "index_llm_context_tool_calls_on_name"
+    t.index ["tool_call_id"], name: "index_llm_context_tool_calls_on_tool_call_id", unique: true
+  end
+
+  create_table "llm_contexts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "llm_model_id"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["llm_model_id"], name: "index_llm_contexts_on_llm_model_id"
+    t.index ["user_id"], name: "index_llm_contexts_on_user_id"
+  end
+
+  create_table "llm_models", force: :cascade do |t|
+    t.json "capabilities", default: []
+    t.integer "context_window"
+    t.datetime "created_at", null: false
+    t.string "family"
+    t.date "knowledge_cutoff"
+    t.integer "max_output_tokens"
+    t.json "metadata", default: {}
+    t.json "modalities", default: {}
+    t.datetime "model_created_at"
+    t.string "model_id", null: false
+    t.string "name", null: false
+    t.json "pricing", default: {}
+    t.string "provider", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family"], name: "index_llm_models_on_family"
+    t.index ["provider", "model_id"], name: "index_llm_models_on_provider_and_model_id", unique: true
+    t.index ["provider"], name: "index_llm_models_on_provider"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -239,6 +303,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_134002) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "users", column: "initiator_id"
   add_foreign_key "conversations", "users", column: "recipient_id"
+  add_foreign_key "llm_context_messages", "llm_context_tool_calls"
+  add_foreign_key "llm_context_messages", "llm_contexts"
+  add_foreign_key "llm_context_messages", "llm_models"
+  add_foreign_key "llm_context_tool_calls", "llm_context_messages"
+  add_foreign_key "llm_contexts", "llm_models"
+  add_foreign_key "llm_contexts", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
