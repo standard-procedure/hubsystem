@@ -37,6 +37,7 @@ hubsystem/
 | Know what to build next | `docs/IMPLEMENTATION-PLAN.md` |
 | **Work on the Rails server** | **`hubsystem-server/AGENTS.md`** ← Start here for development |
 | Server tech stack & principles | `hubsystem-server/AGENTS.md` |
+| Synthetic agent architecture | `hubsystem-server/docs/SYNTHETIC-AGENTS.md` |
 
 ## Key Concepts
 

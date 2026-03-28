@@ -34,6 +34,10 @@ This project uses **Phlex** (not ERB) for all HTML rendering. See [`docs/PHLEX-G
 
 See `../docs/ARCHITECTURE.md` for full design.
 
+## Synthetic Agents
+
+Synthetics are persistent AI entities with identity, emotion, and memory. See [`docs/SYNTHETIC-AGENTS.md`](docs/SYNTHETIC-AGENTS.md) for the full architecture — processing pipeline, emotional state, LLM context, memory system, and testing approach.
+
 ---
 
 **For complete development standards**, see the full AGENTS.md at the application root.
