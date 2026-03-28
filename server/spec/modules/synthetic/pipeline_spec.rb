@@ -11,6 +11,7 @@ RSpec.describe Synthetic::Pipeline, type: :module do
   let(:mock_context) do
     context = bishop.ensure_llm_context
     mock_response = instance_double(RubyLLM::Message, content: "I can help with that.")
+    allow(context).to receive(:with_tools).and_return(context)
     allow(context).to receive(:ask).and_return(mock_response)
     allow(bishop).to receive(:ensure_llm_context).and_return(context)
     context

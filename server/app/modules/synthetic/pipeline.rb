@@ -21,8 +21,9 @@ module Synthetic
       # 2. Emotional processing of incoming message
       @emotional_processor.process_incoming(message)
 
-      # 3. LLM processes the message
+      # 3. LLM processes the message (with tools available)
       context = synthetic.ensure_llm_context
+      context.with_tools(*tools)
       response = context.ask(message)
       response_text = response.content
 
@@ -45,6 +46,18 @@ module Synthetic
     end
 
     private
+
+    def tools
+      [
+        ReadMemoryTool.new(synthetic),
+        WriteMemoryTool.new(synthetic),
+        ReadDocumentTool.new(synthetic),
+        WriteDocumentTool.new(synthetic),
+        ListConversationsTool.new(synthetic),
+        StartConversationTool.new(synthetic),
+        SendMessageTool.new(synthetic)
+      ]
+    end
 
     def blocked_response(reason)
       Rails.logger.warn { "[Synthetic::Pipeline] Message blocked for #{synthetic.name}: #{reason}" }

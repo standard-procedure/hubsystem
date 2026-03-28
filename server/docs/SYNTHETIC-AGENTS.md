@@ -140,6 +140,43 @@ Vector embeddings for semantic search will be added when migrating to PostgreSQL
 
 [Documents](../app/models/document.rb) are public knowledge visible to all users. Any user (human or synthetic) can author documents. Same tag and text search interface as memories.
 
+## Tools
+
+Synthetics have tools available during LLM processing, defined under `app/tools/` as [RubyLLM tool classes](https://rubyllm.com/tools/). Tools receive a reference to the synthetic on initialization and are registered with the LLM context in the [pipeline](../app/modules/synthetic/pipeline.rb).
+
+### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| [ReadMemoryTool](../app/tools/read_memory_tool.rb) | Search private memories by tag or text |
+| [WriteMemoryTool](../app/tools/write_memory_tool.rb) | Store a private memory with tags |
+| [ReadDocumentTool](../app/tools/read_document_tool.rb) | Search public documents by tag or text |
+| [WriteDocumentTool](../app/tools/write_document_tool.rb) | Create a public document |
+| [ListConversationsTool](../app/tools/list_conversations_tool.rb) | List conversations and requests |
+| [StartConversationTool](../app/tools/start_conversation_tool.rb) | Send a conversation request to another user |
+| [SendMessageTool](../app/tools/send_message_tool.rb) | Send a message in an active conversation |
+
+### Adding New Tools
+
+```ruby
+# app/tools/my_tool.rb
+class MyTool < RubyLLM::Tool
+  description "What the tool does"
+  param :arg, type: "string", desc: "Argument description", required: true
+
+  def initialize(synthetic)
+    @synthetic = synthetic
+    super()
+  end
+
+  def execute(arg:)
+    "Result for #{arg}"
+  end
+end
+```
+
+Register in `Synthetic::Pipeline#tools` to make it available during processing.
+
 ## Testing
 
 All LLM calls are mocked in specs using `spec/support/llm_mock.rb`:
@@ -159,7 +196,9 @@ No real LLM calls are made during tests. Each processing module is tested in iso
 ## Future Work
 
 - **Agent loop** — Async fiber-based runner processing messages from conversations
-- **Tools** — RubyLLM tool definitions for memory, documents, conversations, tasks, bash
+- **Task tools** — hierarchical tasks with dependencies, assignable to other users
+- **Reminder/schedule tools** — send self messages on a delay or cron schedule
+- **Bash tool** — execute commands in a sandboxed workspace (`workspaces/{uid}/`)
 - **Compaction** — summarise and replace old LLM context messages when fatigue exceeds threshold
 - **Docker sandbox** — containerised bash execution per synthetic
 - **pgvector** — semantic search for memories and documents after PostgreSQL migration
