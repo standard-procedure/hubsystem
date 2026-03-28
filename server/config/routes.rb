@@ -10,6 +10,12 @@ Rails.application.routes.draw do
     resource :closure, only: [:new, :create], controller: "conversation_closures"
   end
 
+  resources :tasks, only: [:index, :show, :new, :create] do
+    resource :assignment, only: [:update], controller: "task_assignments"
+    resource :completion, only: [:create], controller: "task_completions"
+    resource :cancellation, only: [:create], controller: "task_cancellations"
+  end
+
   resources :messages, only: [:index]
 
   resource :session

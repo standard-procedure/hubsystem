@@ -90,9 +90,15 @@ Tasks with a `due_at` timestamp are picked up by [TaskReminderJob](app/jobs/task
 
 Tasks with a `schedule` field (cron expression, parsed by [Fugit](https://github.com/floraison/fugit)) repeat automatically. When a scheduled task completes, a new pending task is created with the same subject, description, assignee, tags, and schedule, with `due_at` set to the next cron occurrence. Cancelling a scheduled task stops the recurrence.
 
+### Web UI
+
+Tasks are managed via [TasksController](app/controllers/tasks_controller.rb) accessible from the System knob in the CRT Monitor footer. The index shows two tabs: "Assigned to me" (active tasks) and "Created by me". Task show pages allow assignment (radio buttons), completion, cancellation, and adding subtasks.
+
+State transitions use [RESTful nested resources](DEVELOPMENT-PATTERNS.md#restful-state-transitions): `TaskAssignmentsController`, `TaskCompletionsController`, `TaskCancellationsController`.
+
 ### Dashboard
 
-The dashboard shows a [status matrix](app/components/status_matrix.rb) of the current user's conversations:
+The dashboard shows a task summary [status bar](app/components/status_bar.rb) with pending, blocked, and overdue counts, plus a [status matrix](app/components/status_matrix.rb) of the current user's conversations:
 - **Nominal** (green) — active, all messages read
 - **Warning** (amber) — unread messages
 - **Critical** (red) — pending conversation request

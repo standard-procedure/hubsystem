@@ -100,12 +100,13 @@ RSpec.describe Components::CrtMonitor, type: :component do
       expect(knobs[1]["href"]).to eq("/conversations")
     end
 
-    it "renders System as a non-link knob" do
+    it "renders System as a link to tasks" do
       html = render_fragment(described_class.new)
       knobs = html.css(".crt-controls .crt-knob")
 
-      expect(knobs[2].name).to eq("div")
+      expect(knobs[2].name).to eq("a")
       expect(knobs[2]["title"]).to eq("System")
+      expect(knobs[2]["href"]).to eq("/tasks")
     end
 
     it "highlights the dashboard knob by default" do

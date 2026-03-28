@@ -52,7 +52,7 @@ class Components::CrtMonitor < Components::Base
         div class: "crt-controls" do
           nav_knob :dashboard, "Dashboard", root_path
           nav_knob :messages, "Messages", conversations_path
-          nav_knob :system, "System"
+          nav_knob :system, "System", tasks_path
         end
         div class: "crt-nameplate" do
           span(class: "crt-nameplate-text") { "MU/TH/UR 6000" }
