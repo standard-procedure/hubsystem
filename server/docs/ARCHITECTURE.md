@@ -86,6 +86,10 @@ On completion or cancellation, the task creator receives a message via an active
 
 Tasks with a `due_at` timestamp are picked up by [TaskReminderJob](app/jobs/task_reminder_job.rb), which runs every minute via SolidQueue's recurring job config, sending reminder messages to assignees.
 
+### Scheduled / Repeating Tasks
+
+Tasks with a `schedule` field (cron expression, parsed by [Fugit](https://github.com/floraison/fugit)) repeat automatically. When a scheduled task completes, a new pending task is created with the same subject, description, assignee, tags, and schedule, with `due_at` set to the next cron occurrence. Cancelling a scheduled task stops the recurrence.
+
 ### Dashboard
 
 The dashboard shows a [status matrix](app/components/status_matrix.rb) of the current user's conversations:

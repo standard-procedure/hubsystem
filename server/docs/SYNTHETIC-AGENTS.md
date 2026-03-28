@@ -227,7 +227,6 @@ No real LLM calls are made during tests. Each processing module is tested in iso
 
 ## Future Work
 
-- **Scheduled/repeating tasks** — tasks with cron-style `schedule` field that auto-create on completion
 - **Bash tool** — execute commands in a sandboxed workspace (`workspaces/{uid}/`)
 - **Compaction** — summarise and replace old LLM context messages when fatigue exceeds threshold
 - **Docker sandbox** — containerised bash execution per synthetic

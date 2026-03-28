@@ -163,6 +163,56 @@ RSpec.describe Task, type: :model do
     end
   end
 
+  describe "scheduling" do
+    it "validates cron expression format" do
+      task = Task.new(creator: alice, subject: "Bad schedule", schedule: "not a cron")
+      expect(task).not_to be_valid
+      expect(task.errors[:schedule]).to include("is not a valid cron expression")
+    end
+
+    it "accepts valid cron expressions" do
+      task = Task.new(creator: alice, subject: "Daily", schedule: "0 9 * * *")
+      expect(task).to be_valid
+    end
+
+    it "identifies scheduled tasks" do
+      scheduled = Task.create!(creator: alice, subject: "Daily standup", schedule: "0 9 * * *")
+      normal = Task.create!(creator: alice, subject: "One-off")
+      expect(scheduled).to be_scheduled
+      expect(normal).not_to be_scheduled
+    end
+
+    it "calculates next_due_at from cron expression" do
+      task = Task.create!(creator: alice, subject: "Hourly", schedule: "0 * * * *")
+      expect(task.next_due_at).to be > Time.current
+      expect(task.next_due_at).to be < 2.hours.from_now
+    end
+
+    it "creates next occurrence on completion" do
+      task = Task.create!(creator: alice, assignee: bob, subject: "Daily report", schedule: "0 9 * * *", tags: ["ops"])
+
+      expect {
+        task.complete!
+      }.to change(Task, :count).by(1)
+
+      next_task = Task.pending.where(schedule: "0 9 * * *").last
+      expect(next_task.subject).to eq("Daily report")
+      expect(next_task.assignee).to eq(bob)
+      expect(next_task.creator).to eq(alice)
+      expect(next_task.schedule).to eq("0 9 * * *")
+      expect(next_task.tags).to eq(["ops"])
+      expect(next_task.due_at).to be_present
+    end
+
+    it "does not create next occurrence on cancellation" do
+      task = Task.create!(creator: alice, subject: "Daily", schedule: "0 9 * * *")
+
+      expect {
+        task.cancel!
+      }.not_to change(Task, :count)
+    end
+  end
+
   describe "scopes" do
     describe ".due" do
       it "returns pending tasks with due_at in the past" do
