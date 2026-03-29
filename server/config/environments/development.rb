@@ -80,5 +80,5 @@ Rails.application.configure do
 
   # Use SolidQueue for background jobs (run via bin/jobs or Procfile.dev)
   config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  config.solid_queue.connects_to = {database: {writing: :queue}}
 end
