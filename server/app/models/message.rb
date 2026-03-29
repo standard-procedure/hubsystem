@@ -8,7 +8,7 @@ class Message < ApplicationRecord
 
   validates :content, presence: true
 
-  broadcasts_refresh_to :conversation
+  broadcasts_refreshes_to :conversation
   after_create_commit :notify_synthetic_recipient
 
   scope :unread, -> { where(read_at: nil) }

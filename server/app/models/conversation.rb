@@ -9,7 +9,7 @@ class Conversation < ApplicationRecord
 
   enum :status, requested: 0, active: 1, closed: 2
 
-  broadcasts_refresh
+  broadcasts_refreshes
   after_commit :broadcast_conversation_matrices
   after_create_commit :notify_synthetic_recipient
 
