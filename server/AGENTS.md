@@ -84,6 +84,15 @@ Tests use Rails fixtures (not factories). Fixture files are in `spec/fixtures/`.
 - User fixtures require `role_type` and `role_id` (delegated type). Use `<%= ActiveRecord::FixtureSet.identify(:fixture_name) %>` for `role_id`. Corresponding role fixtures live in `humans.yml` and `synthetics.yml`.
 - Specs tagged `:llm` hit real Ollama and are excluded by default. Run them with: `bin/rspec --tag llm`
 
+### Web UI Testing Principle
+
+Always write web UI tests assuming JavaScript is unavailable. Use Rack::Test (request specs) which is fast and avoids timing issues. The actual implementation may use JS (turbo-frames, broadcasts) but tests should work without it:
+
+- Links open new pages in tests but may open within turbo-frames in a real browser
+- For turbo-broadcasts, reload the page to check updates
+- Playwright is a last resort — ask for advice before using it
+- If a scenario proves difficult without JS, we'll devise patterns for common Turbo scenarios
+
 ### Ollama Models
 
 RubyLLM doesn't have `nomic-embed-text` in its built-in registry. Use `assume_model_exists: true` and `provider: :openai` when calling `RubyLLM.embed` with Ollama models. Model tiers are configured in `config/llm_models.yml`.

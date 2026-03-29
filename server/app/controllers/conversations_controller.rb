@@ -17,20 +17,6 @@ class ConversationsController < ApplicationController
   end
 
   def new
-    render Views::Conversations::New.new(user: Current.user, users: User.where.not(id: Current.user.id).in_order)
-  end
-
-  def create
-    @conversation = Conversation.new(
-      subject: params[:conversation][:subject],
-      initiator: Current.user,
-      recipient: User.find(params[:conversation][:recipient_id]),
-      status: :requested
-    )
-    if @conversation.save
-      redirect_to conversation_path(@conversation)
-    else
-      render Views::Conversations::New.new(user: Current.user, users: User.where.not(id: Current.user.id).in_order), status: :unprocessable_entity
-    end
+    redirect_to users_path, notice: "Find a user to start a conversation with."
   end
 end

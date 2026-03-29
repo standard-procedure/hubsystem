@@ -46,17 +46,16 @@ RSpec.describe "Conversations", type: :request do
   end
 
   describe "GET /conversations/new" do
-    it "shows the new conversation form" do
+    it "redirects to users page" do
       get new_conversation_path
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include("New Conversation")
+      expect(response).to redirect_to(users_path)
     end
   end
 
-  describe "POST /conversations" do
+  describe "POST /users/:user_id/conversations" do
     it "creates a conversation request" do
       expect {
-        post conversations_path, params: {conversation: {subject: "Hello", recipient_id: users(:bob).id}}
+        post user_conversations_path(users(:bob)), params: {conversation: {subject: "Hello"}}
       }.to change(Conversation, :count).by(1)
 
       conversation = Conversation.last

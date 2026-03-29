@@ -22,7 +22,24 @@ class User < ApplicationRecord
   has_many :authored_documents, class_name: "Document", foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :initiated_conversations, class_name: "Conversation", foreign_key: :initiator_id, dependent: :destroy, inverse_of: :initiator
   has_many :received_conversations, class_name: "Conversation", foreign_key: :recipient_id, dependent: :destroy, inverse_of: :recipient
+  has_many :notes_about, class_name: "Note", foreign_key: :subject_id, dependent: :destroy
+  has_many :authored_notes, class_name: "Note", foreign_key: :author_id, dependent: :destroy
   enum :status, active: 0, deleted: -1
+
+  HUMAN_STATES = %w[offline online do_not_disturb].freeze
+  SYNTHETIC_STATES = %w[offline online busy tired].freeze
+
+  def go_online! = update!(state: "online")
+  def go_offline! = update!(state: "offline")
+
+  def state_color
+    case state
+    when "online" then :nominal
+    when "busy", "tired", "do_not_disturb" then :warning
+    when "offline" then :offline
+    else :offline
+    end
+  end
 
   scope :system_administrators, -> { active.where(system_administrator: true) }
   scope :in_order, -> { order :name }

@@ -58,9 +58,8 @@ module ConversationSteps
   # --- Actions ---
 
   step "I ask Bob to start a conversation" do
-    visit new_conversation_path
     bob = users(:bob)
-    choose "recipient_#{bob.id}"
+    visit new_user_conversation_path(bob)
     fill_in "conversation[subject]", with: "Hi Bob"
     click_on "Send Request"
     @current_conversation = Conversation.last
@@ -128,24 +127,34 @@ module ConversationSteps
   # --- Assertions: Dashboard ---
 
   step "I should see my existing conversations in a status matrix" do
-    expect(page).to have_css(".status-matrix")
-    expect(page).to have_css(".matrix-cell")
+    within "#conversation_matrix" do
+      expect(page).to have_css(".status-matrix")
+      expect(page).to have_css(".matrix-cell")
+    end
   end
 
   step "conversations with unread messages should be represented by an amber cell" do
-    expect(page).to have_css(".matrix-cell--degraded")
+    within "#conversation_matrix" do
+      expect(page).to have_css(".matrix-cell--degraded")
+    end
   end
 
   step "my conversation request from Bob should be represented by a red cell" do
-    expect(page).to have_css(".matrix-cell--critical")
+    within "#conversation_matrix" do
+      expect(page).to have_css(".matrix-cell--critical")
+    end
   end
 
   step "the conversation with Bob should be represented by a greyed out cell" do
-    expect(page).to have_css(".matrix-cell--offline")
+    within "#conversation_matrix" do
+      expect(page).to have_css(".matrix-cell--offline")
+    end
   end
 
   step "the conversation with Bob should not be visible in the conversation matrix" do
-    expect(page).not_to have_css(".matrix-cell--offline")
+    within "#conversation_matrix" do
+      expect(page).not_to have_css(".matrix-cell--offline")
+    end
   end
 
   # --- Assertions: Conversation state ---

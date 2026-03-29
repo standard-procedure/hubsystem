@@ -4,6 +4,7 @@ class Views::Dashboard::Show < Views::Base
   prop :user, User
   prop :conversations, _Any, default: [].freeze
   prop :tasks, _Any, default: [].freeze
+  prop :all_users, _Any, default: [].freeze
 
   def view_template
     render Views::Layouts::Application.new(title: "HubSystem", user: @user) do
@@ -21,9 +22,21 @@ class Views::Dashboard::Show < Views::Base
       end
 
       render Components::Panel.new(title: "Conversations") do
-        StatusMatrix do |matrix|
-          @conversations.each do |conversation|
-            matrix.item state: conversation_state(conversation), href: conversation_path(conversation)
+        div id: "conversation_matrix" do
+          StatusMatrix do |matrix|
+            @conversations.each do |conversation|
+              matrix.item state: conversation_state(conversation), href: conversation_path(conversation)
+            end
+          end
+        end
+      end
+
+      render Components::Panel.new(title: "User Activity") do
+        div id: "user_activity_matrix" do
+          StatusMatrix do |matrix|
+            @all_users.each do |u|
+              matrix.item state: u.state_color, href: user_path(u)
+            end
           end
         end
       end

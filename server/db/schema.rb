@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_090004) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_100002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -151,6 +151,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_090004) do
     t.index ["conversation_id", "sender_id", "read_at"], name: "index_messages_on_conversation_id_and_sender_id_and_read_at"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "notes", force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.bigint "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "visibility", default: "private", null: false
+    t.index ["author_id"], name: "index_notes_on_author_id"
+    t.index ["subject_id", "author_id"], name: "index_notes_on_subject_id_and_author_id"
+    t.index ["subject_id", "visibility"], name: "index_notes_on_subject_id_and_visibility"
+    t.index ["subject_id"], name: "index_notes_on_subject_id"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -391,11 +404,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_090004) do
     t.string "name", null: false
     t.bigint "role_id", null: false
     t.string "role_type", null: false
+    t.string "state", default: "offline", null: false
     t.integer "status", default: 0, null: false
     t.boolean "system_administrator", default: false, null: false
     t.string "uid", null: false
     t.datetime "updated_at", null: false
     t.index ["role_type", "role_id"], name: "index_users_on_role_type_and_role_id", unique: true
+    t.index ["state"], name: "index_users_on_state"
     t.index ["status", "uid"], name: "index_users_on_status_and_uid", unique: true
   end
 
@@ -413,6 +428,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_090004) do
   add_foreign_key "llm_contexts", "synthetics"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "notes", "users", column: "author_id"
+  add_foreign_key "notes", "users", column: "subject_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "rails_pulse_operations", "rails_pulse_queries", column: "query_id"

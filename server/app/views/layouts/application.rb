@@ -12,7 +12,7 @@ class Views::Layouts::Application < Views::Base
   prop :title, String
   prop :subtitle, String, default: ""
   prop :user, _Any?, default: nil
-  prop :active_nav, Enum(:dashboard, :messages, :system), default: :dashboard
+  prop :active_nav, Enum(:dashboard, :messages, :users, :system), default: :dashboard
   prop :lang, String, default: "en"
   prop :head, _Callable?
   prop :attributes, Hash, :**, default: {}.freeze

@@ -22,7 +22,7 @@ class Views::Conversations::Index < Views::Base
         end
 
         Row justify: "end" do
-          Button label: "New Conversation", variant: :primary, tag: :a, href: new_conversation_path
+          Button label: "Find User", variant: :primary, tag: :a, href: users_path
         end
       end
     end

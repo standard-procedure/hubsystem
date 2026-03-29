@@ -3,7 +3,7 @@
 class Components::CrtMonitor < Components::Base
   prop :brand, String, default: "HubSystem"
   prop :user, _Any?, default: nil
-  prop :active_nav, Enum(:dashboard, :messages, :system), default: :dashboard
+  prop :active_nav, Enum(:dashboard, :messages, :users, :system), default: :dashboard
 
   def view_template(&)
     div class: "crt-housing" do
@@ -52,6 +52,7 @@ class Components::CrtMonitor < Components::Base
         div class: "crt-controls" do
           nav_knob :dashboard, "Dashboard", root_path
           nav_knob :messages, "Messages", conversations_path
+          nav_knob :users, "Users", users_path
           nav_knob :system, "System", tasks_path
         end
         div class: "crt-nameplate" do

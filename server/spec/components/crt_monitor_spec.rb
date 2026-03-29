@@ -81,10 +81,10 @@ RSpec.describe Components::CrtMonitor, type: :component do
   end
 
   describe "navigation knobs" do
-    it "renders three navigation knobs" do
+    it "renders four navigation knobs" do
       html = render_fragment(described_class.new)
 
-      expect(html.css(".crt-controls .crt-knob").length).to eq(3)
+      expect(html.css(".crt-controls .crt-knob").length).to eq(4)
     end
 
     it "renders Dashboard and Messages as links" do
@@ -100,13 +100,22 @@ RSpec.describe Components::CrtMonitor, type: :component do
       expect(knobs[1]["href"]).to eq("/conversations")
     end
 
-    it "renders System as a link to tasks" do
+    it "renders Users as a link" do
       html = render_fragment(described_class.new)
       knobs = html.css(".crt-controls .crt-knob")
 
       expect(knobs[2].name).to eq("a")
-      expect(knobs[2]["title"]).to eq("System")
-      expect(knobs[2]["href"]).to eq("/tasks")
+      expect(knobs[2]["title"]).to eq("Users")
+      expect(knobs[2]["href"]).to eq("/users")
+    end
+
+    it "renders System as a link to tasks" do
+      html = render_fragment(described_class.new)
+      knobs = html.css(".crt-controls .crt-knob")
+
+      expect(knobs[3].name).to eq("a")
+      expect(knobs[3]["title"]).to eq("System")
+      expect(knobs[3]["href"]).to eq("/tasks")
     end
 
     it "highlights the dashboard knob by default" do
@@ -130,7 +139,7 @@ RSpec.describe Components::CrtMonitor, type: :component do
       html = render_fragment(described_class.new(active_nav: :system))
       knobs = html.css(".crt-controls .crt-knob")
 
-      expect(knobs[2]["class"]).to include("crt-knob--power")
+      expect(knobs[3]["class"]).to include("crt-knob--power")
     end
   end
 end

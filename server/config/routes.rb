@@ -3,7 +3,12 @@ Rails.application.routes.draw do
 
   resource :component, only: [:show]
 
-  resources :conversations, only: [:index, :show, :new, :create] do
+  resources :users, only: [:index, :show] do
+    resources :notes, only: [:new, :create, :edit, :update, :destroy]
+    resources :conversations, only: [:new, :create], controller: "user_conversations"
+  end
+
+  resources :conversations, only: [:index, :show, :new] do
     resources :messages, only: [:create], module: :conversations
     resource :acceptance, only: [:create], controller: "conversation_acceptances"
     resource :rejection, only: [:create], controller: "conversation_rejections"
