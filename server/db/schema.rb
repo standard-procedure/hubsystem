@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_070311) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+  enable_extension "vector"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -57,7 +61,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_070311) do
     t.integer "author_id", null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
-    t.json "tags", default: [], null: false
+    t.vector "embedding", limit: 768
+    t.text "tags", default: [], null: false, array: true
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_documents_on_author_id"
@@ -281,8 +286,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_070311) do
   create_table "synthetic_memories", force: :cascade do |t|
     t.text "content", null: false
     t.datetime "created_at", null: false
+    t.vector "embedding", limit: 768
     t.integer "synthetic_id", null: false
-    t.json "tags", default: [], null: false
+    t.text "tags", default: [], null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["synthetic_id"], name: "index_synthetic_memories_on_synthetic_id"
   end
@@ -308,7 +314,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_070311) do
     t.string "schedule"
     t.integer "status", default: 0, null: false
     t.string "subject", null: false
-    t.json "tags", default: [], null: false
+    t.text "tags", default: [], null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["assignee_id", "status"], name: "index_tasks_on_assignee_id_and_status"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
