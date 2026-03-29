@@ -30,6 +30,11 @@ The design system is called [mother](../docs/hubsystem-design-system-reference.h
 
 This project uses **Phlex** (not ERB) for all HTML rendering. See [`docs/PHLEX-GUIDE.md`](docs/PHLEX-GUIDE.md) for the full guide covering components, views, layouts, attributes, yielding, kits, Literal properties, testing, and Rails integration.
 
+**Do not use `helpers.method_name`** — this is deprecated in Phlex and will be removed. Instead, include the relevant `Phlex::Rails::Helpers::*` module. Common ones already included in `Views::Base`:
+- `Phlex::Rails::Helpers::FormAuthenticityToken` → `form_authenticity_token`
+
+For other Rails helpers, find the matching module (e.g. `Phlex::Rails::Helpers::FormWith`, `Phlex::Rails::Helpers::LinkTo`) and include it in the view or component class. Route helpers (`*_path`, `*_url`) are available automatically via `Components::Base`.
+
 ## HubSystem-Specific Concepts
 
 See `../docs/ARCHITECTURE.md` for full design.
