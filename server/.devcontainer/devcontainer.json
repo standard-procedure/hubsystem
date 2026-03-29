@@ -1,0 +1,45 @@
+{
+  "name": "HubSystem",
+  "dockerComposeFile": "compose.yaml",
+  "service": "rails-app",
+  "workspaceFolder": "/workspaces/hubsystem/server",
+
+  "containerEnv": {
+    "DB_HOST": "postgres",
+    "OLLAMA_HOST": "http://ollama:11434",
+    "TERM": "xterm-256color"
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/duduribeiro/devcontainer-features/neovim:1": { "version": "nightly" },
+    "ghcr.io/rails/devcontainer/features/postgres-client": {}
+  },
+
+  "forwardPorts": [3000],
+
+  "mounts": [
+    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached,readonly",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.cache/ms-playwright,target=/home/vscode/.cache/ms-playwright,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
+  ],
+
+  "postCreateCommand": "sudo mkdir -p /Users/rahoulb && sudo ln -sfn /home/vscode/.claude /Users/rahoulb/.claude && bin/setup --skip-server && docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-extensions-pack",
+        "testdouble.vscode-standard-ruby",
+        "Shopify.ruby-lsp",
+        "anthonybullard.vscode-rails-db-schema",
+        "george-alisson.html-preview-vscode",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "anthropic.claude-code"
+      ]
+    }
+  }
+}

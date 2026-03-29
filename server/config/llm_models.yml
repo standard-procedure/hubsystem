@@ -1,12 +1,15 @@
 development:
-  low: claude-haiku-4-5
+  low: qwen2.5:3b
   medium: claude-sonnet-4-6
   high: claude-opus-4-6
+  embedding: nomic-embed-text
 test:
-  low: claude-haiku-4-5
-  medium: claude-sonnet-4-6
-  high: claude-opus-4-6
+  low: qwen2.5:3b
+  medium: qwen2.5:3b
+  high: qwen2.5:3b
+  embedding: nomic-embed-text
 production:
   low: claude-haiku-4-5
   medium: claude-sonnet-4-6
-  high: claude-opus-4-6  
+  high: claude-opus-4-6
+  embedding: nomic-embed-text

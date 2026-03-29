@@ -138,3 +138,29 @@ OpenAPI documentation is auto-generated from request specs via [rspec-openapi](h
 ```bash
 OPENAPI=1 bundle exec rspec spec/requests/api/
 ```
+
+## Infrastructure
+
+### Development (DevContainer)
+
+Docker Compose with four services:
+- **rails-app** — Ruby 3.4.5, Falcon, Bun, Playwright
+- **postgres** — PostgreSQL 16 with pgvector extension for vector search
+- **sandbox** — Ubuntu container for synthetic bash execution (shared, per-synthetic workspace dirs under `/workspaces/sandbox/{uid}/`)
+- **ollama** — local LLM inference with `qwen2.5:3b` (chat) and `nomic-embed-text` (embeddings, 768 dimensions)
+
+### Production (Kamal)
+
+- Rails + Falcon deployed via Kamal
+- Managed PostgreSQL (or containerised)
+- Sandbox container for bash execution
+- LLM models configured per environment in [config/llm_models.yml](../config/llm_models.yml)
+
+### LLM Model Tiers
+
+| Tier | Dev/Test | Production | Usage |
+|------|----------|------------|-------|
+| low | qwen2.5:3b (Ollama) | claude-haiku-4-5 | Processing modules |
+| medium | claude-sonnet-4-6 | claude-sonnet-4-6 | Future use |
+| high | claude-opus-4-6 | claude-opus-4-6 | Main LLM response |
+| embedding | nomic-embed-text (Ollama) | nomic-embed-text (Ollama) | Vector embeddings |

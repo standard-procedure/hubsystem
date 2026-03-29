@@ -45,7 +45,8 @@ module Synthetic
         CreateTaskTool.new(synthetic),
         AssignTaskTool.new(synthetic),
         CompleteTaskTool.new(synthetic),
-        ListTasksTool.new(synthetic)
+        ListTasksTool.new(synthetic),
+        RunCommandTool.new(synthetic)
       ]
     end
 

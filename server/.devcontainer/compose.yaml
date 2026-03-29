@@ -1,0 +1,51 @@
+services:
+  rails-app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    ports:
+      - "3000:3000"
+    env_file: devcontainer.env
+    environment:
+      DB_HOST: postgres
+      OLLAMA_HOST: http://ollama:11434
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sleep infinity
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  sandbox:
+    image: ubuntu:24.04
+    restart: unless-stopped
+    volumes:
+      - sandbox-workspaces:/workspaces/sandbox
+    command: sleep infinity
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+volumes:
+  postgres-data:
+  sandbox-workspaces:
+  ollama-data:

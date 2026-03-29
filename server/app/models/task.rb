@@ -23,7 +23,7 @@ class Task < ApplicationRecord
   scope :assigned_to, ->(user) { where(assignee: user) }
   scope :created_by, ->(user) { where(creator: user) }
   scope :top_level, -> { where(parent_id: nil) }
-  scope :tagged_with, ->(tag) { where("json_each.value = ?", tag).joins("JOIN json_each(tags) AS json_each") }
+  scope :tagged_with, ->(tag) { where("? = ANY(tags)", tag) }
 
   def blocked?
     dependencies.open.exists?

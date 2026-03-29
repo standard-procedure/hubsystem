@@ -34,6 +34,36 @@ This project uses **Phlex** (not ERB) for all HTML rendering. See [`docs/PHLEX-G
 
 See `../docs/ARCHITECTURE.md` for full design.
 
+## Development Environment
+
+This project uses a devcontainer with Docker Compose sidecars for PostgreSQL (with pgvector), a bash sandbox, and Ollama (local LLM).
+
+### Running commands
+
+Check if you are inside or outside the devcontainer:
+
+```bash
+# Inside devcontainer (test -d /workspaces):
+bin/rspec spec/
+
+# Outside devcontainer:
+devcontainer exec --workspace-folder ~/Developer/hubsystem/server bash -lc "bin/rspec spec/"
+```
+
+### Services
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| postgres | 5432 | Database (pgvector enabled) |
+| sandbox | — | Shared bash execution for synthetics |
+| ollama | 11434 | Local LLM inference (qwen2.5:3b, nomic-embed-text) |
+
+### Environment variables
+
+Set in `.devcontainer/devcontainer.env` (gitignored):
+- `ANTHROPIC_API_KEY` — for Claude models (medium/high tier)
+- `DB_HOST` — auto-set to `postgres` inside devcontainer
+
 ## Synthetic Agents
 
 Synthetics are persistent AI entities with identity, emotion, and memory. See [`docs/SYNTHETIC-AGENTS.md`](docs/SYNTHETIC-AGENTS.md) for the full architecture — processing pipeline, emotional state, LLM context, memory system, and testing approach.
