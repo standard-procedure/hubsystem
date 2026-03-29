@@ -9,7 +9,7 @@ class Views::Notes::Edit < Views::Base
       render Components::Panel.new(title: "Edit Note about #{@user.name}") do
         form action: user_note_path(@user, @note), method: :post do
           input type: "hidden", name: "_method", value: "patch"
-          input type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token
+          input type: "hidden", name: "authenticity_token", value: form_authenticity_token
           Column gap: 4 do
             Input name: "note[content]", type: "textarea", label: "Note", required: true,
               value: @note.content,

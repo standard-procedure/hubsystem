@@ -57,17 +57,12 @@ class Views::Users::Show < Views::Base
             a(href: edit_user_note_path(@user, note), class: "btn btn-ghost btn-sm") { "Edit" }
             form(action: user_note_path(@user, note), method: :post, style: "display:inline") do
               input type: "hidden", name: "_method", value: "delete"
-              input type: "hidden", name: "authenticity_token", value: authenticity_token
+              input type: "hidden", name: "authenticity_token", value: form_authenticity_token
               Button label: "Delete", variant: :danger, size: :sm
             end
           end
         end
       end
     end
-  end
-
-  def authenticity_token
-    # Access the form authenticity token
-    helpers.form_authenticity_token
   end
 end

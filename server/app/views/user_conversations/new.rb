@@ -8,7 +8,7 @@ class Views::UserConversations::New < Views::Base
     render Views::Layouts::Application.new(title: "HubSystem", user: Current.user, active_nav: :messages) do
       render Components::Panel.new(title: "Start Conversation with #{@recipient.name}") do
         form action: user_conversations_path(@recipient), method: :post do
-          input type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token
+          input type: "hidden", name: "authenticity_token", value: form_authenticity_token
           Column gap: 4 do
             Input name: "conversation[subject]", label: "Subject", required: true,
               value: @conversation&.subject,

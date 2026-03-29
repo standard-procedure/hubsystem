@@ -16,7 +16,7 @@ class Views::Notes::New < Views::Base
 
   def render_form(action)
     form action: action, method: :post do
-      input type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token
+      input type: "hidden", name: "authenticity_token", value: form_authenticity_token
       Column gap: 4 do
         Input name: "note[content]", type: "textarea", label: "Note", required: true,
           value: @note&.content,
