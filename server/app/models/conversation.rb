@@ -10,6 +10,7 @@ class Conversation < ApplicationRecord
   enum :status, requested: 0, active: 1, closed: 2
 
   after_update_commit :broadcast_refresh
+  after_commit :broadcast_conversation_matrices
   after_create_commit :notify_synthetic_recipient
 
   validates :subject, presence: true
@@ -61,5 +62,16 @@ class Conversation < ApplicationRecord
 
   def notify_synthetic_recipient
     Synthetic::ConversationAcceptanceJob.perform_later(id) if recipient.synthetic?
+  end
+
+  def broadcast_conversation_matrices
+    [initiator, recipient].each do |user|
+      conversations = Conversation.involving(user).open
+        .or(Conversation.involving(user).recently_closed)
+        .includes(:initiator, :recipient)
+      broadcast_replace_to [user, :conversation_matrix],
+        target: "conversation_matrix",
+        renderable: Components::ConversationMatrix.new(user: user, conversations: conversations)
+    end
   end
 end

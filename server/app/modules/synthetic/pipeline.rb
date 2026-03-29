@@ -12,9 +12,14 @@ class Synthetic
     end
 
     def process(message)
+      update_state(:busy)
+
       # 1. Pre-process: threat assessment + incoming emotion (concurrent)
       preprocess = @preprocessor.process(message)
-      return blocked_response(preprocess.reason) if preprocess.blocked
+      if preprocess.blocked
+        update_state_from_fatigue
+        return blocked_response(preprocess.reason)
+      end
 
       # 2. Process: LLM generates a response
       context = synthetic.ensure_llm_context
@@ -30,6 +35,7 @@ class Synthetic
       # 4. Post-process: memory + outgoing emotion (concurrent) + capacity
       @postprocessor.process(response_text)
 
+      update_state_from_fatigue
       response_text
     end
 
@@ -55,6 +61,15 @@ class Synthetic
 
     def llm_model(tier)
       Rails.application.config.llm_models[tier.to_s]
+    end
+
+    def update_state(state)
+      synthetic.update_column(:state, state) if synthetic.respond_to?(:state)
+    end
+
+    def update_state_from_fatigue
+      new_state = (synthetic.fatigue.to_i >= 60) ? "tired" : "online"
+      update_state(new_state)
     end
 
     def blocked_response(reason)

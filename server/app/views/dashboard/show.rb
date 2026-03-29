@@ -22,23 +22,11 @@ class Views::Dashboard::Show < Views::Base
       end
 
       render Components::Panel.new(title: "Conversations") do
-        div id: "conversation_matrix" do
-          StatusMatrix do |matrix|
-            @conversations.each do |conversation|
-              matrix.item state: conversation_state(conversation), href: conversation_path(conversation)
-            end
-          end
-        end
+        render Components::ConversationMatrix.new(user: @user, conversations: @conversations)
       end
 
       render Components::Panel.new(title: "User Activity") do
-        div id: "user_activity_matrix" do
-          StatusMatrix do |matrix|
-            @all_users.each do |u|
-              matrix.item state: u.state_color, href: user_path(u)
-            end
-          end
-        end
+        render Components::UserActivityMatrix.new(users: @all_users)
       end
 
       if @tasks.any?
@@ -54,20 +42,6 @@ class Views::Dashboard::Show < Views::Base
           end
         end
       end
-    end
-  end
-
-  private
-
-  def conversation_state(conversation)
-    if conversation.requested? && conversation.recipient == @user
-      :critical
-    elsif conversation.closed?
-      :offline
-    elsif conversation.has_unread_messages_for?(@user)
-      :warning
-    else
-      :nominal
     end
   end
 end

@@ -23,6 +23,7 @@ class Synthetic
     PROMPT
 
     def compact!
+      @synthetic.update_column(:state, "offline") if @synthetic.respond_to?(:state)
       context = @synthetic.ensure_llm_context
       messages = context.llm_context_messages.order(:created_at)
       return if messages.count <= RECENT_MESSAGE_COUNT
