@@ -1,17 +1,12 @@
 # frozen_string_literal: true
 
-class ListTasksTool < RubyLLM::Tool
+class ListTasksTool < SyntheticTool
   description "List tasks, optionally filtered by status, assignee, or tags."
 
   param :status, type: "string", desc: "Filter by status: pending, in_progress, completed, cancelled, or all (default: pending)", required: false
   param :assignee_name, type: "string", desc: "Filter by assignee name", required: false
   param :tag, type: "string", desc: "Filter by tag", required: false
   param :limit, type: "integer", desc: "Maximum results (default 20)", required: false
-
-  def initialize(synthetic)
-    @synthetic = synthetic
-    super()
-  end
 
   def execute(status: "pending", assignee_name: nil, tag: nil, limit: 20)
     scope = Task.all

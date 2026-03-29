@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
-class AssignTaskTool < RubyLLM::Tool
+class AssignTaskTool < SyntheticTool
   description "Assign a task to a user."
 
   param :task_id, type: "integer", desc: "ID of the task to assign", required: true
   param :assignee_name, type: "string", desc: "Name or UID of user to assign to", required: true
-
-  def initialize(synthetic)
-    @synthetic = synthetic
-    super()
-  end
 
   def execute(task_id:, assignee_name:)
     task = Task.find_by(id: task_id)

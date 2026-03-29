@@ -100,7 +100,7 @@ class Task < ApplicationRecord
   def find_or_create_notification_conversation
     return nil unless assignee
 
-    Conversation.involving(creator).involving(assignee).active.first ||
+    Conversation.between(creator, assignee).active.first ||
       Conversation.create(initiator: assignee, recipient: creator, subject: "Task notifications", status: :active)
   end
 end

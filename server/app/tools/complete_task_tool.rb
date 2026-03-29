@@ -1,14 +1,9 @@
 # frozen_string_literal: true
 
-class CompleteTaskTool < RubyLLM::Tool
+class CompleteTaskTool < SyntheticTool
   description "Mark a task as completed. If all sibling tasks are done, the parent auto-completes."
 
   param :task_id, type: "integer", desc: "ID of the task to complete", required: true
-
-  def initialize(synthetic)
-    @synthetic = synthetic
-    super()
-  end
 
   def execute(task_id:)
     task = Task.find_by(id: task_id)

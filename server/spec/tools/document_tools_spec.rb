@@ -14,20 +14,20 @@ RSpec.describe "Document tools", type: :model do
     end
 
     it "searches by query" do
-      tool = described_class.new
+      tool = described_class.new(bishop)
       result = tool.execute(query: "deploy")
       expect(result).to include("Deploy Guide")
     end
 
     it "searches by tag" do
-      tool = described_class.new
+      tool = described_class.new(bishop)
       result = tool.execute(tag: "api")
       expect(result).to include("API Reference")
       expect(result).not_to include("Deploy Guide")
     end
 
     it "returns no documents message when empty" do
-      tool = described_class.new
+      tool = described_class.new(bishop)
       result = tool.execute(tag: "nonexistent")
       expect(result).to eq("No documents found.")
     end

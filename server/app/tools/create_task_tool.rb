@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateTaskTool < RubyLLM::Tool
+class CreateTaskTool < SyntheticTool
   description "Create a new task, optionally as a subtask of an existing task."
 
   param :subject, type: "string", desc: "Brief task title", required: true
@@ -9,11 +9,6 @@ class CreateTaskTool < RubyLLM::Tool
   param :parent_id, type: "integer", desc: "ID of parent task (for subtasks)", required: false
   param :due_at, type: "string", desc: "Due date/time in ISO 8601 format", required: false
   param :tags, type: "string", desc: "Comma-separated tags", required: false
-
-  def initialize(synthetic)
-    @synthetic = synthetic
-    super()
-  end
 
   def execute(subject:, description: nil, assignee_name: nil, parent_id: nil, due_at: nil, tags: nil)
     assignee = find_assignee(assignee_name) if assignee_name.present?

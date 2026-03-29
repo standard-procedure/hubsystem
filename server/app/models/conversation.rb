@@ -16,6 +16,9 @@ class Conversation < ApplicationRecord
   validate :participants_are_different
 
   scope :involving, ->(user) { where(initiator: user).or(where(recipient: user)) }
+  scope :between, ->(user_a, user_b) {
+    where(initiator: user_a, recipient: user_b).or(where(initiator: user_b, recipient: user_a))
+  }
   scope :open, -> { where(status: [:requested, :active]) }
   scope :recently_closed, -> { closed.where(closed_at: 1.day.ago..) }
 
@@ -29,6 +32,23 @@ class Conversation < ApplicationRecord
 
   def has_unread_messages_for?(user)
     messages.where.not(sender: user).where(read_at: nil).exists?
+  end
+
+  def accept!(by:)
+    raise ActiveRecord::RecordInvalid.new(self), "Can only accept requested conversations" unless requested?
+    raise ActiveRecord::RecordInvalid.new(self), "Only the recipient can accept" unless recipient == by
+    update!(status: :active)
+  end
+
+  def reject!(by:)
+    raise ActiveRecord::RecordInvalid.new(self), "Can only reject requested conversations" unless requested?
+    raise ActiveRecord::RecordInvalid.new(self), "Only the recipient can reject" unless recipient == by
+    update!(status: :closed, closed_at: Time.current)
+  end
+
+  def close!
+    raise ActiveRecord::RecordInvalid.new(self), "Can only close active conversations" unless active?
+    update!(status: :closed, closed_at: Time.current)
   end
 
   private

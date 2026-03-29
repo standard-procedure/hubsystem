@@ -24,6 +24,6 @@ class TaskReminderJob < ApplicationJob
   def find_notification_conversation(creator, assignee)
     return nil if creator == assignee
 
-    Conversation.involving(creator).involving(assignee).active.first
+    Conversation.between(creator, assignee).active.first
   end
 end

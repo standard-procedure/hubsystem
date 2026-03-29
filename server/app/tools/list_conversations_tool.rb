@@ -1,14 +1,9 @@
 # frozen_string_literal: true
 
-class ListConversationsTool < RubyLLM::Tool
+class ListConversationsTool < SyntheticTool
   description "List your active conversations and pending requests."
 
   param :status, type: "string", desc: "Filter by status: active, requested, or all (default: all)", required: false
-
-  def initialize(synthetic)
-    @synthetic = synthetic
-    super()
-  end
 
   def execute(status: "all")
     scope = Conversation.involving(@synthetic)

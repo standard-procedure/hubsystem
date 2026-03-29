@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
-class WriteMemoryTool < RubyLLM::Tool
+class WriteMemoryTool < SyntheticTool
   description "Store a private memory for future reference. Memories are only visible to you."
 
   param :content, type: "string", desc: "The fact or observation to remember", required: true
   param :tags, type: "string", desc: "Comma-separated tags for categorisation", required: true
-
-  def initialize(synthetic)
-    @synthetic = synthetic
-    super()
-  end
 
   def execute(content:, tags:)
     tag_list = tags.split(",").map(&:strip).reject(&:empty?)

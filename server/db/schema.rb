@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_070311) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -135,6 +135,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
     t.integer "sender_id", null: false
     t.datetime "updated_at", null: false
     t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id", "sender_id", "read_at"], name: "index_messages_on_conversation_id_and_sender_id_and_read_at"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
@@ -324,6 +325,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
     t.string "uid", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["provider", "uid"], name: "index_user_identities_on_provider_and_uid", unique: true
     t.index ["user_id"], name: "index_user_identities_on_user_id"
   end
 

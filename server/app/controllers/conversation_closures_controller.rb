@@ -8,11 +8,7 @@ class ConversationClosuresController < ApplicationController
 
   def create
     @conversation = Conversation.involving(Current.user).find(params[:conversation_id])
-    if @conversation.active?
-      @conversation.update!(status: :closed, closed_at: Time.current)
-      redirect_to conversations_path
-    else
-      redirect_to conversations_path, alert: "Cannot close this conversation."
-    end
+    @conversation.close!
+    redirect_to conversations_path
   end
 end
