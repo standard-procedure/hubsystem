@@ -40,14 +40,19 @@ This project uses a devcontainer with Docker Compose sidecars for PostgreSQL (wi
 
 ### Running commands
 
-Check if you are inside or outside the devcontainer:
+First, detect whether you are inside or outside the devcontainer:
 
 ```bash
-# Inside devcontainer (test -d /workspaces):
+test -d /workspaces && echo "INSIDE" || echo "OUTSIDE"
+```
+
+```bash
+# Inside devcontainer — run commands directly:
 bin/rspec spec/
 
-# Outside devcontainer:
-devcontainer exec --workspace-folder ~/Developer/hubsystem/server bash -lc "bin/rspec spec/"
+# Outside devcontainer — start the container, then exec into it:
+devcontainer up --workspace-folder .
+devcontainer exec --workspace-folder . bash -lc "bin/rspec spec/"
 ```
 
 ### Services
