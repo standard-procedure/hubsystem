@@ -66,16 +66,16 @@ class Views::Conversations::Show < Views::Base
       form_with url: conversation_messages_path(@conversation), method: :post do |form|
         Row gap: 4, align: "end" do
           div(style: "flex: 1") do
-            textarea(
+            input(
               name: "message[content]",
               placeholder: "Type your message...",
               rows: 2,
               required: true,
               class: "input-field",
-              style: "resize: vertical; width: 100%"
+              autofocus: true
             )
           end
-          Button label: "Send", variant: :primary
+          Button label: "Send", variant: :primary, size: :sm
         end
       end
     end
