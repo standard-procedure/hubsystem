@@ -1,15 +1,39 @@
 development:
-  low: qwen2.5:3b
-  medium: claude-sonnet-4-6
-  high: claude-opus-4-6
-  embedding: nomic-embed-text
+  low:
+    model: qwen2.5:3b
+    provider: openai
+  medium:
+    model: qwen2.5:3b
+    provider: openai
+  high:
+    model: qwen2.5:3b
+    provider: openai
+  embedding:
+    model: nomic-embed-text
+    provider: openai
 test:
-  low: qwen2.5:3b
-  medium: qwen2.5:3b
-  high: qwen2.5:3b
-  embedding: nomic-embed-text
+  low:
+    model: qwen2.5:3b
+    provider: openai
+  medium:
+    model: qwen2.5:3b
+    provider: openai
+  high:
+    model: qwen2.5:3b
+    provider: openai
+  embedding:
+    model: nomic-embed-text
+    provider: openai
 production:
-  low: claude-haiku-4-5
-  medium: claude-sonnet-4-6
-  high: claude-opus-4-6
-  embedding: nomic-embed-text
+  low:
+    model: claude-haiku-4-5
+    provider: anthropic
+  medium:
+    model: claude-sonnet-4-6
+    provider: anthropic
+  high:
+    model: claude-opus-4-6
+    provider: anthropic
+  embedding:
+    model: nomic-embed-text
+    provider: openai

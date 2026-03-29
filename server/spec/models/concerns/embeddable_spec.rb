@@ -47,8 +47,8 @@ RSpec.describe Embeddable, type: :model do
   end
 
   describe ".embedding_model" do
-    it "returns the configured embedding model" do
-      expect(Synthetic::Memory.embedding_model).to eq(Rails.application.config.llm_models["embedding"])
+    it "returns the configured embedding model ID" do
+      expect(Synthetic::Memory.embedding_model).to eq(Rails.application.config.llm_models[:embedding][:model])
     end
   end
 end

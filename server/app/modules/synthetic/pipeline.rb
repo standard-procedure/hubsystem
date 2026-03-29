@@ -23,7 +23,8 @@ class Synthetic
 
       # 2. Process: LLM generates a response
       context = synthetic.ensure_llm_context
-      context.with_model(llm_model(synthetic.llm_tier))
+      config = llm_config(synthetic.llm_tier)
+      context.with_model(config[:model])
       context.with_instructions(synthetic.operating_system) if synthetic.operating_system.present? && context.llm_context_messages.empty?
       context.with_tools(*tools)
       response_text = context.ask(message).content
@@ -59,8 +60,8 @@ class Synthetic
       ]
     end
 
-    def llm_model(tier)
-      Rails.application.config.llm_models[tier.to_s]
+    def llm_config(tier)
+      Rails.application.config.llm_models[tier.to_sym]
     end
 
     def update_state(state)

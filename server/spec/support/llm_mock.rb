@@ -8,7 +8,7 @@ module LlmMock
     allow(mock_chat).to receive(:with_model).and_return(mock_chat)
     allow(mock_chat).to receive(:with_instructions).and_return(mock_chat)
     allow(mock_chat).to receive(:ask).and_return(mock_response)
-    allow(RubyLLM).to receive(:chat).and_return(mock_chat)
+    allow(RubyLLM).to receive(:chat).with(any_args).and_return(mock_chat)
     mock_chat
   end
 end

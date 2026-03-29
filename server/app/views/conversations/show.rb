@@ -2,12 +2,14 @@
 
 class Views::Conversations::Show < Views::Base
   include Phlex::Rails::Helpers::FormWith
+  include Phlex::Rails::Helpers::TurboStreamFrom
 
   prop :user, User
   prop :conversation, Conversation
 
   def view_template
     render Views::Layouts::Application.new(title: @conversation.subject, return_href: conversations_path, user: @user, active_nav: :messages) do
+      turbo_stream_from @conversation
       render Components::Panel.new(title: @conversation.subject) do
         render_status_bar
         render_messages

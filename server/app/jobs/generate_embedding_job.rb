@@ -5,7 +5,8 @@ class GenerateEmbeddingJob < ApplicationJob
 
   def perform(class_name, id)
     record = class_name.constantize.find(id)
-    response = RubyLLM.embed(record.embeddable_text, model: record.class.embedding_model, provider: :openai, assume_model_exists: true)
+    config = record.class.embedding_config
+    response = RubyLLM.embed(record.embeddable_text, model: config[:model], provider: config[:provider].to_sym, assume_model_exists: true)
     record.update_column(:embedding, response.vectors)
   end
 end

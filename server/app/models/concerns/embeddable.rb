@@ -10,12 +10,17 @@ module Embeddable
 
   class_methods do
     def semantic_search(query, limit: 10)
-      embedding = RubyLLM.embed(query, model: embedding_model, provider: :openai, assume_model_exists: true).vectors
+      config = embedding_config
+      embedding = RubyLLM.embed(query, model: config[:model], provider: config[:provider].to_sym, assume_model_exists: true).vectors
       nearest_neighbors(:embedding, embedding, distance: "cosine").limit(limit)
     end
 
+    def embedding_config
+      Rails.application.config.llm_models[:embedding]
+    end
+
     def embedding_model
-      Rails.application.config.llm_models["embedding"]
+      embedding_config[:model]
     end
   end
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Components::UserActivityMatrix < Components::Base
+  include Phlex::Rails::Helpers::TurboStreamFrom
+
   prop :users, _Any, default: [].freeze
 
   def view_template

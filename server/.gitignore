@@ -39,4 +39,5 @@
 /.playwright-mcp
 /node_modules
 
-.DS_Store.devcontainer/devcontainer.env
+.DS_Store
+/.devcontainer/devcontainer.env 

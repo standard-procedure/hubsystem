@@ -17,7 +17,12 @@ class Synthetic < ApplicationRecord
   end
 
   def ensure_llm_context
-    llm_context || create_llm_context!
+    llm_context || create_llm_context!(llm_model: default_llm_model)
+  end
+
+  def default_llm_model
+    config = Rails.application.config.llm_models[llm_tier.to_sym]
+    LlmModel.find_by(model_id: config[:model], provider: config[:provider])
   end
 
   def adjust_emotions(deltas)

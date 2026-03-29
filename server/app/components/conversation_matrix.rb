@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Components::ConversationMatrix < Components::Base
+  include Phlex::Rails::Helpers::TurboStreamFrom
+
   prop :user, User
   prop :conversations, _Any, default: [].freeze
 
