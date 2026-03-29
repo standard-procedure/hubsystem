@@ -80,7 +80,8 @@ Tests use Rails fixtures (not factories). Fixture files are in `spec/fixtures/`.
   ```ruby
   RubyLLM.embed("your text", model: "nomic-embed-text", provider: :openai, assume_model_exists: true).vectors
   ```
-- For fixtures referencing STI models (e.g. `synthetic_memories.yml` referencing `User::Synthetic`), use `_fixture: model_class:` at the top of the file so Rails can resolve associations correctly.
+- For fixtures with non-standard table names (e.g. `synthetic_memories.yml`), use `_fixture: model_class:` at the top of the file so Rails can resolve associations correctly.
+- User fixtures require `role_type` and `role_id` (delegated type). Use `<%= ActiveRecord::FixtureSet.identify(:fixture_name) %>` for `role_id`. Corresponding role fixtures live in `humans.yml` and `synthetics.yml`.
 - Specs tagged `:llm` hit real Ollama and are excluded by default. Run them with: `bin/rspec --tag llm`
 
 ### Ollama Models

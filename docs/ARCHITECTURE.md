@@ -40,14 +40,16 @@ Organisation
 ### Users
 
 ```
-User (STI)
-  ├── Person (humans)
-  └── Agent (AI agents)
+User (delegated_type :role)
+  ├── Human (humans table)
+  └── Synthetic (synthetics table)
 ```
 
-**Why STI here?** Users share authentication, authorization, and notification concerns.
+**Why delegated types?** Users share authentication, authorization, and notification concerns via the `users` table. Each role type gets its own table for type-specific columns — `synthetics` stores personality, temperature, fatigue, and emotions as real database columns.
 
-**Agent as User:**
+Type checking: `user.human?` / `user.synthetic?` (not `is_a?`).
+
+**Synthetic as User:**
 - Can send/receive messages
 - Can have SecurityPasses
 - Can be placed in Locations (via Item + delegated_type)
