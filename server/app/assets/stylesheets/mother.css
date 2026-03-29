@@ -613,7 +613,8 @@
     gap: 8px;
   }
 
-  .sys-header-bar span {
+  .sys-header-bar span,
+  .sys-header-bar .status-item {
     font-family: var(--font-display);
     font-size: 11px;
     color: var(--color-text-dim);
