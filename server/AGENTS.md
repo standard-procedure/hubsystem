@@ -69,6 +69,24 @@ Set in `.devcontainer/devcontainer.env` (gitignored):
 - `ANTHROPIC_API_KEY` — for Claude models (medium/high tier)
 - `DB_HOST` — auto-set to `postgres` inside devcontainer
 
+## Testing
+
+### Fixtures and Embeddings
+
+Tests use Rails fixtures (not factories). Fixture files are in `spec/fixtures/`.
+
+- `synthetic_memories.yml` and `documents.yml` include pre-computed 768-dimension embeddings from `nomic-embed-text` via Ollama. This allows semantic search (pgvector nearest_neighbors) to work in tests without a running Ollama instance.
+- When adding new fixture records that need embeddings, generate them inside the devcontainer:
+  ```ruby
+  RubyLLM.embed("your text", model: "nomic-embed-text", provider: :openai, assume_model_exists: true).vectors
+  ```
+- For fixtures referencing STI models (e.g. `synthetic_memories.yml` referencing `User::Synthetic`), use `_fixture: model_class:` at the top of the file so Rails can resolve associations correctly.
+- Specs tagged `:llm` hit real Ollama and are excluded by default. Run them with: `bin/rspec --tag llm`
+
+### Ollama Models
+
+RubyLLM doesn't have `nomic-embed-text` in its built-in registry. Use `assume_model_exists: true` and `provider: :openai` when calling `RubyLLM.embed` with Ollama models. Model tiers are configured in `config/llm_models.yml`.
+
 ## Synthetic Agents
 
 Synthetics are persistent AI entities with identity, emotion, and memory. See [`docs/SYNTHETIC-AGENTS.md`](docs/SYNTHETIC-AGENTS.md) for the full architecture — processing pipeline, emotional state, LLM context, memory system, and testing approach.
