@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Document, type: :model do
-  fixtures :users
+  fixtures :users, :documents
 
   let(:bishop) { users(:bishop) }
 
@@ -23,18 +23,11 @@ RSpec.describe Document, type: :model do
 
   describe "associations" do
     it "belongs to an author" do
-      doc = Document.create!(author: bishop, title: "Guide", content: "How to do things", tags: ["guide"])
-      expect(doc.author).to eq(bishop)
+      expect(documents(:deploy_guide).author).to eq(bishop)
     end
   end
 
   describe "scopes" do
-    before do
-      Document.create!(author: bishop, title: "Deployment Guide", content: "How to deploy the app", tags: ["ops", "guide"])
-      Document.create!(author: bishop, title: "API Reference", content: "Endpoint documentation", tags: ["api", "guide"])
-      Document.create!(author: users(:alice), title: "Meeting Notes", content: "Discussed deployment timeline", tags: ["meetings"])
-    end
-
     describe ".tagged_with" do
       it "returns documents matching a tag" do
         expect(Document.tagged_with("guide").count).to eq(2)
@@ -53,6 +46,7 @@ RSpec.describe Document, type: :model do
 
     describe ".recent" do
       it "orders by updated_at descending" do
+        documents(:meeting_notes).update_column(:updated_at, 1.minute.from_now)
         expect(Document.recent.first.title).to eq("Meeting Notes")
       end
     end

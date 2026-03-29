@@ -3,17 +3,12 @@
 require "rails_helper"
 
 RSpec.describe "Memory tools", type: :model do
-  fixtures :users
+  fixtures :users, :synthetic_memories
 
   let(:bishop) { users(:bishop) }
 
   describe ReadMemoryTool do
     let(:tool) { described_class.new(bishop) }
-
-    before do
-      Synthetic::Memory.create!(synthetic: bishop, content: "Alice likes mornings", tags: ["alice", "preferences"])
-      Synthetic::Memory.create!(synthetic: bishop, content: "Project deadline Friday", tags: ["project"])
-    end
 
     it "searches by tag" do
       result = tool.execute(tag: "alice")

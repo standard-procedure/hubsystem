@@ -3,7 +3,7 @@
 class Synthetic::Memory < ApplicationRecord
   self.table_name = "synthetic_memories"
 
-  has_neighbors :embedding
+  include Embeddable
 
   belongs_to :synthetic, class_name: "User::Synthetic"
 
@@ -15,4 +15,12 @@ class Synthetic::Memory < ApplicationRecord
     where("content ILIKE ?", "%#{sanitized}%")
   }
   scope :recent, -> { order(created_at: :desc) }
+
+  def embeddable_text
+    content
+  end
+
+  def embedding_content_changed?
+    saved_change_to_content?
+  end
 end

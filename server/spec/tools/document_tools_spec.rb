@@ -3,16 +3,11 @@
 require "rails_helper"
 
 RSpec.describe "Document tools", type: :model do
-  fixtures :users
+  fixtures :users, :documents
 
   let(:bishop) { users(:bishop) }
 
   describe ReadDocumentTool do
-    before do
-      Document.create!(author: bishop, title: "Deploy Guide", content: "How to deploy", tags: ["ops"])
-      Document.create!(author: users(:alice), title: "API Reference", content: "Endpoint docs", tags: ["api"])
-    end
-
     it "searches by query" do
       tool = described_class.new(bishop)
       result = tool.execute(query: "deploy")

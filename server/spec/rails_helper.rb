@@ -67,6 +67,10 @@ RSpec.configure do |config|
   # To enable this behaviour uncomment the line below.
   # config.infer_spec_type_from_file_location!
 
+  # Exclude specs that require a running Ollama instance by default.
+  # Run with: bin/rspec --tag llm
+  config.filter_run_excluding llm: true
+
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:

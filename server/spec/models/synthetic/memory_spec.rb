@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Memory, type: :model do
-  fixtures :users
+  fixtures :users, :synthetic_memories
 
   let(:bishop) { users(:bishop) }
 
@@ -17,18 +17,11 @@ RSpec.describe Synthetic::Memory, type: :model do
 
   describe "associations" do
     it "belongs to a synthetic" do
-      memory = Synthetic::Memory.create!(synthetic: bishop, content: "Test memory", tags: ["test"])
-      expect(memory.synthetic).to eq(bishop)
+      expect(synthetic_memories(:alice_mornings).synthetic).to eq(bishop)
     end
   end
 
   describe "scopes" do
-    before do
-      Synthetic::Memory.create!(synthetic: bishop, content: "Alice prefers mornings", tags: ["alice", "preferences"])
-      Synthetic::Memory.create!(synthetic: bishop, content: "Project deadline is Friday", tags: ["project", "deadlines"])
-      Synthetic::Memory.create!(synthetic: bishop, content: "Alice likes coffee", tags: ["alice", "preferences"])
-    end
-
     describe ".tagged_with" do
       it "returns memories matching a tag" do
         results = Synthetic::Memory.tagged_with("alice")
@@ -50,6 +43,7 @@ RSpec.describe Synthetic::Memory, type: :model do
 
     describe ".recent" do
       it "orders by created_at descending" do
+        synthetic_memories(:alice_coffee).update_column(:created_at, 1.minute.from_now)
         results = Synthetic::Memory.recent
         expect(results.first.content).to eq("Alice likes coffee")
       end
@@ -58,13 +52,11 @@ RSpec.describe Synthetic::Memory, type: :model do
 
   describe "user association" do
     it "is accessible via the synthetic's memories" do
-      Synthetic::Memory.create!(synthetic: bishop, content: "Test", tags: [])
-      expect(bishop.memories.count).to eq(1)
+      expect(bishop.memories.count).to eq(3)
     end
 
     it "is destroyed when the synthetic is destroyed" do
-      Synthetic::Memory.create!(synthetic: bishop, content: "Test", tags: [])
-      expect { bishop.destroy }.to change(Synthetic::Memory, :count).by(-1)
+      expect { bishop.destroy }.to change(Synthetic::Memory, :count).by(-3)
     end
   end
 end
