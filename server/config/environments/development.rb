@@ -77,4 +77,8 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   config.hosts = []
+
+  # Use SolidQueue for background jobs (run via bin/jobs or Procfile.dev)
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :queue } }
 end

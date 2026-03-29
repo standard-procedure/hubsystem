@@ -7,8 +7,21 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
 development:
-  <<: *default
-  database: hubsystem_development
+  primary:
+    <<: *default
+    database: hubsystem_development
+  cache:
+    <<: *default
+    database: hubsystem_development_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: hubsystem_development_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: hubsystem_development_cable
+    migrations_paths: db/cable_migrate
 
 test:
   <<: *default
