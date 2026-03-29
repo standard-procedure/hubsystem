@@ -1,3 +1,4 @@
 web: bundle exec falcon serve -b http://0.0.0.0:3000
 js: bun run build --watch
 css: bun build:css --watch
+worker: bin/jobs

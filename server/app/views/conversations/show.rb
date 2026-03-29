@@ -19,19 +19,33 @@ class Views::Conversations::Show < Views::Base
   private
 
   def render_status_bar
-    StatusBar do |status|
-      status.item label: @conversation.other_participant(@user).name, state: :info
-      status.item label: @conversation.status.capitalize, state: status_state
+    Row justify: "between", align: "center" do
+      StatusBar do |status|
+        status.item label: @conversation.other_participant(@user).name, state: :info
+        status.item label: @conversation.status.capitalize, state: status_state
+      end
+      if @conversation.active?
+        Button label: "Close Conversation", variant: :danger, size: :sm, tag: :a, href: new_conversation_closure_path(@conversation)
+      end
     end
   end
 
   def render_messages
-    div class: "message-list" do
+    Grid(
+      columns: [
+        Components::Grid::Column.new(label: "Time", width: 1),
+        Components::Grid::Column.new(label: "From", width: 1),
+        Components::Grid::Column.new(label: "Message", width: 4)
+      ],
+      max_height: "400px"
+    ) do |grid|
       @conversation.messages.order(:created_at).each do |message|
-        div class: message_classes(message) do
-          span(class: "message-sender") { message.sender.name }
-          span(class: "message-content") { message.content }
-        end
+        sender_color = (message.sender == @user) ? :phosphor : :bright
+        grid.row(
+          {value: message.created_at.strftime("%H:%M"), color: :dim},
+          {value: message.sender.name, color: sender_color},
+          message.content
+        )
       end
     end
   end
@@ -48,13 +62,19 @@ class Views::Conversations::Show < Views::Base
       end
     elsif @conversation.active?
       form_with url: conversation_messages_path(@conversation), method: :post do |form|
-        Row gap: 8 do
-          Input name: "message[content]", label: "Message", placeholder: "Type your message..."
+        Row gap: 4, align: "end" do
+          div(style: "flex: 1") do
+            textarea(
+              name: "message[content]",
+              placeholder: "Type your message...",
+              rows: 2,
+              required: true,
+              class: "input-field",
+              style: "resize: vertical; width: 100%"
+            )
+          end
           Button label: "Send", variant: :primary
         end
-      end
-      Row justify: "end" do
-        Button label: "Close Conversation", variant: :ghost, tag: :a, href: new_conversation_closure_path(@conversation)
       end
     end
   end

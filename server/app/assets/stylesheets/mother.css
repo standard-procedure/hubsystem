@@ -1050,6 +1050,63 @@
   .matrix-cell--offline { background: var(--color-phosphor-900); }
 
 
+  /* ---- Grid (data table / log viewer) ---- */
+
+  .grid-viewer {
+    background: var(--color-screen-950);
+    border: 1px solid var(--color-screen-500);
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-screen-500) var(--color-screen-950);
+  }
+
+  .grid-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    gap: 12px;
+    padding: 4px 12px;
+    background: var(--color-screen-800);
+    border-bottom: 1px solid var(--color-screen-500);
+    font-family: var(--font-display);
+    font-size: 10px;
+    color: var(--color-text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .grid-row {
+    padding: 2px 12px;
+    display: flex;
+    gap: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .grid-row:nth-child(even) {
+    background: hsla(160, 8%, 9%, 0.6);
+  }
+
+  .grid-cell {
+    color: var(--color-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .grid-cell--bright { color: var(--color-text-bright); }
+  .grid-cell--primary { color: var(--color-text-primary); }
+  .grid-cell--muted { color: var(--color-text-muted); }
+  .grid-cell--dim { color: var(--color-text-dim); }
+  .grid-cell--phosphor { color: var(--color-phosphor-400); }
+  .grid-cell--amber { color: var(--color-amber-400); }
+  .grid-cell--alert { color: var(--color-alert-400); }
+  .grid-cell--cryo { color: var(--color-cryo-400); }
+
+
   /* ---- Boot lines and cursor ---- */
   .boot-line {
     font-size: 12px;
