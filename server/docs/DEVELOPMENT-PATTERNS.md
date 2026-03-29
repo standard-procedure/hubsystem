@@ -234,6 +234,74 @@ The WebSocket connection authenticates via the session cookie in [app/channels/a
 
 The project uses `async-cable` for WebSocket support, which requires Falcon's async event loop. Puma (used as the Capybara test server) cannot run the async-cable middleware. To enable live broadcasts in tests, the test server would need to switch to Falcon.
 
+## Concurrent Operations with Async::Barrier
+
+When multiple independent operations can run in parallel, use `Synthetic::Concurrent.run` ([app/modules/synthetic/concurrent.rb](../app/modules/synthetic/concurrent.rb)). This wraps `Async::Barrier` to spawn fibers and wait for all of them to finish.
+
+### Usage
+
+Pass lambdas for each independent operation. Results are returned in the same order:
+
+```ruby
+threat_result, emotion_result = Synthetic::Concurrent.run(
+  -> { assess_threat(message) },
+  -> { process_emotion(message) }
+)
+```
+
+### How it works
+
+```ruby
+module Synthetic
+  module Concurrent
+    def self.run(*callables)
+      results = Array.new(callables.size)
+      Sync do
+        barrier = Async::Barrier.new
+        callables.each_with_index do |callable, i|
+          barrier.async { results[i] = callable.call }
+        end
+        barrier.wait
+      end
+      results
+    end
+  end
+end
+```
+
+- `Sync` creates an Async event loop (or joins the existing one under Falcon)
+- `barrier.async` spawns a fiber for each callable
+- `barrier.wait` blocks until all fibers complete
+- Results array preserves the order of the input callables
+
+### When to use
+
+- Independent LLM calls that don't depend on each other's results (e.g. threat assessment + emotional processing)
+- Independent database queries where results are combined afterwards
+- Any I/O-bound operations that can overlap
+
+### When NOT to use
+
+- Sequential operations where one step's output feeds the next
+- CPU-bound work (fibers yield on I/O, not on computation)
+- Operations that share mutable state
+
+### Testing
+
+Test the composition, not the concurrency. Mock the stage class (e.g. `Preprocessor`) rather than its internal components. The concurrency is an implementation detail:
+
+```ruby
+# Good — tests the stage's contract
+allow_any_instance_of(Synthetic::Preprocessor).to receive(:process)
+  .and_return(Synthetic::Preprocessor::Result.new(blocked: false, reason: "OK"))
+
+# Avoid — couples test to internal concurrency structure
+allow_any_instance_of(Synthetic::ThreatAssessor).to receive(:process).and_return(...)
+allow_any_instance_of(Synthetic::EmotionalProcessor).to receive(:process_incoming).and_return(...)
+```
+
+The stage's own spec tests that its internal modules are called correctly.
+
 ## RESTful State Transitions
 
 State changes on resources are modelled as nested singular resources, each with its own controller. This keeps controllers focused and avoids custom actions.
