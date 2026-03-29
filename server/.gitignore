@@ -41,3 +41,6 @@
 
 .DS_Store
 /.devcontainer/devcontainer.env 
+
+# Claude Code local settings
+/.claude/
