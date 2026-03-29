@@ -9,7 +9,7 @@ class Views::Tasks::New < Views::Base
   def view_template
     title = @parent ? "New Subtask of: #{@parent.subject}" : "New Task"
 
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user, active_nav: :system) do
+    render Views::Layouts::Application.new(title: title, return_href: tasks_path, user: @user, active_nav: :system) do
       render Components::Panel.new(title: title) do
         form_with url: tasks_path, method: :post do |form|
           Column gap: 12 do

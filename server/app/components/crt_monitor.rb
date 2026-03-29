@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Components::CrtMonitor < Components::Base
-  prop :brand, String, default: "HubSystem"
+  prop :title, String, default: "HubSystem"
+  prop :return_href, _String?, default: nil
   prop :user, _Any?, default: nil
   prop :active_nav, Enum(:dashboard, :messages, :users, :system), default: :dashboard
 
@@ -22,7 +23,14 @@ class Components::CrtMonitor < Components::Base
   def render_top
     div class: "crt-top" do
       div class: "crt-top-inner" do
-        span(class: "crt-brand") { @brand }
+        div class: "crt-brand-group" do
+          if @return_href.present?
+            a(href: @return_href, class: "crt-back") { "\u2190" }
+            a(href: @return_href, class: "crt-brand") { @title }
+          else
+            a(href: root_path, class: "crt-brand") { @title }
+          end
+        end
         if @user
           a href: logout_path, class: "crt-badge", data_turbo_method: :delete do
             div class: "crt-badge-led"

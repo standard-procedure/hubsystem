@@ -5,8 +5,8 @@ class Views::Users::Show < Views::Base
   prop :notes, _Any
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: Current.user, active_nav: :users) do
-      render Components::SystemPanel.new(title: @user.name, subtitle: @user.human? ? "Human" : "Synthetic") do
+    render Views::Layouts::Application.new(title: @user.name, return_href: users_path, user: Current.user, active_nav: :users) do
+      render Components::SystemPanel.new(title: @user.name, header_text: @user.human? ? "Human" : "Synthetic", header_status_text: @user.state.humanize, header_status: @user.state_color.to_sym) do
         render_profile
       end
 
@@ -21,9 +21,8 @@ class Views::Users::Show < Views::Base
         end
       end
 
-      Row justify: "end", gap: 2 do
+      Row justify: "end" do
         Button label: "Start Conversation", variant: :primary, tag: :a, href: new_user_conversation_path(@user)
-        Button label: "Back to Users", variant: :secondary, tag: :a, href: users_path
       end
     end
   end
@@ -31,11 +30,6 @@ class Views::Users::Show < Views::Base
   private
 
   def render_profile
-    StatusBar do |bar|
-      bar.item(state: @user.state_color, label: @user.state.humanize)
-      bar.item(state: :info, label: @user.uid)
-    end
-
     if @user.synthetic?
       render Components::Panel.new(title: "Synthetic Profile", variant: :active) do
         p { "Class: #{@user.synthetic_class&.name || "Unassigned"}" }

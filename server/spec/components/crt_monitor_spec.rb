@@ -37,16 +37,33 @@ RSpec.describe Components::CrtMonitor, type: :component do
       expect(html.at_css(".screen-content")).to be_present
     end
 
-    it "renders the brand name" do
-      html = render_fragment(described_class.new(brand: "TestBrand"))
+    it "renders the title as a link to root" do
+      html = render_fragment(described_class.new(title: "TestTitle"))
 
-      expect(html.at_css(".crt-brand").text).to eq("TestBrand")
+      brand = html.at_css(".crt-brand")
+      expect(brand.text).to eq("TestTitle")
+      expect(brand.name).to eq("a")
+      expect(brand["href"]).to eq("/")
     end
 
-    it "defaults the brand to HubSystem" do
+    it "defaults the title to HubSystem" do
       html = render_fragment(described_class.new)
 
       expect(html.at_css(".crt-brand").text).to eq("HubSystem")
+    end
+
+    it "renders a back arrow when return_href is provided" do
+      html = render_fragment(described_class.new(return_href: "/users"))
+
+      back = html.at_css(".crt-back")
+      expect(back).to be_present
+      expect(back["href"]).to eq("/users")
+    end
+
+    it "does not render a back arrow by default" do
+      html = render_fragment(described_class.new)
+
+      expect(html.at_css(".crt-back")).to be_nil
     end
 
     it "renders vents" do

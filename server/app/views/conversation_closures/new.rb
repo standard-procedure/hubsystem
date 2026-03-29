@@ -7,7 +7,7 @@ class Views::ConversationClosures::New < Views::Base
   prop :conversation, Conversation
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user, active_nav: :messages) do
+    render Views::Layouts::Application.new(title: @conversation.subject, return_href: conversation_path(@conversation), user: @user, active_nav: :messages) do
       render Components::Panel.new(title: "Close Conversation") do
         p { "Are you sure you want to close \"#{@conversation.subject}\" with #{@conversation.other_participant(@user).name}?" }
         Row gap: 8, justify: "end" do

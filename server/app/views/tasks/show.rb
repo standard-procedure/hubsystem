@@ -8,7 +8,7 @@ class Views::Tasks::Show < Views::Base
   prop :users, _Any
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user, active_nav: :system) do
+    render Views::Layouts::Application.new(title: @task.subject, return_href: tasks_path, user: @user, active_nav: :system) do
       render Components::Panel.new(title: @task.subject) do
         render_details
         render_assignment

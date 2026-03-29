@@ -6,7 +6,7 @@ class Views::Conversations::Index < Views::Base
   prop :archived, _Boolean, default: false
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user, active_nav: :messages) do
+    render Views::Layouts::Application.new(title: "Conversations", return_href: root_path, user: @user, active_nav: :messages) do
       render Components::Panel.new(title: "Conversations") do
         Navigation do |nav|
           nav.item label: "Active", active: !@archived, href: conversations_path

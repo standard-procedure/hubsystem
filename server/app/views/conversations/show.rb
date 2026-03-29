@@ -7,7 +7,7 @@ class Views::Conversations::Show < Views::Base
   prop :conversation, Conversation
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user, active_nav: :messages) do
+    render Views::Layouts::Application.new(title: @conversation.subject, return_href: conversations_path, user: @user, active_nav: :messages) do
       render Components::Panel.new(title: @conversation.subject) do
         render_status_bar
         render_messages

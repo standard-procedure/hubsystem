@@ -11,6 +11,7 @@ class Views::Layouts::Application < Views::Base
 
   prop :title, String
   prop :subtitle, String, default: ""
+  prop :return_href, _String?, default: nil
   prop :user, _Any?, default: nil
   prop :active_nav, Enum(:dashboard, :messages, :users, :system), default: :dashboard
   prop :lang, String, default: "en"
@@ -22,7 +23,7 @@ class Views::Layouts::Application < Views::Base
     html(lang: @lang) do
       head { render_head }
       body do
-        render Components::CrtMonitor.new(brand: @title, user: @user, active_nav: @active_nav), &
+        render Components::CrtMonitor.new(title: @title, return_href: @return_href, user: @user, active_nav: @active_nav), &
       end
     end
   end

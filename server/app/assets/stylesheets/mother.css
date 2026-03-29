@@ -331,9 +331,9 @@
     --case-border: hsl(38, 15%, 68%);
     --case-top-highlight: hsla(38, 40%, 95%, 0.6);
     --case-top-shadow: hsla(38, 10%, 50%, 0.3);
-    --case-text: hsl(38, 10%, 45%);
-    --case-text-light: hsl(38, 10%, 52%);
-    --case-text-dark: hsl(38, 8%, 38%);
+    --case-text: hsl(38, 12%, 35%);
+    --case-text-light: hsl(38, 12%, 42%);
+    --case-text-dark: hsl(38, 10%, 28%);
     --case-badge-bg: linear-gradient(180deg, hsl(38, 25%, 78%), hsl(38, 20%, 72%));
     --case-badge-border: hsl(38, 12%, 62%);
     --case-badge-highlight: hsla(38, 40%, 92%, 0.5);
@@ -344,11 +344,11 @@
     --case-knob-border: hsl(38, 10%, 48%);
     --case-knob-highlight: hsla(38, 30%, 85%, 0.5);
     --case-knob-mark: hsl(38, 8%, 42%);
-    --case-label-color: hsl(38, 8%, 50%);
+    --case-label-color: hsl(38, 10%, 40%);
     --case-nameplate-bg: linear-gradient(180deg, hsl(42, 35%, 90%), hsl(42, 30%, 85%));
     --case-nameplate-border: hsl(38, 15%, 70%);
     --case-nameplate-highlight: hsla(42, 40%, 96%, 0.6);
-    --case-nameplate-text: hsl(38, 15%, 35%);
+    --case-nameplate-text: hsl(38, 18%, 28%);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -358,9 +358,9 @@
       --case-border: hsl(38, 8%, 28%);
       --case-top-highlight: hsla(38, 15%, 30%, 0.4);
       --case-top-shadow: hsla(38, 5%, 10%, 0.5);
-      --case-text: hsl(38, 8%, 50%);
-      --case-text-light: hsl(38, 8%, 45%);
-      --case-text-dark: hsl(38, 6%, 42%);
+      --case-text: hsl(38, 10%, 58%);
+      --case-text-light: hsl(38, 10%, 52%);
+      --case-text-dark: hsl(38, 8%, 48%);
       --case-badge-bg: linear-gradient(180deg, hsl(38, 10%, 20%), hsl(38, 8%, 16%));
       --case-badge-border: hsl(38, 6%, 26%);
       --case-badge-highlight: hsla(38, 12%, 28%, 0.4);
@@ -371,11 +371,11 @@
       --case-knob-border: hsl(38, 5%, 12%);
       --case-knob-highlight: hsla(38, 10%, 28%, 0.4);
       --case-knob-mark: hsl(38, 5%, 20%);
-      --case-label-color: hsl(38, 6%, 38%);
+      --case-label-color: hsl(38, 8%, 48%);
       --case-nameplate-bg: linear-gradient(180deg, hsl(42, 8%, 18%), hsl(42, 6%, 14%));
       --case-nameplate-border: hsl(38, 6%, 24%);
       --case-nameplate-highlight: hsla(42, 10%, 24%, 0.4);
-      --case-nameplate-text: hsl(38, 8%, 48%);
+      --case-nameplate-text: hsl(38, 10%, 56%);
     }
   }
 
@@ -401,12 +401,31 @@
     gap: 8px;
   }
 
+  .crt-brand-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .crt-back {
+    font-size: 14px;
+    color: var(--case-text);
+    text-decoration: none;
+    margin-right: 8px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+
+  .crt-back:hover {
+    opacity: 1;
+  }
+
   .crt-brand {
     font-family: var(--font-display);
     font-size: 11px;
     color: var(--case-text);
     letter-spacing: 0.25em;
     text-transform: uppercase;
+    text-decoration: none;
   }
 
   .crt-model {

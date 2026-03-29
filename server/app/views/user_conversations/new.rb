@@ -5,7 +5,7 @@ class Views::UserConversations::New < Views::Base
   prop :conversation, _Nilable(Conversation), default: nil
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: Current.user, active_nav: :messages) do
+    render Views::Layouts::Application.new(title: "New Conversation", return_href: user_path(@recipient), user: Current.user, active_nav: :messages) do
       render Components::Panel.new(title: "Start Conversation with #{@recipient.name}") do
         form action: user_conversations_path(@recipient), method: :post do
           input type: "hidden", name: "authenticity_token", value: form_authenticity_token

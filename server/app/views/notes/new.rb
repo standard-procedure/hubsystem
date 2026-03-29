@@ -5,7 +5,7 @@ class Views::Notes::New < Views::Base
   prop :note, _Nilable(Note), default: nil
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: Current.user, active_nav: :users) do
+    render Views::Layouts::Application.new(title: "New Note", return_href: user_path(@user), user: Current.user, active_nav: :users) do
       render Components::Panel.new(title: "New Note about #{@user.name}") do
         render_form(user_notes_path(@user))
       end

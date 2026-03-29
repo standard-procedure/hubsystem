@@ -5,7 +5,7 @@ class Views::Notes::Edit < Views::Base
   prop :note, Note
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: Current.user, active_nav: :users) do
+    render Views::Layouts::Application.new(title: "Edit Note", return_href: user_path(@user), user: Current.user, active_nav: :users) do
       render Components::Panel.new(title: "Edit Note about #{@user.name}") do
         form action: user_note_path(@user, @note), method: :post do
           input type: "hidden", name: "_method", value: "patch"

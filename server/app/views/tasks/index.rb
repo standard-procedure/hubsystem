@@ -6,7 +6,7 @@ class Views::Tasks::Index < Views::Base
   prop :created, _Boolean, default: false
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user, active_nav: :system) do
+    render Views::Layouts::Application.new(title: "Tasks", return_href: root_path, user: @user, active_nav: :system) do
       render Components::Panel.new(title: "Tasks") do
         Navigation do |nav|
           nav.item label: "Assigned to me", active: !@created, href: tasks_path

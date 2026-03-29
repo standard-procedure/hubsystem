@@ -22,9 +22,26 @@ See `docs/DEVELOPMENT-PROCESS.md`
 - **Monitoring:** RailsPulse
 - **API Docs:** rspec-openapi (auto-generated)
 
-## User Interface 
+## User Interface
 
-The design system is called [mother](../docs/hubsystem-design-system-reference.html) implemented in `app/assets/mother.css`.  It is designed to look like the computers from the 1980s Aliens films.  
+The design system is called [mother](../docs/hubsystem-design-system-reference.html) implemented in `app/assets/mother.css`.  It is designed to look like the computers from the 1980s Aliens films.
+
+### Button placement rules
+
+- The **primary action** button is always **right-justified** (end of the row).
+- **Secondary actions** (cancel, back) sit to the left of the primary action.
+- **Destructive actions** (delete, cancel task) are positioned as **far from the primary/secondary actions as possible** — typically left-justified with `justify: "between"` on the row, so they sit at the opposite end.
+
+```ruby
+# Example: primary right, destructive far left
+Row justify: "between" do
+  Button label: "Delete", variant: :danger, size: :sm   # far left
+  Row gap: 2 do
+    Button label: "Cancel", variant: :secondary, tag: :a, href: back_path
+    Button label: "Save", variant: :primary              # far right
+  end
+end
+```
 
 ## Phlex Components
 
