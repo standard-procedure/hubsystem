@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe TaskReminderJob, type: :job do
-  fixtures :users, :conversations, :messages
+  fixtures :users, :humans, :synthetics, :conversations, :messages
 
   let(:alice) { users(:alice) }
   let(:bob) { users(:bob) }

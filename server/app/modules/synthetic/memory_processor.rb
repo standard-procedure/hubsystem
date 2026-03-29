@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class MemoryProcessor < BaseModule
     SYSTEM_PROMPT = <<~PROMPT
       You are a memory processing module for an AI agent. Analyse the following content and identify any facts, preferences, or information worth remembering for future interactions.

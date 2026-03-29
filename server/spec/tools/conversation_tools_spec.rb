@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Conversation tools", type: :model do
-  fixtures :users, :conversations, :messages
+  fixtures :users, :humans, :synthetics, :conversations, :messages
 
   let(:bishop) { users(:bishop) }
   let(:alice) { users(:alice) }

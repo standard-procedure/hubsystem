@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class User::Synthetic::ConversationAcceptanceJob < ApplicationJob
+class Synthetic::ConversationAcceptanceJob < ApplicationJob
   queue_as :default
 
   def perform(conversation_id)
     conversation = Conversation.find(conversation_id)
     return unless conversation.requested?
-    return unless conversation.recipient.is_a?(User::Synthetic)
+    return unless conversation.recipient.synthetic?
 
     conversation.update!(status: :active)
 

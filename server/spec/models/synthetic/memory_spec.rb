@@ -3,13 +3,14 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Memory, type: :model do
-  fixtures :users, :synthetic_memories
+  fixtures :users, :humans, :synthetics, :synthetic_memories
 
   let(:bishop) { users(:bishop) }
+  let(:bishop_synthetic) { synthetics(:bishop_synthetic) }
 
   describe "validations" do
     it "requires content" do
-      memory = Synthetic::Memory.new(synthetic: bishop, content: nil)
+      memory = Synthetic::Memory.new(synthetic: bishop_synthetic, content: nil)
       expect(memory).not_to be_valid
       expect(memory.errors[:content]).to include("can't be blank")
     end
@@ -17,7 +18,7 @@ RSpec.describe Synthetic::Memory, type: :model do
 
   describe "associations" do
     it "belongs to a synthetic" do
-      expect(synthetic_memories(:alice_mornings).synthetic).to eq(bishop)
+      expect(synthetic_memories(:alice_mornings).synthetic).to eq(bishop_synthetic)
     end
   end
 
@@ -50,13 +51,13 @@ RSpec.describe Synthetic::Memory, type: :model do
     end
   end
 
-  describe "user association" do
+  describe "synthetic association" do
     it "is accessible via the synthetic's memories" do
-      expect(bishop.memories.count).to eq(3)
+      expect(bishop_synthetic.memories.count).to eq(3)
     end
 
     it "is destroyed when the synthetic is destroyed" do
-      expect { bishop.destroy }.to change(Synthetic::Memory, :count).by(-3)
+      expect { bishop_synthetic.destroy }.to change(Synthetic::Memory, :count).by(-3)
     end
   end
 end

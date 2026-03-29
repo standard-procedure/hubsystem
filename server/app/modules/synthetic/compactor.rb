@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class Compactor < BaseModule
     RECENT_MESSAGE_COUNT = 20
 

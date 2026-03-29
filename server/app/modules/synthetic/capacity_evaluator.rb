@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class CapacityEvaluator < BaseModule
     COMPACTION_THRESHOLD = 80
     DEFAULT_CONTEXT_WINDOW = 100_000

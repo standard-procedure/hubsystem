@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Conversation lifecycle", type: :request do
-  fixtures :users, :user_sessions, :conversations, :messages
+  fixtures :users, :humans, :synthetics, :user_sessions, :conversations, :messages
 
   describe "POST /conversations/:id/acceptance" do
     it "accepts a conversation request as the recipient" do

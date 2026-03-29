@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Conversation, type: :model do
-  fixtures :users, :conversations, :messages
+  fixtures :users, :humans, :synthetics, :conversations, :messages
 
   describe "associations" do
     it "belongs to an initiator" do

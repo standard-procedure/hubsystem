@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class Postprocessor
     def initialize(synthetic)
       @synthetic = synthetic

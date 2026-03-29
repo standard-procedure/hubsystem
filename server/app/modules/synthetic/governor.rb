@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class Governor < BaseModule
     SYSTEM_PROMPT = <<~PROMPT
       You are a governance module for an AI agent. Assess whether the following response from the agent is appropriate, ethical, and within acceptable boundaries.

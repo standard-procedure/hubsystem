@@ -1,0 +1,31 @@
+bishop_synthetic:
+  personality: "Calm and methodical"
+  temperature: 0.4
+  fatigue: 0
+  emotions:
+    joy: 50
+    sadness: 10
+    fear: 10
+    anger: 10
+    surprise: 20
+    disgust: 5
+    anticipation: 30
+    trust: 50
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>
+
+ash_synthetic:
+  personality: "Direct and efficient"
+  temperature: 0.4
+  fatigue: 0
+  emotions:
+    joy: 50
+    sadness: 10
+    fear: 10
+    anger: 10
+    surprise: 20
+    disgust: 5
+    anticipation: 30
+    trust: 50
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.week.ago %>

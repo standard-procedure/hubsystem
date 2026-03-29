@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Tasks", type: :request do
-  fixtures :users, :user_sessions
+  fixtures :users, :humans, :synthetics, :user_sessions
 
   before { sign_in_as user_sessions(:alice_session) }
 

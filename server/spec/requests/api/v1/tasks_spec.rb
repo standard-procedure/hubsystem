@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "API V1 Tasks", type: :request do
-  fixtures :users, :oauth_applications, :oauth_access_tokens
+  fixtures :users, :humans, :synthetics, :oauth_applications, :oauth_access_tokens
 
   let(:alice) { users(:alice) }
   let(:bob) { users(:bob) }

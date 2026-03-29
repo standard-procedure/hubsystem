@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  include HasAttributes
+  delegated_type :role, types: %w[Human Synthetic], dependent: :destroy
+
+  # Delegate Synthetic-specific methods so the pipeline can work with User records directly
+  delegate :ensure_llm_context, :memories, :adjust_emotions, :personality, :temperature,
+    :fatigue, :fatigue=, :emotions, :emotions=, to: :role, allow_nil: true
+
+  # Delegate Human-specific methods
+  delegate :identities, to: :role, allow_nil: true
 
   has_one_attached :photo
   validate :photo_is_an_image, if: -> { photo.attached? }

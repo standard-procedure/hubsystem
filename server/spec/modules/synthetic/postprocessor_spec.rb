@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Postprocessor, type: :module do
-  fixtures :users
+  fixtures :users, :humans, :synthetics
 
   let(:bishop) { users(:bishop) }
   let(:postprocessor) { described_class.new(bishop) }

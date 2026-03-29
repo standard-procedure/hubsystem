@@ -27,7 +27,7 @@ class ReadMemoryTool < SyntheticTool
 
   def semantic_search(query, tag, limit)
     results = Synthetic::Memory.semantic_search(query, limit: limit)
-      .where(synthetic: @synthetic)
+      .where(synthetic: @synthetic.role)
     results = results.tagged_with(tag) if tag.present?
     return results if results.any?
 

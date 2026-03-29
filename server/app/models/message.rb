@@ -21,6 +21,6 @@ class Message < ApplicationRecord
 
   def notify_synthetic_recipient
     other = conversation.other_participant(sender)
-    User::Synthetic::MessageProcessorJob.perform_later(id) if other.is_a?(User::Synthetic)
+    Synthetic::MessageProcessorJob.perform_later(id) if other.synthetic?
   end
 end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class User::Identity < ApplicationRecord
-  belongs_to :user, inverse_of: :identities, class_name: "User::Human"
+  belongs_to :human, inverse_of: :identities
+  has_one :user, through: :human, source: :user
+
   validates :provider, presence: true
   validates :uid, presence: true
 

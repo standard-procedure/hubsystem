@@ -3,7 +3,7 @@
 require "async"
 require "async/barrier"
 
-module Synthetic
+class Synthetic
   module Concurrent
     def self.run(*callables)
       results = Array.new(callables.size)

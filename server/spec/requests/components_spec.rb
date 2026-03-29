@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Components", type: :request do
-  fixtures :users, :user_sessions
+  fixtures :users, :humans, :synthetics, :user_sessions
 
   describe "GET /component" do
     it "returns the component gallery" do

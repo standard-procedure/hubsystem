@@ -3,15 +3,16 @@
 require "rails_helper"
 
 RSpec.describe GenerateEmbeddingJob, type: :job do
-  fixtures :users
+  fixtures :users, :humans, :synthetics
 
   let(:bishop) { users(:bishop) }
+  let(:bishop_synthetic) { synthetics(:bishop_synthetic) }
   let(:fake_vector) { Array.new(768) { rand(-1.0..1.0) } }
   let(:embed_response) { instance_double("RubyLLM::EmbeddingResponse", vectors: fake_vector) }
 
   describe "#perform" do
     it "generates and stores an embedding for a Synthetic::Memory" do
-      memory = Synthetic::Memory.create!(synthetic: bishop, content: "Alice prefers mornings", tags: ["alice"])
+      memory = Synthetic::Memory.create!(synthetic: bishop_synthetic, content: "Alice prefers mornings", tags: ["alice"])
 
       allow(RubyLLM).to receive(:embed)
         .with("Alice prefers mornings", model: Synthetic::Memory.embedding_model, provider: :openai, assume_model_exists: true)

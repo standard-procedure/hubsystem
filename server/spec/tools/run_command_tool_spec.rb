@@ -4,7 +4,7 @@ require "rails_helper"
 require "open3"
 
 RSpec.describe RunCommandTool, type: :model do
-  fixtures :users
+  fixtures :users, :humans, :synthetics
 
   let(:bishop) { users(:bishop) }
   let(:tool) { described_class.new(bishop) }

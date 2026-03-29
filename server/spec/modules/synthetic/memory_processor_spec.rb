@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::MemoryProcessor, type: :module do
-  fixtures :users
+  fixtures :users, :humans, :synthetics
 
   let(:bishop) { users(:bishop) }
   let(:processor) { described_class.new(bishop) }

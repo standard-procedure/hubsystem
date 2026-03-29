@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class EmotionalProcessor < BaseModule
     SYSTEM_PROMPT = <<~PROMPT
       You are an emotional processing module for an AI agent named %{name} with the following personality: %{personality}

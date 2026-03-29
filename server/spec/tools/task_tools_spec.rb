@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Task tools", type: :model do
-  fixtures :users
+  fixtures :users, :humans, :synthetics
 
   let(:alice) { users(:alice) }
   let(:bob) { users(:bob) }

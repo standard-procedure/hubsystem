@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -46,8 +46,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   create_table "conversations", force: :cascade do |t|
     t.datetime "closed_at"
     t.datetime "created_at", null: false
-    t.integer "initiator_id", null: false
-    t.integer "recipient_id", null: false
+    t.bigint "initiator_id", null: false
+    t.bigint "recipient_id", null: false
     t.integer "status", default: 0, null: false
     t.string "subject", null: false
     t.datetime "updated_at", null: false
@@ -58,7 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.integer "author_id", null: false
+    t.bigint "author_id", null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.vector "embedding", limit: 768
@@ -68,6 +68,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
     t.index ["author_id"], name: "index_documents_on_author_id"
   end
 
+  create_table "humans", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "llm_context_messages", force: :cascade do |t|
     t.integer "cache_creation_tokens"
     t.integer "cached_tokens"
@@ -75,9 +80,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
     t.json "content_raw"
     t.datetime "created_at", null: false
     t.integer "input_tokens"
-    t.integer "llm_context_id", null: false
-    t.integer "llm_context_tool_call_id"
-    t.integer "llm_model_id"
+    t.bigint "llm_context_id", null: false
+    t.bigint "llm_context_tool_call_id"
+    t.bigint "llm_model_id"
     t.integer "output_tokens"
     t.string "role", null: false
     t.text "thinking_signature"
@@ -93,7 +98,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   create_table "llm_context_tool_calls", force: :cascade do |t|
     t.json "arguments", default: {}
     t.datetime "created_at", null: false
-    t.integer "llm_context_message_id", null: false
+    t.bigint "llm_context_message_id", null: false
     t.string "name", null: false
     t.text "thought_signature"
     t.string "tool_call_id", null: false
@@ -105,11 +110,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
 
   create_table "llm_contexts", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "llm_model_id"
+    t.bigint "llm_model_id"
+    t.bigint "synthetic_id", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
     t.index ["llm_model_id"], name: "index_llm_contexts_on_llm_model_id"
-    t.index ["user_id"], name: "index_llm_contexts_on_user_id"
+    t.index ["synthetic_id"], name: "index_llm_contexts_on_synthetic_id"
   end
 
   create_table "llm_models", force: :cascade do |t|
@@ -134,10 +139,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
 
   create_table "messages", force: :cascade do |t|
     t.text "content", null: false
-    t.integer "conversation_id", null: false
+    t.bigint "conversation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "read_at"
-    t.integer "sender_id", null: false
+    t.bigint "sender_id", null: false
     t.datetime "updated_at", null: false
     t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
     t.index ["conversation_id", "sender_id", "read_at"], name: "index_messages_on_conversation_id_and_sender_id_and_read_at"
@@ -146,11 +151,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
-    t.integer "application_id", null: false
+    t.bigint "application_id", null: false
     t.datetime "created_at", null: false
     t.integer "expires_in", null: false
     t.text "redirect_uri", null: false
-    t.integer "resource_owner_id", null: false
+    t.bigint "resource_owner_id", null: false
     t.datetime "revoked_at"
     t.string "scopes", default: "", null: false
     t.string "token", null: false
@@ -160,12 +165,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.integer "application_id", null: false
+    t.bigint "application_id", null: false
     t.datetime "created_at", null: false
     t.integer "expires_in"
     t.string "previous_refresh_token", default: "", null: false
     t.string "refresh_token"
-    t.integer "resource_owner_id"
+    t.bigint "resource_owner_id"
     t.datetime "revoked_at"
     t.string "scopes"
     t.string "token", null: false
@@ -188,15 +193,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   end
 
   create_table "rails_pulse_operations", force: :cascade do |t|
-    t.string "codebase_location"
+    t.string "codebase_location", comment: "File and line number (e.g., app/models/user.rb:25)"
     t.datetime "created_at", null: false
-    t.decimal "duration", precision: 15, scale: 6, null: false
-    t.string "label", null: false
-    t.datetime "occurred_at", null: false
-    t.string "operation_type", null: false
-    t.integer "query_id"
-    t.integer "request_id", null: false
-    t.float "start_time", default: 0.0, null: false
+    t.decimal "duration", precision: 15, scale: 6, null: false, comment: "Operation duration in milliseconds"
+    t.string "label", null: false, comment: "Descriptive name (e.g., SELECT FROM users WHERE id = 1, render layout)"
+    t.datetime "occurred_at", precision: nil, null: false, comment: "When the request started"
+    t.string "operation_type", null: false, comment: "Type of operation (e.g., database, view, gem_call)"
+    t.bigint "query_id", comment: "Link to the normalized SQL query"
+    t.bigint "request_id", null: false, comment: "Link to the request"
+    t.float "start_time", default: 0.0, null: false, comment: "Operation start time in milliseconds"
     t.datetime "updated_at", null: false
     t.index ["created_at", "query_id"], name: "idx_operations_for_aggregation"
     t.index ["created_at"], name: "idx_operations_created_at"
@@ -210,32 +215,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   end
 
   create_table "rails_pulse_queries", force: :cascade do |t|
-    t.datetime "analyzed_at"
-    t.text "backtrace_analysis"
+    t.datetime "analyzed_at", comment: "When query analysis was last performed"
+    t.text "backtrace_analysis", comment: "JSON object with call chain and N+1 detection"
     t.datetime "created_at", null: false
-    t.text "explain_plan"
-    t.text "index_recommendations"
-    t.text "issues"
-    t.text "metadata"
-    t.text "n_plus_one_analysis"
-    t.string "normalized_sql", limit: 1000, null: false
-    t.text "query_stats"
-    t.text "suggestions"
-    t.text "tags"
+    t.text "explain_plan", comment: "EXPLAIN output from actual SQL execution"
+    t.text "index_recommendations", comment: "JSON array of database index recommendations"
+    t.text "issues", comment: "JSON array of detected performance issues"
+    t.text "metadata", comment: "JSON object containing query complexity metrics"
+    t.text "n_plus_one_analysis", comment: "JSON object with enhanced N+1 query detection results"
+    t.string "normalized_sql", limit: 1000, null: false, comment: "Normalized SQL query string (e.g., SELECT * FROM users WHERE id = ?)"
+    t.text "query_stats", comment: "JSON object with query characteristics analysis"
+    t.text "suggestions", comment: "JSON array of optimization recommendations"
+    t.text "tags", comment: "JSON array of tags for filtering and categorization"
     t.datetime "updated_at", null: false
     t.index ["normalized_sql"], name: "index_rails_pulse_queries_on_normalized_sql", unique: true
   end
 
   create_table "rails_pulse_requests", force: :cascade do |t|
-    t.string "controller_action"
+    t.string "controller_action", comment: "Controller and action handling the request (e.g., PostsController#show)"
     t.datetime "created_at", null: false
-    t.decimal "duration", precision: 15, scale: 6, null: false
-    t.boolean "is_error", default: false, null: false
-    t.datetime "occurred_at", null: false
-    t.string "request_uuid", null: false
-    t.integer "route_id", null: false
-    t.integer "status", null: false
-    t.text "tags"
+    t.decimal "duration", precision: 15, scale: 6, null: false, comment: "Total request duration in milliseconds"
+    t.boolean "is_error", default: false, null: false, comment: "True if status >= 500"
+    t.datetime "occurred_at", precision: nil, null: false, comment: "When the request started"
+    t.string "request_uuid", null: false, comment: "Unique identifier for the request (e.g., UUID)"
+    t.bigint "route_id", null: false, comment: "Link to the route"
+    t.integer "status", null: false, comment: "HTTP status code (e.g., 200, 500)"
+    t.text "tags", comment: "JSON array of tags for filtering and categorization"
     t.datetime "updated_at", null: false
     t.index ["created_at", "route_id"], name: "idx_requests_for_aggregation"
     t.index ["created_at"], name: "idx_requests_created_at"
@@ -247,35 +252,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
 
   create_table "rails_pulse_routes", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "method", null: false
-    t.string "path", null: false
-    t.text "tags"
+    t.string "method", null: false, comment: "HTTP method (e.g., GET, POST)"
+    t.string "path", null: false, comment: "Request path (e.g., /posts/index)"
+    t.text "tags", comment: "JSON array of tags for filtering and categorization"
     t.datetime "updated_at", null: false
     t.index ["method", "path"], name: "index_rails_pulse_routes_on_method_and_path", unique: true
   end
 
   create_table "rails_pulse_summaries", force: :cascade do |t|
-    t.float "avg_duration"
-    t.integer "count", default: 0, null: false
+    t.float "avg_duration", comment: "Average duration in milliseconds"
+    t.integer "count", default: 0, null: false, comment: "Total number of requests/operations"
     t.datetime "created_at", null: false
-    t.integer "error_count", default: 0
-    t.float "max_duration"
-    t.float "min_duration"
-    t.float "p50_duration"
-    t.float "p95_duration"
-    t.float "p99_duration"
-    t.datetime "period_end", null: false
-    t.datetime "period_start", null: false
-    t.string "period_type", null: false
-    t.integer "status_2xx", default: 0
-    t.integer "status_3xx", default: 0
-    t.integer "status_4xx", default: 0
-    t.integer "status_5xx", default: 0
-    t.float "stddev_duration"
-    t.integer "success_count", default: 0
-    t.integer "summarizable_id", null: false
+    t.integer "error_count", default: 0, comment: "Number of error responses (5xx)"
+    t.float "max_duration", comment: "Maximum duration in milliseconds"
+    t.float "min_duration", comment: "Minimum duration in milliseconds"
+    t.float "p50_duration", comment: "50th percentile duration"
+    t.float "p95_duration", comment: "95th percentile duration"
+    t.float "p99_duration", comment: "99th percentile duration"
+    t.datetime "period_end", null: false, comment: "End of the aggregation period"
+    t.datetime "period_start", null: false, comment: "Start of the aggregation period"
+    t.string "period_type", null: false, comment: "Aggregation period type: hour, day, week, month"
+    t.integer "status_2xx", default: 0, comment: "Number of 2xx responses"
+    t.integer "status_3xx", default: 0, comment: "Number of 3xx responses"
+    t.integer "status_4xx", default: 0, comment: "Number of 4xx responses"
+    t.integer "status_5xx", default: 0, comment: "Number of 5xx responses"
+    t.float "stddev_duration", comment: "Standard deviation of duration"
+    t.integer "success_count", default: 0, comment: "Number of successful responses"
+    t.bigint "summarizable_id", null: false, comment: "Link to Route or Query"
     t.string "summarizable_type", null: false
-    t.float "total_duration"
+    t.float "total_duration", comment: "Total duration in milliseconds"
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_rails_pulse_summaries_on_created_at"
     t.index ["period_type", "period_start"], name: "index_rails_pulse_summaries_on_period"
@@ -287,16 +292,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.vector "embedding", limit: 768
-    t.integer "synthetic_id", null: false
+    t.bigint "synthetic_id", null: false
     t.text "tags", default: [], null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["synthetic_id"], name: "index_synthetic_memories_on_synthetic_id"
   end
 
+  create_table "synthetics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.json "emotions", default: {"joy" => 50, "sadness" => 10, "fear" => 10, "anger" => 10, "surprise" => 20, "disgust" => 5, "anticipation" => 30, "trust" => 50}
+    t.integer "fatigue", default: 0
+    t.string "personality", default: ""
+    t.decimal "temperature", precision: 3, scale: 2, default: "0.4"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "task_dependencies", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "dependency_id", null: false
-    t.integer "task_id", null: false
+    t.bigint "dependency_id", null: false
+    t.bigint "task_id", null: false
     t.datetime "updated_at", null: false
     t.index ["dependency_id"], name: "index_task_dependencies_on_dependency_id"
     t.index ["task_id", "dependency_id"], name: "index_task_dependencies_on_task_id_and_dependency_id", unique: true
@@ -304,13 +318,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   end
 
   create_table "tasks", force: :cascade do |t|
-    t.integer "assignee_id"
+    t.bigint "assignee_id"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
-    t.integer "creator_id", null: false
+    t.bigint "creator_id", null: false
     t.text "description"
     t.datetime "due_at"
-    t.integer "parent_id"
+    t.bigint "parent_id"
     t.string "schedule"
     t.integer "status", default: 0, null: false
     t.string "subject", null: false
@@ -327,12 +341,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   create_table "user_identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.json "data"
+    t.bigint "human_id", null: false
     t.string "provider", null: false
     t.string "uid", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.index ["human_id"], name: "index_user_identities_on_human_id"
     t.index ["provider", "uid"], name: "index_user_identities_on_provider_and_uid", unique: true
-    t.index ["user_id"], name: "index_user_identities_on_user_id"
   end
 
   create_table "user_sessions", force: :cascade do |t|
@@ -341,19 +355,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
     t.string "ip_address"
     t.datetime "updated_at", null: false
     t.string "user_agent"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_user_sessions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.json "data"
     t.string "name", null: false
+    t.bigint "role_id", null: false
+    t.string "role_type", null: false
     t.integer "status", default: 0, null: false
     t.boolean "system_administrator", default: false, null: false
-    t.string "type", null: false
     t.string "uid", null: false
     t.datetime "updated_at", null: false
+    t.index ["role_type", "role_id"], name: "index_users_on_role_type_and_role_id", unique: true
     t.index ["status", "uid"], name: "index_users_on_status_and_uid", unique: true
   end
 
@@ -367,7 +382,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   add_foreign_key "llm_context_messages", "llm_models"
   add_foreign_key "llm_context_tool_calls", "llm_context_messages"
   add_foreign_key "llm_contexts", "llm_models"
-  add_foreign_key "llm_contexts", "users"
+  add_foreign_key "llm_contexts", "synthetics"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
@@ -375,12 +390,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_080001) do
   add_foreign_key "rails_pulse_operations", "rails_pulse_queries", column: "query_id"
   add_foreign_key "rails_pulse_operations", "rails_pulse_requests", column: "request_id"
   add_foreign_key "rails_pulse_requests", "rails_pulse_routes", column: "route_id"
-  add_foreign_key "synthetic_memories", "users", column: "synthetic_id"
+  add_foreign_key "synthetic_memories", "synthetics"
   add_foreign_key "task_dependencies", "tasks"
   add_foreign_key "task_dependencies", "tasks", column: "dependency_id"
   add_foreign_key "tasks", "tasks", column: "parent_id"
   add_foreign_key "tasks", "users", column: "assignee_id"
   add_foreign_key "tasks", "users", column: "creator_id"
-  add_foreign_key "user_identities", "users"
+  add_foreign_key "user_identities", "humans"
   add_foreign_key "user_sessions", "users"
 end

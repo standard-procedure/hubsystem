@@ -3,26 +3,26 @@
 require "rails_helper"
 
 RSpec.describe User::Identity, type: :model do
-  fixtures :users, :user_identities
+  fixtures :users, :humans, :user_identities
 
   describe "validations" do
     it "requires a provider" do
-      identity = User::Identity.new(user: users(:alice), provider: nil, uid: "123")
+      identity = User::Identity.new(human: humans(:alice_human), provider: nil, uid: "123")
       expect(identity).not_to be_valid
       expect(identity.errors[:provider]).to include("can't be blank")
     end
 
     it "requires a uid" do
-      identity = User::Identity.new(user: users(:alice), provider: "github", uid: nil)
+      identity = User::Identity.new(human: humans(:alice_human), provider: "github", uid: nil)
       expect(identity).not_to be_valid
       expect(identity.errors[:uid]).to include("can't be blank")
     end
   end
 
   describe "associations" do
-    it "belongs to a user" do
+    it "belongs to a human" do
       identity = user_identities(:alice_developer)
-      expect(identity.user).to eq(users(:alice))
+      expect(identity.human).to eq(humans(:alice_human))
     end
   end
 

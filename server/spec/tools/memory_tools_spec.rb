@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Memory tools", type: :model do
-  fixtures :users, :synthetic_memories
+  fixtures :users, :humans, :synthetics, :synthetic_memories
 
   let(:bishop) { users(:bishop) }
 

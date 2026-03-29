@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class User::Synthetic::MessageProcessorJob < ApplicationJob
+class Synthetic::MessageProcessorJob < ApplicationJob
   queue_as :default
 
   def perform(message_id)
@@ -21,6 +21,6 @@ class User::Synthetic::MessageProcessorJob < ApplicationJob
 
   def synthetic_recipient(conversation, sender)
     other = conversation.other_participant(sender)
-    other if other.is_a?(User::Synthetic)
+    other if other.synthetic?
   end
 end

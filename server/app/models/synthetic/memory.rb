@@ -5,7 +5,7 @@ class Synthetic::Memory < ApplicationRecord
 
   include Embeddable
 
-  belongs_to :synthetic, class_name: "User::Synthetic"
+  belongs_to :synthetic
 
   validates :content, presence: true
 

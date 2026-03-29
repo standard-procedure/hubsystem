@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Document, type: :model do
-  fixtures :users, :documents
+  fixtures :users, :humans, :synthetics, :documents
 
   let(:bishop) { users(:bishop) }
 

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Pipeline, type: :module do
-  fixtures :users
+  fixtures :users, :humans, :synthetics
 
   let(:bishop) { users(:bishop) }
   let(:pipeline) { described_class.new(bishop) }

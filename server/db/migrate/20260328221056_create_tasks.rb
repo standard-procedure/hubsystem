@@ -10,7 +10,7 @@ class CreateTasks < ActiveRecord::Migration[8.1]
       t.datetime :completed_at
       t.datetime :due_at
       t.string :schedule
-      t.json :tags, null: false, default: []
+      t.text :tags, array: true, default: [], null: false
 
       t.timestamps
     end

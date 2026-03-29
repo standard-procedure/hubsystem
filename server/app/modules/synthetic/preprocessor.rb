@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Synthetic
+class Synthetic
   class Preprocessor
     Result = Data.define(:blocked, :reason)
 
