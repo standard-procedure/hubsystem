@@ -7,13 +7,13 @@ hostname = File.basename(__dir__)
 
 service hostname do
   include Falcon::Environment::Rack
-  
+
   # This file will be loaded in the main process before forking.
   preload "preload.rb"
-  
+
   # Default to port 3000 unless otherwise specified.
-  port {ENV.fetch("PORT", 3000).to_i}
-  
+  port { ENV.fetch("PORT", 3000).to_i }
+
   # Default to HTTP/1.1 for compatibility with proxies:
   endpoint do
     Async::HTTP::Endpoint

@@ -22,7 +22,7 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    if session = User::Session.find_by(id: cookies.signed[:session_id])
+    if (session = User::Session.find_by(id: cookies.signed[:session_id]))
       session.user
     else
       redirect_to new_session_url

@@ -4,13 +4,13 @@
 
 RailsPulse::Schema = lambda do |connection|
   # Skip if all tables already exist to prevent conflicts
-  required_tables = [ :rails_pulse_routes, :rails_pulse_queries, :rails_pulse_requests, :rails_pulse_operations, :rails_pulse_summaries ]
+  required_tables = [:rails_pulse_routes, :rails_pulse_queries, :rails_pulse_requests, :rails_pulse_operations, :rails_pulse_summaries]
 
   if ENV["CI"] == "true"
     existing_tables = required_tables.select { |table| connection.table_exists?(table) }
     missing_tables = required_tables - existing_tables
-    puts "[RailsPulse::Schema] Existing tables: #{existing_tables.join(', ')}" if existing_tables.any?
-    puts "[RailsPulse::Schema] Missing tables: #{missing_tables.join(', ')}" if missing_tables.any?
+    puts "[RailsPulse::Schema] Existing tables: #{existing_tables.join(", ")}" if existing_tables.any?
+    puts "[RailsPulse::Schema] Missing tables: #{missing_tables.join(", ")}" if missing_tables.any?
   end
 
   return if required_tables.all? { |table| connection.table_exists?(table) }
@@ -22,7 +22,7 @@ RailsPulse::Schema = lambda do |connection|
     t.timestamps
   end
 
-  connection.add_index :rails_pulse_routes, [ :method, :path ], unique: true, name: "index_rails_pulse_routes_on_method_and_path"
+  connection.add_index :rails_pulse_routes, [:method, :path], unique: true, name: "index_rails_pulse_routes_on_method_and_path"
 
   connection.create_table :rails_pulse_queries do |t|
     t.string :normalized_sql, limit: 1000, null: false, comment: "Normalized SQL query string (e.g., SELECT * FROM users WHERE id = ?)"
@@ -42,7 +42,7 @@ RailsPulse::Schema = lambda do |connection|
   connection.add_index :rails_pulse_queries, :normalized_sql, unique: true, name: "index_rails_pulse_queries_on_normalized_sql", length: 191
 
   connection.create_table :rails_pulse_requests do |t|
-    t.references :route, null: false, foreign_key: { to_table: :rails_pulse_routes }, comment: "Link to the route"
+    t.references :route, null: false, foreign_key: {to_table: :rails_pulse_routes}, comment: "Link to the route"
     t.decimal :duration, precision: 15, scale: 6, null: false, comment: "Total request duration in milliseconds"
     t.integer :status, null: false, comment: "HTTP status code (e.g., 200, 500)"
     t.boolean :is_error, null: false, default: false, comment: "True if status >= 500"
@@ -55,11 +55,11 @@ RailsPulse::Schema = lambda do |connection|
 
   connection.add_index :rails_pulse_requests, :occurred_at, name: "index_rails_pulse_requests_on_occurred_at"
   connection.add_index :rails_pulse_requests, :request_uuid, unique: true, name: "index_rails_pulse_requests_on_request_uuid"
-  connection.add_index :rails_pulse_requests, [ :route_id, :occurred_at ], name: "index_rails_pulse_requests_on_route_id_and_occurred_at"
+  connection.add_index :rails_pulse_requests, [:route_id, :occurred_at], name: "index_rails_pulse_requests_on_route_id_and_occurred_at"
 
   connection.create_table :rails_pulse_operations do |t|
-    t.references :request, null: false, foreign_key: { to_table: :rails_pulse_requests }, comment: "Link to the request"
-    t.references :query, foreign_key: { to_table: :rails_pulse_queries }, index: true, comment: "Link to the normalized SQL query"
+    t.references :request, null: false, foreign_key: {to_table: :rails_pulse_requests}, comment: "Link to the request"
+    t.references :query, foreign_key: {to_table: :rails_pulse_queries}, index: true, comment: "Link to the normalized SQL query"
     t.string :operation_type, null: false, comment: "Type of operation (e.g., database, view, gem_call)"
     t.string :label, null: false, comment: "Descriptive name (e.g., SELECT FROM users WHERE id = 1, render layout)"
     t.decimal :duration, precision: 15, scale: 6, null: false, comment: "Operation duration in milliseconds"
@@ -71,9 +71,9 @@ RailsPulse::Schema = lambda do |connection|
 
   connection.add_index :rails_pulse_operations, :operation_type, name: "index_rails_pulse_operations_on_operation_type"
   connection.add_index :rails_pulse_operations, :occurred_at, name: "index_rails_pulse_operations_on_occurred_at"
-  connection.add_index :rails_pulse_operations, [ :query_id, :occurred_at ], name: "index_rails_pulse_operations_on_query_and_time"
-  connection.add_index :rails_pulse_operations, [ :query_id, :duration, :occurred_at ], name: "index_rails_pulse_operations_query_performance"
-  connection.add_index :rails_pulse_operations, [ :occurred_at, :duration, :operation_type ], name: "index_rails_pulse_operations_on_time_duration_type"
+  connection.add_index :rails_pulse_operations, [:query_id, :occurred_at], name: "index_rails_pulse_operations_on_query_and_time"
+  connection.add_index :rails_pulse_operations, [:query_id, :duration, :occurred_at], name: "index_rails_pulse_operations_query_performance"
+  connection.add_index :rails_pulse_operations, [:occurred_at, :duration, :operation_type], name: "index_rails_pulse_operations_on_time_duration_type"
 
   connection.create_table :rails_pulse_summaries do |t|
     # Time fields
@@ -109,22 +109,22 @@ RailsPulse::Schema = lambda do |connection|
   end
 
   # Unique constraint and indexes for summaries
-  connection.add_index :rails_pulse_summaries, [ :summarizable_type, :summarizable_id, :period_type, :period_start ],
-          unique: true,
-          name: "idx_pulse_summaries_unique"
-  connection.add_index :rails_pulse_summaries, [ :period_type, :period_start ], name: "index_rails_pulse_summaries_on_period"
+  connection.add_index :rails_pulse_summaries, [:summarizable_type, :summarizable_id, :period_type, :period_start],
+    unique: true,
+    name: "idx_pulse_summaries_unique"
+  connection.add_index :rails_pulse_summaries, [:period_type, :period_start], name: "index_rails_pulse_summaries_on_period"
   connection.add_index :rails_pulse_summaries, :created_at, name: "index_rails_pulse_summaries_on_created_at"
 
   # Add indexes to existing tables for efficient aggregation
-  connection.add_index :rails_pulse_requests, [ :created_at, :route_id ], name: "idx_requests_for_aggregation"
+  connection.add_index :rails_pulse_requests, [:created_at, :route_id], name: "idx_requests_for_aggregation"
   connection.add_index :rails_pulse_requests, :created_at, name: "idx_requests_created_at"
 
-  connection.add_index :rails_pulse_operations, [ :created_at, :query_id ], name: "idx_operations_for_aggregation"
+  connection.add_index :rails_pulse_operations, [:created_at, :query_id], name: "idx_operations_for_aggregation"
   connection.add_index :rails_pulse_operations, :created_at, name: "idx_operations_created_at"
 
   if ENV["CI"] == "true"
     created_tables = required_tables.select { |table| connection.table_exists?(table) }
-    puts "[RailsPulse::Schema] Successfully created tables: #{created_tables.join(', ')}"
+    puts "[RailsPulse::Schema] Successfully created tables: #{created_tables.join(", ")}"
   end
 end
 

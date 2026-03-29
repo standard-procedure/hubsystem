@@ -34,7 +34,7 @@ class Views::Dashboard::Show < Views::Base
           StatusBar do |status|
             pending_count = @tasks.count(&:pending?)
             blocked_count = @tasks.count(&:blocked?)
-            due_count = @tasks.select { |t| t.due_at.present? && t.due_at <= Time.current }.count
+            due_count = @tasks.count { |t| t.due_at.present? && t.due_at <= Time.current }
 
             status.item label: "#{pending_count} Pending", state: :nominal
             status.item label: "#{blocked_count} Blocked", state: (blocked_count > 0) ? :warning : :nominal
