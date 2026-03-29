@@ -24,7 +24,7 @@ class Components::CrtMonitor < Components::Base
       div class: "crt-top-inner" do
         span(class: "crt-brand") { @brand }
         if @user
-          a href: logout_path, class: "crt-badge" do
+          a href: logout_path, class: "crt-badge", data_turbo_method: :delete do
             div class: "crt-badge-led"
             span(class: "crt-badge-text") { "Power" }
           end

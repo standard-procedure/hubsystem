@@ -12,7 +12,7 @@ class StartConversationTool < RubyLLM::Tool
   end
 
   def execute(recipient_name:, subject:)
-    recipient = User.active.where("name LIKE ? OR uid LIKE ?", "%#{recipient_name}%", "%#{recipient_name}%").first
+    recipient = User.search_by_name_or_uid(recipient_name).first
     return "User '#{recipient_name}' not found." unless recipient
     return "You cannot start a conversation with yourself." if recipient == @synthetic
 

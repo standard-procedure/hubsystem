@@ -15,7 +15,7 @@ class AssignTaskTool < RubyLLM::Tool
     task = Task.find_by(id: task_id)
     return "Task #{task_id} not found." unless task
 
-    assignee = User.active.where("name LIKE ? OR uid LIKE ?", "%#{assignee_name}%", "%#{assignee_name}%").first
+    assignee = User.search_by_name_or_uid(assignee_name).first
     return "User '#{assignee_name}' not found." unless assignee
 
     task.update!(assignee: assignee)

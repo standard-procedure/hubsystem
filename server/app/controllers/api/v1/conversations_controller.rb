@@ -3,15 +3,15 @@
 class Api::V1::ConversationsController < Api::V1::BaseController
   def index
     conversations = if params[:archived]
-      Conversation.involving(current_user).closed.order(closed_at: :desc)
+      Conversation.involving(current_user).closed.includes(:initiator, :recipient).order(closed_at: :desc)
     else
-      Conversation.involving(current_user).where(status: [:requested, :active]).order(updated_at: :desc)
+      Conversation.involving(current_user).open.includes(:initiator, :recipient).order(updated_at: :desc)
     end
     render json: conversations.map { |c| conversation_json(c) }
   end
 
   def show
-    conversation = Conversation.involving(current_user).find(params[:id])
+    conversation = Conversation.involving(current_user).includes(:initiator, :recipient, messages: :sender).find(params[:id])
     conversation.messages.where.not(sender: current_user).unread.update_all(read_at: Time.current)
     render json: conversation_json(conversation, include_messages: true)
   end

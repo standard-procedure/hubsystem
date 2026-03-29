@@ -16,10 +16,15 @@ class Conversation < ApplicationRecord
   validate :participants_are_different
 
   scope :involving, ->(user) { where(initiator: user).or(where(recipient: user)) }
+  scope :open, -> { where(status: [:requested, :active]) }
   scope :recently_closed, -> { closed.where(closed_at: 1.day.ago..) }
 
   def other_participant(user)
     (user == initiator) ? recipient : initiator
+  end
+
+  def pending_for?(user)
+    requested? && recipient == user
   end
 
   def has_unread_messages_for?(user)

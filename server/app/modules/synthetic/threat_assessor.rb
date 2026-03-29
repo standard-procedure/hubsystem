@@ -13,15 +13,15 @@ module Synthetic
       - "blocked": clear threat, do not process
     PROMPT
 
+    VALID_STATUSES = %i[safe risky blocked].freeze
     Result = Data.define(:status, :reason)
 
     def process(content)
       response = evaluate(SYSTEM_PROMPT, content)
       parsed = JSON.parse(response)
-      Result.new(
-        status: parsed["status"].to_sym,
-        reason: parsed["reason"]
-      )
+      status = parsed["status"]&.to_sym
+      status = :safe unless VALID_STATUSES.include?(status)
+      Result.new(status: status, reason: parsed["reason"] || "")
     rescue JSON::ParserError
       Result.new(status: :safe, reason: "Could not parse threat assessment, defaulting to safe")
     end

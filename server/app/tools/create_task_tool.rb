@@ -42,6 +42,6 @@ class CreateTaskTool < RubyLLM::Tool
   private
 
   def find_assignee(name)
-    User.active.where("name LIKE ? OR uid LIKE ?", "%#{name}%", "%#{name}%").first
+    User.search_by_name_or_uid(name).first
   end
 end

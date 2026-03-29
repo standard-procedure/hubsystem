@@ -18,6 +18,7 @@ class Task < ApplicationRecord
   validates :subject, presence: true
   validate :schedule_is_valid_cron, if: -> { schedule.present? }
 
+  scope :open, -> { where.not(status: [:completed, :cancelled]) }
   scope :due, -> { pending.where(due_at: ..Time.current) }
   scope :assigned_to, ->(user) { where(assignee: user) }
   scope :created_by, ->(user) { where(creator: user) }
@@ -25,7 +26,7 @@ class Task < ApplicationRecord
   scope :tagged_with, ->(tag) { where("json_each.value = ?", tag).joins("JOIN json_each(tags) AS json_each") }
 
   def blocked?
-    dependencies.where.not(status: [:completed, :cancelled]).exists?
+    dependencies.open.exists?
   end
 
   def scheduled?
@@ -52,7 +53,7 @@ class Task < ApplicationRecord
     return if completed? || cancelled?
 
     update!(status: :cancelled, completed_at: Time.current)
-    children.where.not(status: [:completed, :cancelled]).find_each(&:cancel!)
+    children.open.find_each(&:cancel!)
     notify_creator("cancelled")
     check_parent_completion
   end
@@ -74,7 +75,7 @@ class Task < ApplicationRecord
 
   def check_parent_completion
     return unless parent
-    return if parent.children.where.not(status: [:completed, :cancelled]).exists?
+    return if parent.children.open.exists?
 
     parent.complete!
   end

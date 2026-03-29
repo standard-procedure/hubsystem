@@ -17,6 +17,10 @@ class User < ApplicationRecord
 
   scope :system_administrators, -> { active.where(system_administrator: true) }
   scope :in_order, -> { order :name }
+  scope :search_by_name_or_uid, ->(term) {
+    sanitized = sanitize_sql_like(term)
+    active.where("name LIKE ? OR uid LIKE ?", "%#{sanitized}%", "%#{sanitized}%")
+  }
 
   def to_s = name
   def to_param = "#{id}-#{uid}".parameterize

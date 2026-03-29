@@ -19,7 +19,7 @@ class ListTasksTool < RubyLLM::Tool
     scope = scope.tagged_with(tag) if tag.present?
 
     if assignee_name.present?
-      assignee = User.active.where("name LIKE ? OR uid LIKE ?", "%#{assignee_name}%", "%#{assignee_name}%").first
+      assignee = User.search_by_name_or_uid(assignee_name).first
       return "User '#{assignee_name}' not found." unless assignee
       scope = scope.assigned_to(assignee)
     end

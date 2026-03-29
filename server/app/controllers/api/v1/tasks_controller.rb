@@ -5,7 +5,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     tasks = if params[:created]
       Task.created_by(current_user)
     else
-      Task.assigned_to(current_user).where.not(status: [:completed, :cancelled])
+      Task.assigned_to(current_user).open
     end
     render json: tasks.order(created_at: :desc).map { |t| task_json(t) }
   end

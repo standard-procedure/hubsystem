@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
   resource :session
   match "/auth/:provider/callback", to: "sessions#create", via: [:get, :post], as: :login
-  match "/logout", to: "sessions#destroy", via: [:get, :post], as: :logout
+  match "/logout", to: "sessions#destroy", via: [:post, :delete], as: :logout
   resources :passwords, param: :token
   use_doorkeeper
   get "up" => "rails/health#show", :as => :rails_health_check

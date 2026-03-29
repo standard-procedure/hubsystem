@@ -3,7 +3,7 @@
 class Api::V1::Conversations::MessagesController < Api::V1::BaseController
   def index
     conversation = Conversation.involving(current_user).find(params[:conversation_id])
-    messages = conversation.messages.order(:created_at)
+    messages = conversation.messages.includes(:sender).order(:created_at)
     render json: messages.map { |m|
       {id: m.id, sender: {id: m.sender.id, name: m.sender.name}, content: m.content, read_at: m.read_at, created_at: m.created_at}
     }

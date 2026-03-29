@@ -3,15 +3,15 @@
 class TasksController < ApplicationController
   def index
     @tasks = if params[:created]
-      Task.created_by(Current.user).order(created_at: :desc)
+      Task.created_by(Current.user).includes(:assignee, :dependencies).order(created_at: :desc)
     else
-      Task.assigned_to(Current.user).where.not(status: [:completed, :cancelled]).order(created_at: :desc)
+      Task.assigned_to(Current.user).open.includes(:assignee, :dependencies).order(created_at: :desc)
     end
     render Views::Tasks::Index.new(user: Current.user, tasks: @tasks, created: params[:created].present?)
   end
 
   def show
-    @task = Task.find(params[:id])
+    @task = Task.includes(:assignee, :creator, :dependencies, children: :assignee).find(params[:id])
     render Views::Tasks::Show.new(user: Current.user, task: @task, users: User.where.not(id: Current.user.id).in_order)
   end
 
