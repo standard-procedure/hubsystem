@@ -28,10 +28,11 @@ class Components::StatusBar < Components::Slotted
     end
   end
 
-  private def render_item item
-    div class: "status-item" do
-      div class: ["status-dot", item.dot_class]
-      item.contents&.call || plain(item.label.to_s)
+  private def render_item(item)
+    if item.contents
+      render(Components::StatusItem.new(state: item.state), &item.contents)
+    else
+      render Components::StatusItem.new(state: item.state, label: item.label)
     end
   end
 end
