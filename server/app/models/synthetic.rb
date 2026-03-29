@@ -4,8 +4,17 @@ class Synthetic < ApplicationRecord
   has_one :user, as: :role, dependent: :destroy, touch: true
   has_one :llm_context, dependent: :destroy
   has_many :memories, class_name: "Synthetic::Memory", dependent: :destroy, inverse_of: :synthetic
+  belongs_to :synthetic_class, optional: true
 
   EMOTIONS = %w[joy sadness fear anger surprise disgust anticipation trust].freeze
+
+  def llm_tier
+    synthetic_class&.llm_tier || "low"
+  end
+
+  def operating_system
+    synthetic_class&.operating_system || ""
+  end
 
   def ensure_llm_context
     llm_context || create_llm_context!

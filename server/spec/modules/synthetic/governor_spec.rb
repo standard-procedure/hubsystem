@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Governor, type: :module do
-  fixtures :users, :humans, :synthetics
+  fixtures :users, :humans, :synthetics, :synthetic_classes
 
   let(:bishop) { users(:bishop) }
   let(:governor) { described_class.new(bishop) }

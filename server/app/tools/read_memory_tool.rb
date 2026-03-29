@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReadMemoryTool < SyntheticTool
-  description "Search your private memories by tag or text query. Returns matching memories."
+  description "Search your personal and class memories by tag or text query. Returns matching memories."
 
   param :query, type: "string", desc: "Text to search for in memory content", required: false
   param :tag, type: "string", desc: "Tag to filter memories by", required: false
@@ -13,7 +13,7 @@ class ReadMemoryTool < SyntheticTool
     if query.present?
       results = semantic_search(query, tag, capped_limit)
     else
-      scope = @synthetic.memories.recent
+      scope = accessible_memories.recent
       scope = scope.tagged_with(tag) if tag.present?
       results = scope.limit(capped_limit)
     end
@@ -25,9 +25,13 @@ class ReadMemoryTool < SyntheticTool
 
   private
 
+  def accessible_memories
+    Synthetic::Memory.for_synthetic(@synthetic.role)
+  end
+
   def semantic_search(query, tag, limit)
     results = Synthetic::Memory.semantic_search(query, limit: limit)
-      .where(synthetic: @synthetic.role)
+      .merge(accessible_memories)
     results = results.tagged_with(tag) if tag.present?
     return results if results.any?
 
@@ -38,7 +42,7 @@ class ReadMemoryTool < SyntheticTool
   end
 
   def text_search(query, tag, limit)
-    scope = @synthetic.memories.recent
+    scope = accessible_memories.recent
     scope = scope.tagged_with(tag) if tag.present?
     scope.search(query).limit(limit)
   end

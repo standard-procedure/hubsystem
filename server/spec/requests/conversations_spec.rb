@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Conversations", type: :request do
-  fixtures :users, :humans, :synthetics, :user_sessions, :conversations, :messages
+  fixtures :users, :humans, :synthetics, :synthetic_classes, :user_sessions, :conversations, :messages
 
   before { sign_in_as user_sessions(:alice_session) }
 

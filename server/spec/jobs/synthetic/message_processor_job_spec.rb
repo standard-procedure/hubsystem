@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::MessageProcessorJob, type: :job do
-  fixtures :users, :humans, :synthetics, :conversations, :messages
+  fixtures :users, :humans, :synthetics, :synthetic_classes, :conversations, :messages
 
   let(:bishop) { users(:bishop) }
   let(:alice) { users(:alice) }

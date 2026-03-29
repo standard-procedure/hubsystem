@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe GenerateEmbeddingJob, type: :job do
-  fixtures :users, :humans, :synthetics
+  fixtures :users, :humans, :synthetics, :synthetic_classes
 
   let(:bishop) { users(:bishop) }
   let(:bishop_synthetic) { synthetics(:bishop_synthetic) }

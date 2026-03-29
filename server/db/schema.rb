@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_090004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -59,13 +59,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
 
   create_table "documents", force: :cascade do |t|
     t.bigint "author_id", null: false
+    t.string "category", default: "document", null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.vector "embedding", limit: 768
+    t.bigint "parent_id"
     t.text "tags", default: [], null: false, array: true
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_documents_on_author_id"
+    t.index ["parent_id"], name: "index_documents_on_parent_id"
   end
 
   create_table "humans", force: :cascade do |t|
@@ -288,13 +291,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
     t.index ["summarizable_type", "summarizable_id"], name: "index_rails_pulse_summaries_on_summarizable"
   end
 
+  create_table "synthetic_class_skills", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "document_id", null: false
+    t.bigint "synthetic_class_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_id"], name: "index_synthetic_class_skills_on_document_id"
+    t.index ["synthetic_class_id", "document_id"], name: "idx_synthetic_class_skills_unique", unique: true
+    t.index ["synthetic_class_id"], name: "index_synthetic_class_skills_on_synthetic_class_id"
+  end
+
+  create_table "synthetic_classes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "llm_tier", default: "low", null: false
+    t.string "name", null: false
+    t.text "operating_system", default: ""
+    t.datetime "updated_at", null: false
+  end
+
   create_table "synthetic_memories", force: :cascade do |t|
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.vector "embedding", limit: 768
-    t.bigint "synthetic_id", null: false
+    t.string "scope", default: "personal", null: false
+    t.bigint "synthetic_class_id"
+    t.bigint "synthetic_id"
     t.text "tags", default: [], null: false, array: true
     t.datetime "updated_at", null: false
+    t.index ["scope"], name: "index_synthetic_memories_on_scope"
+    t.index ["synthetic_class_id"], name: "index_synthetic_memories_on_synthetic_class_id"
     t.index ["synthetic_id"], name: "index_synthetic_memories_on_synthetic_id"
   end
 
@@ -303,8 +328,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
     t.json "emotions", default: {"joy" => 50, "sadness" => 10, "fear" => 10, "anger" => 10, "surprise" => 20, "disgust" => 5, "anticipation" => 30, "trust" => 50}
     t.integer "fatigue", default: 0
     t.string "personality", default: ""
+    t.bigint "synthetic_class_id"
     t.decimal "temperature", precision: 3, scale: 2, default: "0.4"
     t.datetime "updated_at", null: false
+    t.index ["synthetic_class_id"], name: "index_synthetics_on_synthetic_class_id"
   end
 
   create_table "task_dependencies", force: :cascade do |t|
@@ -376,6 +403,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "users", column: "initiator_id"
   add_foreign_key "conversations", "users", column: "recipient_id"
+  add_foreign_key "documents", "documents", column: "parent_id"
   add_foreign_key "documents", "users", column: "author_id"
   add_foreign_key "llm_context_messages", "llm_context_tool_calls"
   add_foreign_key "llm_context_messages", "llm_contexts"
@@ -390,7 +418,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_221113) do
   add_foreign_key "rails_pulse_operations", "rails_pulse_queries", column: "query_id"
   add_foreign_key "rails_pulse_operations", "rails_pulse_requests", column: "request_id"
   add_foreign_key "rails_pulse_requests", "rails_pulse_routes", column: "route_id"
+  add_foreign_key "synthetic_class_skills", "documents"
+  add_foreign_key "synthetic_class_skills", "synthetic_classes"
+  add_foreign_key "synthetic_memories", "synthetic_classes"
   add_foreign_key "synthetic_memories", "synthetics"
+  add_foreign_key "synthetics", "synthetic_classes"
   add_foreign_key "task_dependencies", "tasks"
   add_foreign_key "task_dependencies", "tasks", column: "dependency_id"
   add_foreign_key "tasks", "tasks", column: "parent_id"

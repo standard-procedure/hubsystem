@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Pipeline, type: :module do
-  fixtures :users, :humans, :synthetics
+  fixtures :users, :humans, :synthetics, :synthetic_classes
 
   let(:bishop) { users(:bishop) }
   let(:pipeline) { described_class.new(bishop) }
@@ -11,6 +11,8 @@ RSpec.describe Synthetic::Pipeline, type: :module do
   let(:mock_context) do
     context = bishop.ensure_llm_context
     mock_response = instance_double(RubyLLM::Message, content: "I can help with that.")
+    allow(context).to receive(:with_model).and_return(context)
+    allow(context).to receive(:with_instructions).and_return(context)
     allow(context).to receive(:with_tools).and_return(context)
     allow(context).to receive(:ask).and_return(mock_response)
     allow(bishop).to receive(:ensure_llm_context).and_return(context)

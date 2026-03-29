@@ -4,10 +4,14 @@ class Document < ApplicationRecord
   include Embeddable
 
   belongs_to :author, class_name: "User"
+  belongs_to :parent, class_name: "Document", optional: true
+  has_many :children, class_name: "Document", foreign_key: :parent_id, dependent: :destroy
 
   validates :title, presence: true
   validates :content, presence: true
 
+  scope :skills, -> { where(category: "skill") }
+  scope :top_level, -> { where(parent_id: nil) }
   scope :tagged_with, ->(tag) { where("? = ANY(tags)", tag) }
   scope :search, ->(query) {
     sanitized = sanitize_sql_like(query)

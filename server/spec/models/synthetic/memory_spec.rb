@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Synthetic::Memory, type: :model do
-  fixtures :users, :humans, :synthetics, :synthetic_memories
+  fixtures :users, :humans, :synthetics, :synthetic_classes, :synthetic_memories
 
   let(:bishop) { users(:bishop) }
   let(:bishop_synthetic) { synthetics(:bishop_synthetic) }

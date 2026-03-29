@@ -5,7 +5,8 @@ class User < ApplicationRecord
 
   # Delegate Synthetic-specific methods so the pipeline can work with User records directly
   delegate :ensure_llm_context, :memories, :adjust_emotions, :personality, :temperature,
-    :fatigue, :fatigue=, :emotions, :emotions=, to: :role, allow_nil: true
+    :fatigue, :fatigue=, :emotions, :emotions=, :llm_tier, :operating_system,
+    :synthetic_class, to: :role, allow_nil: true
 
   # Delegate Human-specific methods
   delegate :identities, to: :role, allow_nil: true
