@@ -22,34 +22,18 @@ class Views::Conversations::Show < Views::Base
 
   def render_status_bar
     Row justify: "between", align: "center" do
-      StatusBar do |status|
-        status.item label: @conversation.other_participant(@user).name, state: :info
-        status.item label: @conversation.status.capitalize, state: status_state
+      span do
+        Button label: "Close Conversation", variant: :danger, size: :sm, tag: :a, href: new_conversation_closure_path(@conversation) if @conversation.active?
       end
-      if @conversation.active?
-        Button label: "Close Conversation", variant: :danger, size: :sm, tag: :a, href: new_conversation_closure_path(@conversation)
+      StatusBar do |status|
+        status.item label: @conversation.other_participant(@user).name, state: @user.state_color
+        status.item label: @conversation.status.capitalize, state: status_state
       end
     end
   end
 
   def render_messages
-    Grid(
-      columns: [
-        Components::Grid::Column.new(label: "Time", width: 1),
-        Components::Grid::Column.new(label: "From", width: 1),
-        Components::Grid::Column.new(label: "Message", width: 4)
-      ],
-      max_height: "400px"
-    ) do |grid|
-      @conversation.messages.order(:created_at).each do |message|
-        sender_color = (message.sender == @user) ? :phosphor : :bright
-        grid.row(
-          {value: message.created_at.strftime("%H:%M"), color: :dim},
-          {value: message.sender.name, color: sender_color},
-          message.content
-        )
-      end
-    end
+    MessagesGrid user: @user, conversation: @conversation
   end
 
   def render_actions

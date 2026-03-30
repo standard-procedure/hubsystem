@@ -3,13 +3,14 @@
 class Message < ApplicationRecord
   include Turbo::Broadcastable
 
+  broadcasts_refreshes_to :conversation
   belongs_to :conversation
+  delegate :recipients, to: :conversation
   belongs_to :sender, class_name: "User"
 
-  validates :content, presence: true
+  after_create_commit :notify_recipient, if: -> { conversation.other_participant(sender)&.synthetic? }
 
-  broadcasts_refreshes_to :conversation
-  after_create_commit :notify_synthetic_recipient
+  validates :content, presence: true
 
   scope :unread, -> { where(read_at: nil) }
 
@@ -17,10 +18,13 @@ class Message < ApplicationRecord
     update!(read_at: Time.current) if read_at.nil?
   end
 
-  private
+  def reply content:, sender:
+    raise ArgumentError unless String === content
+    raise ArgumentError unless User === sender
+    conversation.messages.create!(sender:, content:) if content.present?
+  end
 
-  def notify_synthetic_recipient
-    other = conversation.other_participant(sender)
-    Synthetic::MessageProcessorJob.perform_later(id) if other.synthetic?
+  private def notify_recipient
+    Synthetic::MessageProcessorJob.perform_later(self, conversation.other_participant(sender))
   end
 end

@@ -5,16 +5,16 @@ require "rails_helper"
 RSpec.describe Synthetic::CapacityEvaluator, type: :module do
   fixtures :users, :humans, :synthetics, :synthetic_classes
 
-  let(:bishop) { users(:bishop) }
-  let(:evaluator) { described_class.new(bishop) }
-  let(:context) { bishop.ensure_llm_context }
+  let(:bishop_synthetic) { synthetics(:bishop_synthetic) }
+  let(:evaluator) { described_class.new(synthetic: bishop_synthetic) }
+  let(:context) { bishop_synthetic.ensure_llm_context }
 
   describe "#process" do
     it "returns low fatigue for empty context" do
       result = evaluator.process
       expect(result.fatigue).to eq(0)
       expect(result.needs_compaction).to be false
-      expect(bishop.reload.fatigue).to eq(0)
+      expect(bishop_synthetic.reload.fatigue).to eq(0)
     end
 
     context "with real token data" do

@@ -5,13 +5,13 @@ class Conversation < ApplicationRecord
 
   belongs_to :initiator, class_name: "User"
   belongs_to :recipient, class_name: "User"
-  has_many :messages, dependent: :destroy
+  has_many :messages, -> { order :created_at }, dependent: :destroy
 
   enum :status, requested: 0, active: 1, closed: 2
 
   broadcasts_refreshes
-  after_commit :broadcast_conversation_matrices
-  after_create_commit :notify_synthetic_recipient
+  # after_commit :broadcast_conversation_matrices
+  after_create_commit :notify_recipient, if: -> { recipient.synthetic? }
 
   validates :subject, presence: true
   validate :participants_are_different
@@ -34,6 +34,8 @@ class Conversation < ApplicationRecord
   def has_unread_messages_for?(user)
     messages.where.not(sender: user).where(read_at: nil).exists?
   end
+
+  def recipients = [initiator, recipient]
 
   def accept!(by:)
     raise ActiveRecord::RecordInvalid.new(self), "Can only accept requested conversations" unless requested?
@@ -60,16 +62,16 @@ class Conversation < ApplicationRecord
     end
   end
 
-  def notify_synthetic_recipient
-    Synthetic::ConversationAcceptanceJob.perform_later(id) if recipient.synthetic?
+  def notify_recipient
+    Synthetic::ConversationAcceptanceJob.perform_later(self, recipient)
   end
 
   def broadcast_conversation_matrices
-    [initiator, recipient].each do |user|
+    recipients.each do |user|
       conversations = Conversation.involving(user).open
         .or(Conversation.involving(user).recently_closed)
         .includes(:initiator, :recipient)
-      broadcast_replace_to [user, :conversation_matrix],
+      broadcast_replace_later_to [user, :conversation_matrix],
         target: "conversation_matrix",
         renderable: Components::ConversationMatrix.new(user: user, conversations: conversations)
     end

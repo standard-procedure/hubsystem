@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 class Synthetic
-  class Preprocessor
-    Result = Data.define(:blocked, :reason)
+  class Preprocessor < Literal::Data
+    prop :synthetic, Synthetic
 
-    def initialize(synthetic)
-      @threat_assessor = ThreatAssessor.new(synthetic)
-      @emotional_processor = EmotionalProcessor.new(synthetic)
+    class Result < Literal::Data
+      prop :blocked, _Boolean
+      prop :reason, String
     end
 
     def process(message)
+      raise ArgumentError unless Message === message
       threat, _ = Concurrent.run(
-        -> { @threat_assessor.process(message) },
-        -> { @emotional_processor.process_incoming(message) }
+        -> { ThreatAssessor.new(synthetic: @synthetic).process(message) },
+        -> { EmotionalProcessor.new(synthetic: @synthetic).process_incoming(message) }
       )
       Result.new(
         blocked: threat.status == :blocked,

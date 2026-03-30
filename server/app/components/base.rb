@@ -5,6 +5,7 @@ class Components::Base < Phlex::HTML
   extend Components::Types
   include ActionView::RecordIdentifier
   include Phlex::Rails::Helpers::Routes
+  include Phlex::Rails::Helpers::L
 
   if Rails.env.development?
     def before_template

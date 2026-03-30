@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe Synthetic::Governor, type: :module do
   fixtures :users, :humans, :synthetics, :synthetic_classes
 
-  let(:bishop) { users(:bishop) }
-  let(:governor) { described_class.new(bishop) }
+  let(:bishop_synthetic) { synthetics(:bishop_synthetic) }
+  let(:governor) { described_class.new(synthetic: bishop_synthetic) }
 
   describe "#process" do
     it "approves appropriate responses" do

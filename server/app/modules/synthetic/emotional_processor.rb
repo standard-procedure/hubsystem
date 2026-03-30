@@ -14,8 +14,8 @@ class Synthetic
       Only include emotions that change. Respond with JSON only.
     PROMPT
 
-    def process_incoming(content)
-      apply_adjustments(content)
+    def process_incoming(message)
+      apply_adjustments(message.content)
     end
 
     def process_outgoing(content)

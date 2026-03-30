@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe Synthetic::Compactor, type: :module do
   fixtures :users, :humans, :synthetics, :synthetic_classes
 
-  let(:bishop) { users(:bishop) }
-  let(:compactor) { described_class.new(bishop) }
-  let(:context) { bishop.ensure_llm_context }
+  let(:bishop_synthetic) { synthetics(:bishop_synthetic) }
+  let(:compactor) { described_class.new(synthetic: bishop_synthetic) }
+  let(:context) { bishop_synthetic.ensure_llm_context }
 
   let(:llm_response) do
     {
@@ -69,7 +69,7 @@ RSpec.describe Synthetic::Compactor, type: :module do
           compactor.compact!
         }.to change(Synthetic::Memory, :count).by(2)
 
-        memory = bishop.memories.find_by(content: "Alice deployment scheduled for Friday")
+        memory = bishop_synthetic.memories.find_by(content: "Alice deployment scheduled for Friday")
         expect(memory.tags).to include("alice", "deployment", "compaction")
       end
 
@@ -81,9 +81,9 @@ RSpec.describe Synthetic::Compactor, type: :module do
       end
 
       it "recalculates fatigue after compaction" do
-        bishop.update!(fatigue: 85)
+        bishop_synthetic.update!(fatigue: 85)
         compactor.compact!
-        expect(bishop.reload.fatigue).to be < 85
+        expect(bishop_synthetic.reload.fatigue).to be < 85
       end
     end
 

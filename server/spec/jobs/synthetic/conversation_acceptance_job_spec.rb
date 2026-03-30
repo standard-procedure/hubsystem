@@ -13,23 +13,24 @@ RSpec.describe Synthetic::ConversationAcceptanceJob, type: :job do
       conversation = Conversation.create!(initiator: alice, recipient: bishop, subject: "Can you help me?", status: :requested)
 
       pipeline = instance_double(Synthetic::Pipeline)
-      allow(Synthetic::Pipeline).to receive(:new).with(bishop).and_return(pipeline)
+      allow(Synthetic::Pipeline).to receive(:new).with(synthetic: bishop.synthetic).and_return(pipeline)
       allow(pipeline).to receive(:process).with("Can you help me?").and_return("Of course!")
 
-      described_class.perform_now(conversation.id)
+      described_class.perform_now(conversation, bishop)
 
       conversation.reload
       expect(conversation).to be_active
+      # Records the subject as the first message
       expect(conversation.messages.count).to eq(1)
-      expect(conversation.messages.first.sender).to eq(bishop)
-      expect(conversation.messages.first.content).to eq("Of course!")
+      expect(conversation.messages.first.sender).to eq(alice)
+      expect(conversation.messages.first.content).to eq("Can you help me?")
     end
 
     it "does nothing for non-synthetic recipients" do
       conversation = Conversation.create!(initiator: alice, recipient: users(:bob), subject: "Hello", status: :requested)
 
       expect(Synthetic::Pipeline).not_to receive(:new)
-      described_class.perform_now(conversation.id)
+      described_class.perform_now(conversation, users(:bob))
 
       expect(conversation.reload).to be_requested
     end
@@ -38,7 +39,7 @@ RSpec.describe Synthetic::ConversationAcceptanceJob, type: :job do
       conversation = Conversation.create!(initiator: alice, recipient: bishop, subject: "Test", status: :active)
 
       expect(Synthetic::Pipeline).not_to receive(:new)
-      described_class.perform_now(conversation.id)
+      described_class.perform_now(conversation, bishop)
     end
   end
 end

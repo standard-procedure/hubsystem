@@ -51,7 +51,7 @@ class Synthetic
       )
 
       # Recalculate fatigue
-      CapacityEvaluator.new(@synthetic).process
+      CapacityEvaluator.new(synthetic: @synthetic).process
 
       Rails.logger.info { "[Synthetic::Compactor] #{@synthetic.name} completed sleep cycle — #{compaction_zone.count} messages compacted" }
     end

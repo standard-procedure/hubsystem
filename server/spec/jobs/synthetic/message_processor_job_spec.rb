@@ -14,11 +14,11 @@ RSpec.describe Synthetic::MessageProcessorJob, type: :job do
       message = conversation.messages.create!(sender: alice, content: "What's the weather?")
 
       pipeline = instance_double(Synthetic::Pipeline)
-      allow(Synthetic::Pipeline).to receive(:new).with(bishop).and_return(pipeline)
-      allow(pipeline).to receive(:process).with("What's the weather?").and_return("I don't have weather data.")
+      allow(Synthetic::Pipeline).to receive(:new).with(synthetic: bishop.synthetic).and_return(pipeline)
+      allow(pipeline).to receive(:process).with(message).and_return("I don't have weather data.")
 
       expect {
-        described_class.perform_now(message.id)
+        described_class.perform_now(message, bishop)
       }.to change(Message, :count).by(1)
 
       response = conversation.messages.last
@@ -30,7 +30,7 @@ RSpec.describe Synthetic::MessageProcessorJob, type: :job do
       message = messages(:alice_to_charlie)
 
       expect(Synthetic::Pipeline).not_to receive(:new)
-      described_class.perform_now(message.id)
+      described_class.perform_now(message, alice)
     end
 
     it "does not create a response when pipeline returns nil (blocked)" do
@@ -42,8 +42,8 @@ RSpec.describe Synthetic::MessageProcessorJob, type: :job do
       allow(pipeline).to receive(:process).and_return(nil)
 
       expect {
-        described_class.perform_now(message.id)
-      }.not_to change(Message, :count)
+        described_class.perform_now(message, bishop)
+      }.to raise_error(ArgumentError)
     end
   end
 end

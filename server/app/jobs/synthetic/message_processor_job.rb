@@ -3,24 +3,11 @@
 class Synthetic::MessageProcessorJob < ApplicationJob
   queue_as :default
 
-  def perform(message_id)
-    message = Message.find(message_id)
-    conversation = message.conversation
-    synthetic = synthetic_recipient(conversation, message.sender)
-    return unless synthetic
+  def perform(message, user)
+    raise ArgumentError unless Message === message
+    raise ArgumentError unless User === user
+    return unless user&.synthetic?
 
-    pipeline = Synthetic::Pipeline.new(synthetic)
-    response_text = pipeline.process(message.content)
-
-    if response_text.present?
-      conversation.messages.create!(sender: synthetic, content: response_text)
-    end
-  end
-
-  private
-
-  def synthetic_recipient(conversation, sender)
-    other = conversation.other_participant(sender)
-    other if other.synthetic?
+    user.role.receive message
   end
 end

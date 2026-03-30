@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe Synthetic::MemoryProcessor, type: :module do
   fixtures :users, :humans, :synthetics, :synthetic_classes
 
-  let(:bishop) { users(:bishop) }
-  let(:processor) { described_class.new(bishop) }
+  let(:bishop_synthetic) { synthetics(:bishop_synthetic) }
+  let(:processor) { described_class.new(synthetic: bishop_synthetic) }
 
   describe "#process" do
     it "extracts and persists memories" do
@@ -17,7 +17,7 @@ RSpec.describe Synthetic::MemoryProcessor, type: :module do
         expect(result.memories.size).to eq(1)
       }.to change(Synthetic::Memory, :count).by(1)
 
-      memory = bishop.memories.last
+      memory = bishop_synthetic.memories.last
       expect(memory.content).to eq("Alice prefers morning meetings")
       expect(memory.tags).to include("alice")
     end

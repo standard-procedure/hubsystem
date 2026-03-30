@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
 class Synthetic < ApplicationRecord
+  include Synthetic::MessageProcessing
+
   has_one :user, as: :role, dependent: :destroy, touch: true
+  delegate :name, to: :user
+  delegate :uid, to: :user
   has_one :llm_context, dependent: :destroy
   has_many :memories, class_name: "Synthetic::Memory", dependent: :destroy, inverse_of: :synthetic
   belongs_to :synthetic_class, optional: true
 
   EMOTIONS = %w[joy sadness fear anger surprise disgust anticipation trust].freeze
+
+  def to_s = name
+  def to_param = "#{id}-#{uid}".parameterize
 
   def llm_tier
     synthetic_class&.llm_tier || "low"

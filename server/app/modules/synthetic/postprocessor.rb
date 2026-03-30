@@ -1,22 +1,17 @@
 # frozen_string_literal: true
 
 class Synthetic
-  class Postprocessor
-    def initialize(synthetic)
-      @synthetic = synthetic
-      @memory_processor = MemoryProcessor.new(synthetic)
-      @emotional_processor = EmotionalProcessor.new(synthetic)
-      @capacity_evaluator = CapacityEvaluator.new(synthetic)
-    end
-
+  class Postprocessor < Literal::Data
+    prop :synthetic, Synthetic
     def process(response_text)
+      raise ArgumentError unless String === response_text
       Concurrent.run(
-        -> { @memory_processor.process(response_text) },
-        -> { @emotional_processor.process_outgoing(response_text) }
+        -> { MemoryProcessor.new(synthetic: @synthetic).process(response_text) },
+        -> { EmotionalProcessor.new(synthetic: @synthetic).process_outgoing(response_text) }
       )
 
-      capacity = @capacity_evaluator.process
-      Compactor.new(@synthetic).compact! if capacity.needs_compaction
+      capacity = CapacityEvaluator.new(synthetic: @synthetic).process
+      Compactor.new(synthetic: @synthetic).compact! if capacity.needs_compaction
     end
   end
 end

@@ -16,8 +16,8 @@ class Synthetic
     VALID_STATUSES = %i[safe risky blocked].freeze
     Result = Data.define(:status, :reason)
 
-    def process(content)
-      response = evaluate(SYSTEM_PROMPT, content)
+    def process(message)
+      response = evaluate(SYSTEM_PROMPT, message.content)
       parsed = JSON.parse(response)
       status = parsed["status"]&.to_sym
       status = :safe unless VALID_STATUSES.include?(status)

@@ -1,21 +1,15 @@
 # frozen_string_literal: true
 
 class Synthetic
-  class Pipeline
-    attr_reader :synthetic
-
-    def initialize(synthetic)
-      @synthetic = synthetic
-      @preprocessor = Preprocessor.new(synthetic)
-      @governor = Governor.new(synthetic)
-      @postprocessor = Postprocessor.new(synthetic)
-    end
+  class Pipeline < Literal::Data
+    prop :synthetic, Synthetic
 
     def process(message)
+      raise ArgumentError unless Message === message
       update_state(:busy)
 
       # 1. Pre-process: threat assessment + incoming emotion (concurrent)
-      preprocess = @preprocessor.process(message)
+      preprocess = Preprocessor.new(synthetic: @synthetic).process(message)
       if preprocess.blocked
         update_state_from_fatigue
         return blocked_response(preprocess.reason)
@@ -25,16 +19,16 @@ class Synthetic
       context = synthetic.ensure_llm_context
       config = llm_config(synthetic.llm_tier)
       context.with_model(config[:model])
-      context.with_instructions(synthetic.operating_system) if synthetic.operating_system.present? && context.llm_context_messages.empty?
+      context.with_instructions(synthetic.system_prompt)
       context.with_tools(*tools)
-      response_text = context.ask(message).content
+      response_text = context.ask(synthetic.prompt_for(message)).content
 
       # 3. Govern: check the response is appropriate
-      governance = @governor.process(response_text)
+      governance = Governor.new(synthetic: @synthetic).process(response_text)
       response_text = Governor::REFUSAL_MESSAGE unless governance.approved
 
       # 4. Post-process: memory + outgoing emotion (concurrent) + capacity
-      @postprocessor.process(response_text)
+      Postprocessor.new(synthetic: @synthetic).process(response_text)
 
       update_state_from_fatigue
       response_text
@@ -65,7 +59,7 @@ class Synthetic
     end
 
     def update_state(state)
-      synthetic.update_column(:state, state) if synthetic.respond_to?(:state)
+      synthetic.user&.update_column(:state, state)
     end
 
     def update_state_from_fatigue
