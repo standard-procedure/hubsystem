@@ -26,7 +26,7 @@
     "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
   ],
 
-  "postCreateCommand": "sudo mkdir -p /Users/rahoulb && sudo ln -sfn /home/vscode/.claude /Users/rahoulb/.claude && bin/setup --skip-server && docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text",
+  "postCreateCommand": "bin/setup --skip-server && (docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text &)",
 
   "customizations": {
     "vscode": {
