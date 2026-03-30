@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_100002) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_30_100002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -91,11 +91,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_100002) do
     t.text "thinking_signature"
     t.text "thinking_text"
     t.integer "thinking_tokens"
+    t.string "tool_call_id"
     t.datetime "updated_at", null: false
     t.index ["llm_context_id"], name: "index_llm_context_messages_on_llm_context_id"
     t.index ["llm_context_tool_call_id"], name: "index_llm_context_messages_on_llm_context_tool_call_id"
     t.index ["llm_model_id"], name: "index_llm_context_messages_on_llm_model_id"
     t.index ["role"], name: "index_llm_context_messages_on_role"
+    t.index ["tool_call_id"], name: "index_llm_context_messages_on_tool_call_id"
   end
 
   create_table "llm_context_tool_calls", force: :cascade do |t|
@@ -420,7 +422,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_100002) do
   add_foreign_key "conversations", "users", column: "recipient_id"
   add_foreign_key "documents", "documents", column: "parent_id"
   add_foreign_key "documents", "users", column: "author_id"
-  add_foreign_key "llm_context_messages", "llm_context_tool_calls"
+  add_foreign_key "llm_context_messages", "llm_context_tool_calls", on_delete: :nullify
   add_foreign_key "llm_context_messages", "llm_contexts"
   add_foreign_key "llm_context_messages", "llm_models"
   add_foreign_key "llm_context_tool_calls", "llm_context_messages"
