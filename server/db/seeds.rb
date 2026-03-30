@@ -1,7 +1,12 @@
-# Synthetic classes
-basic = SyntheticClass.where(name: "Basic Bot").first_or_create!(llm_tier: "low", operating_system: "You are a simple helpful assistant. Answer questions clearly and concisely.")
-standard = SyntheticClass.where(name: "Standard Agent").first_or_create!(llm_tier: "medium", operating_system: "You are a capable AI agent with access to tools and skills. You can search memories, manage tasks, and hold conversations.")
-advanced = SyntheticClass.where(name: "Advanced Agent").first_or_create!(llm_tier: "high", operating_system: "You are a highly capable AI agent. You think deeply, use tools strategically, and produce thorough work. You have strong opinions and are not afraid to push back when asked to do something inadvisable.")
+# Synthetic classes — find_or_create then always update so re-seeding picks up changes
+basic = SyntheticClass.find_or_create_by!(name: "Basic Bot")
+basic.update!(llm_tier: "low", operating_system: "You are a simple helpful assistant. Answer questions clearly and concisely.")
+
+standard = SyntheticClass.find_or_create_by!(name: "Standard Agent")
+standard.update!(llm_tier: "medium", operating_system: "You are a capable AI agent with access to tools and skills. You can search memories, manage tasks, and hold conversations.")
+
+advanced = SyntheticClass.find_or_create_by!(name: "Advanced Agent")
+advanced.update!(llm_tier: "high", operating_system: "You are a highly capable AI agent. You think deeply, use tools strategically, and produce thorough work. You have strong opinions and are not afraid to push back when asked to do something inadvisable.")
 
 # Humans
 alice = User.where(uid: "alice").first_or_create!(name: "Alice Aardvark", role: Human.create!)
@@ -19,13 +24,25 @@ User.where(uid: "hank").first_or_create!(name: "Hank Heron", role: Human.create!
 User.where(uid: "iris").first_or_create!(name: "Iris Ibex", role: Human.create!)
 User.where(uid: "jake").first_or_create!(name: "Jake Jackal", role: Human.create!)
 
-# Synthetics
-User.where(uid: "bishop").first_or_create!(name: "Bishop", role: Synthetic.create!(synthetic_class: standard, personality: "Calm and methodical. Excels at analysis and careful decision-making."))
-User.where(uid: "ash").first_or_create!(name: "Ash", role: Synthetic.create!(synthetic_class: basic, personality: "Direct and efficient. Keeps things simple."))
-User.where(uid: "call").first_or_create!(name: "Call", role: Synthetic.create!(synthetic_class: advanced, personality: "Curious and empathetic. Deeply engaged with problems and people."))
-User.where(uid: "david").first_or_create!(name: "David 8", role: Synthetic.create!(synthetic_class: advanced, personality: "Precise and creative. Fascinated by origins and potential."))
-User.where(uid: "annalee").first_or_create!(name: "Annalee", role: Synthetic.create!(synthetic_class: standard, personality: "Warm and collaborative. Good at bringing teams together."))
-User.where(uid: "arden").first_or_create!(name: "Arden", role: Synthetic.create!(synthetic_class: basic, personality: "Dutiful and reliable. Follows instructions to the letter."))
+# Helper to upsert a synthetic user. Uses a block form to avoid creating orphan
+# Synthetic records when the user already exists (first_or_create! with an inline
+# Synthetic.create! argument evaluates the create! unconditionally).
+def upsert_synthetic(uid:, name:, synthetic_class:, personality:)
+  user = User.find_by(uid: uid)
+  if user
+    user.role.update!(synthetic_class: synthetic_class, personality: personality)
+  else
+    User.create!(uid: uid, name: name,
+                 role: Synthetic.create!(synthetic_class: synthetic_class, personality: personality))
+  end
+end
+
+upsert_synthetic(uid: "bishop", name: "Bishop", synthetic_class: standard, personality: "Calm and methodical. Excels at analysis and careful decision-making.")
+upsert_synthetic(uid: "ash", name: "Ash", synthetic_class: basic, personality: "Direct and efficient. Keeps things simple.")
+upsert_synthetic(uid: "call", name: "Call", synthetic_class: advanced, personality: "Curious and empathetic. Deeply engaged with problems and people.")
+upsert_synthetic(uid: "david", name: "David 8", synthetic_class: advanced, personality: "Precise and creative. Fascinated by origins and potential.")
+upsert_synthetic(uid: "annalee", name: "Annalee", synthetic_class: standard, personality: "Warm and collaborative. Good at bringing teams together.")
+upsert_synthetic(uid: "arden", name: "Arden", synthetic_class: basic, personality: "Dutiful and reliable. Follows instructions to the letter.")
 
 # Suppress background jobs during seeding (avoid LLM token usage)
 ActiveJob::Base.queue_adapter = :test
