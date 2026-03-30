@@ -13,3 +13,16 @@ RubyLLM.configure do |config|
   config.use_new_acts_as = true
   config.model_registry_class = "LlmModel"
 end
+
+# Dedicated context for local Ollama calls (embeddings).
+# RubyLLM::Context wraps its own Configuration, so embedding requests always
+# go to the local Ollama endpoint regardless of whether the global config
+# routes to real OpenAI for chat completions.
+Rails.application.config.ollama_context = RubyLLM::Context.new(
+  RubyLLM::Configuration.new.tap do |c|
+    c.openai_api_key = "not-configured"
+    c.openai_api_base = ENV.fetch("OLLAMA_HOST", "http://localhost:11434") + "/v1"
+    c.model_registry_class = "LlmModel"
+    c.use_new_acts_as = true
+  end
+)

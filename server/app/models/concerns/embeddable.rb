@@ -11,7 +11,7 @@ module Embeddable
   class_methods do
     def semantic_search(query, limit: 10)
       config = embedding_config
-      embedding = RubyLLM.embed(query, model: config[:model], provider: config[:provider].to_sym, assume_model_exists: true).vectors
+      embedding = Rails.application.config.ollama_context.embed(query, model: config[:model], provider: config[:provider].to_sym, assume_model_exists: true).vectors
       nearest_neighbors(:embedding, embedding, distance: "cosine").limit(limit)
     end
 
