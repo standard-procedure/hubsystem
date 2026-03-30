@@ -10,7 +10,7 @@ CI.run do
   step "Security: Brakeman code analysis", "bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error"
 
   step "Specs", "bin/rails spec"
-  step "Specs: LLMs", "bin/rspec --llm=true"
+  step "Specs: LLMs", "bin/rspec --tag=llm"
   step "Specs: Features", "bin/rspec spec/features/"
 
   # Optional: set a green GitHub commit status to unblock PR merge.
