@@ -243,3 +243,49 @@ No real LLM calls are made during tests. Each processing module is tested in iso
 
 - **Bash sandbox** — containerised bash execution per synthetic in the sandbox sidecar
 - **Memory tiers** — class memories (shared by agent type) and knowledge base (org-wide)
+
+### Memory Emotional Weight
+
+Memories should carry an emotional valence — a positive/negative weight reflecting how the synthetic felt when the memory was formed. This should influence:
+
+- **Retrieval scoring** — emotionally significant memories rank higher when relevant, not just semantically similar ones
+- **Compaction** — during context compaction, emotional weight is a factor in deciding which facts to preserve vs. discard; a mildly relevant but emotionally significant memory is retained over a neutral one of equal recency
+- **Time decay** — recency weighting should be combined with emotional weight: `score = semantic_similarity * emotional_weight * time_decay_factor`. Recent neutral memories and old emotionally significant memories can be balanced against each other.
+
+The `Synthetic::Memory` model would gain a `valence` column (float, -1.0 to +1.0 — negative for distressing, positive for affirming), set by the memory processor at extraction time.
+
+### Multi-Provider LLM Configuration
+
+The current model tier system (`low` / `medium` / `high` in `config/llm_models.yml`) is too simple. Instead:
+
+- Each LLM configuration entry should be a **RubyLLM context** (or equivalent wrapper) created at application startup — not just a model name string
+- Contexts carry the provider, model ID, and any provider-specific settings (API key reference, base URL for Ollama, etc.)
+- Supported providers: local Ollama, OpenRouter, OpenAI, Anthropic
+- Each `SyntheticClass` (or eventually each `Synthetic`) can reference **multiple named LLM configurations** mapped to tasks — e.g. `threat_assessment: ollama_fast`, `main_response: openrouter_sonnet`, `compaction: anthropic_haiku`
+- This allows mixing local and cloud models per task, per agent type, without changing pipeline code
+
+### Incoming Memory Retrieval
+
+The pipeline is missing a step before the LLM response: retrieving memories **about the sender** of the incoming message. Add an `IncomingMemoryProcessor` stage between `EmotionalProcessor (in)` and `LlmResponse`:
+
+```
+... → Emotional Processor (in) → Incoming Memory Retrieval → LLM Response → ...
+```
+
+This stage:
+1. Identifies the message sender
+2. Queries the synthetic's memories tagged with or semantically related to that sender
+3. Injects relevant memories into the LLM context as system context (not as conversation history)
+4. In future: for group conversations, retrieves memories about all participants present
+
+### Synthetic Process Architecture
+
+The current ActiveJob-on-commit approach (trigger `MessageProcessorJob` when a message is saved) may not be the right model for long-living independent agents. An alternative worth considering:
+
+- Each synthetic runs as a **long-lived external process** (e.g. a rake task: `rake synthetic:run[bishop]`)
+- The process polls (or listens) for unread messages in the database, treating the `messages` table as a durable queue
+- Using `async`, each synthetic process has its **own Async reactor / event loop** — isolated, independently schedulable
+- Multiple synthetics can run in the same process or be **sharded across processes** as load grows, without architectural changes
+- Benefits: cleaner separation of concerns, no job queue infrastructure needed, natural backpressure, easier to reason about per-agent state
+
+This is a significant architectural decision — evaluate once the system is stable and load patterns are understood.
