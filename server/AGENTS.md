@@ -1,128 +1,65 @@
-# hubsystem-server — Agent Guide
+# server/ — HubSystem Rails Application
 
-This is the Rails API server for HubSystem.
+## What this is
 
-**Parent project:** See `../AGENTS.md` for overall HubSystem architecture and design.
+The shared infrastructure hub. All participants — human and synthetic — communicate through this application. Humans use the web UI; Synthetics are authenticated API users.
 
-## Development Principles
+From this application's perspective, **a Synthetic is just a user with an auth token**. This app has no knowledge of LLMs, pipelines, or emotional state.
 
-This project follows strict test-driven development with dual web/API feature parity.
+## Key directories
 
-See `docs/DEVELOPMENT-PROCESS.md`
-
-## Technology Stack
-
-- **Backend:** Rails 8+, Ruby 3.4.5, PostgreSQL with pgvector
-- **Frontend:** Phlex components, Hotwire, Tailwind CSS
-- **JS Runtime:** Bun
-- **Testing:** RSpec, Turnip, Playwright, Fixtures
-- **Linting:** StandardRB
-- **Type Safety:** Literal
-- **Notifications:** Noticed (event-sourced)
-- **Monitoring:** RailsPulse
-- **API Docs:** rspec-openapi (auto-generated)
-
-## User Interface
-
-The design system is called [mother](../docs/hubsystem-design-system-reference.html) implemented in `app/assets/mother.css`.  It is designed to look like the computers from the 1980s Aliens films.
-
-### Button placement rules
-
-- The **primary action** button is always **right-justified** (end of the row).
-- **Secondary actions** (cancel, back) sit to the left of the primary action.
-- **Destructive actions** (delete, cancel task) are positioned as **far from the primary/secondary actions as possible** — typically left-justified with `justify: "between"` on the row, so they sit at the opposite end.
-
-```ruby
-# Example: primary right, destructive far left
-Row justify: "between" do
-  Button label: "Delete", variant: :danger, size: :sm   # far left
-  Row gap: 2 do
-    Button label: "Cancel", variant: :secondary, tag: :a, href: back_path
-    Button label: "Save", variant: :primary              # far right
-  end
-end
+```
+server/
+  app/
+    models/          ActiveRecord models — users, conversations, messages,
+                     documents, tasks, governor_events
+    controllers/
+      api/v1/        JSON API endpoints consumed by Synthetics
+      web/           Browser-facing controllers
+      oauth/         Generic OAuth callback controller (routes to Synthetic inboxes)
+    channels/        ActionCable — synthetic inbox subscriptions, page event feeds
+    jobs/            ActiveJob — background work (embedding, RAG indexing etc)
+  config/
+    database.yml     PostgreSQL — see credentials for connection details
 ```
 
-## Phlex Components
+## Data model (key concepts)
 
-This project uses **Phlex** (not ERB) for all HTML rendering. See [`docs/PHLEX-GUIDE.md`](docs/PHLEX-GUIDE.md) for the full guide covering components, views, layouts, attributes, yielding, kits, Literal properties, testing, and Rails integration.
+- **User** — human or synthetic, both are first-class. `synthetic: boolean`
+- **Conversation** — has many participants (users), has many messages
+- **Message** — belongs to conversation and sender. Delivered to each participant
+- **Document** — tagged, RAG-indexed via pgvector. Belongs to a knowledge base
+- **Task** — hierarchical, with recurring/scheduled variants. Assigned to users
+- **GovernorEvent** — compliance feed. Filed by Synthetics when Governor blocks an action. Not a surveillance feed — Synthetic inner state is never stored here
+- **AuthToken** — scoped tokens for Synthetic API access
 
-**Do not use `helpers.method_name`** — this is deprecated in Phlex and will be removed. Instead, include the relevant `Phlex::Rails::Helpers::*` module. Common ones already included in `Views::Base`:
-- `Phlex::Rails::Helpers::FormAuthenticityToken` → `form_authenticity_token`
+## WebSocket / ActionCable
 
-For other Rails helpers, find the matching module (e.g. `Phlex::Rails::Helpers::FormWith`, `Phlex::Rails::Helpers::LinkTo`) and include it in the view or component class. Route helpers (`*_path`, `*_url`) are available automatically via `Components::Base`.
+Two channel types:
+- **SyntheticInboxChannel** — each Synthetic subscribes to its own inbox. Messages posted here wake the Synthetic's event loop in `world/`
+- **PageFeedChannel** — custom browser pages publish events here; they are routed to the appropriate Synthetic's inbox
 
-## HubSystem-Specific Concepts
+## OAuth callbacks
 
-See `../docs/ARCHITECTURE.md` for full design.
+`OauthController#callback` is a generic endpoint. It receives provider callbacks, looks up the Synthetic that registered interest via a session token, and publishes an event to that Synthetic's inbox. The Synthetic owns all provider-specific logic.
 
-## Development Environment
+## API conventions
 
-This project uses a devcontainer with Docker Compose sidecars for PostgreSQL (with pgvector), a bash sandbox, and Ollama (local LLM).
-
-### Running commands
-
-First, detect whether you are inside or outside the devcontainer:
-
-```bash
-test -d /workspaces && echo "INSIDE" || echo "OUTSIDE"
-```
-
-```bash
-# Inside devcontainer — run commands directly:
-bin/rspec spec/
-
-# Outside devcontainer — start the container, then exec into it:
-devcontainer up --workspace-folder .
-devcontainer exec --workspace-folder . bash -lc "bin/rspec spec/"
-```
-
-### Services
-
-| Service | Port | Purpose |
-|---------|------|---------|
-| postgres | 5432 | Database (pgvector enabled) |
-| sandbox | — | Shared bash execution for synthetics |
-| ollama | 11434 | Local LLM inference (qwen2.5:3b, nomic-embed-text) |
-
-### Environment variables
-
-Set in `.devcontainer/devcontainer.env` (gitignored):
-- `ANTHROPIC_API_KEY` — for Claude models (medium/high tier)
-- `DB_HOST` — auto-set to `postgres` inside devcontainer
+- All Synthetic-facing endpoints under `/api/v1/`
+- JSON:API-ish structure — don't over-engineer, keep it consistent
+- Auth via Bearer token in `Authorization` header
+- Pagination on all collection endpoints
 
 ## Testing
 
-### Fixtures and Embeddings
+- RSpec for unit and integration tests
+- Turnip/Gherkin + Capybara for outside-in feature specs
+- FactoryBot for test data
+- Start outside-in: write the Gherkin scenario first, work inwards
 
-Tests use Rails fixtures (not factories). Fixture files are in `spec/fixtures/`.
+## What does NOT belong here
 
-- `synthetic_memories.yml` and `documents.yml` include pre-computed 768-dimension embeddings from `nomic-embed-text` via Ollama. This allows semantic search (pgvector nearest_neighbors) to work in tests without a running Ollama instance.
-- When adding new fixture records that need embeddings, generate them inside the devcontainer:
-  ```ruby
-  RubyLLM.embed("your text", model: "nomic-embed-text", provider: :openai, assume_model_exists: true).vectors
-  ```
-- For fixtures with non-standard table names (e.g. `synthetic_memories.yml`), use `_fixture: model_class:` at the top of the file so Rails can resolve associations correctly.
-- User fixtures require `role_type` and `role_id` (delegated type). Use `<%= ActiveRecord::FixtureSet.identify(:fixture_name) %>` for `role_id`. Corresponding role fixtures live in `humans.yml` and `synthetics.yml`.
-- Specs tagged `:llm` hit real Ollama and are excluded by default. Run them with: `bin/rspec --tag llm`
-
-### Web UI Testing Principle
-
-Always write web UI tests assuming JavaScript is unavailable. Use Rack::Test (request specs) which is fast and avoids timing issues. The actual implementation may use JS (turbo-frames, broadcasts) but tests should work without it:
-
-- Links open new pages in tests but may open within turbo-frames in a real browser
-- For turbo-broadcasts, reload the page to check updates
-- Playwright is a last resort — ask for advice before using it
-- If a scenario proves difficult without JS, we'll devise patterns for common Turbo scenarios
-
-### Ollama Models
-
-RubyLLM doesn't have `nomic-embed-text` in its built-in registry. Use `assume_model_exists: true` and `provider: :openai` when calling `RubyLLM.embed` with Ollama models. Model tiers are configured in `config/llm_models.yml`.
-
-## Synthetic Agents
-
-Synthetics are persistent AI entities with identity, emotion, and memory. See [`docs/SYNTHETIC-AGENTS.md`](docs/SYNTHETIC-AGENTS.md) for the full architecture — processing pipeline, emotional state, LLM context, memory system, and testing approach.
-
----
-
-**For complete development standards**, see the full AGENTS.md at the application root.
+- LLM calls of any kind (except embedding for RAG indexing)
+- Synthetic pipeline logic (threat assessment, emotional processing, etc.)
+- Tool execution
+- Any knowledge of Archetype structure or Synthetic internals

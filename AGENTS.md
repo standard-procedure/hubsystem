@@ -1,66 +1,38 @@
-# HubSystem — Agent Guide
+# HubSystem — Guide for Agents
 
-> Start here if you're an LLM agent working on this project.
+This repository contains two separate applications that together form HubSystem: a multi-user collaboration platform where participants are human or synthetic (AI).
 
-## What is HubSystem?
-
-HubSystem is a multi-user, multi-tenant AI agent harness built in Ruby on Rails. Inspired by the HubSystem/SecUnit relationship in the Murderbot Diaries — persistent, emotionally real agents with individual memory, security clearances, and a career arc.
-
-Agents are not stateless functions. They are persistent individuals with identity, memory, emotional state, and opinions about the people they work with.
-
-## Mono-repo Structure
+## Repository Structure
 
 ```
 hubsystem/
-├── AGENTS.md                  ← YOU ARE HERE (meta-level guidance)
-├── CLAUDE.md                  ← Symlink to this file
-├── README.md
-├── docs/
-│   ├── ARCHITECTURE.md        ← Full system design
-│   ├── IMPLEMENTATION-PLAN.md ← Phased build plan (read before starting work)
-│   └── design.md              ← Original design document
-├── hubsystem-server/          ← Rails API + UI server (Phase 1 — current)
-│   ├── AGENTS.md              ← **Server-specific development guide**
-│   ├── CLAUDE.md              ← Symlink to server AGENTS.md
-│   └── spec/features/steps/
-│       ├── web/               ← Web UI step definitions (Playwright)
-│       └── api/               ← API step definitions (request specs)
-├── hubsystem-cli/             ← CLI client
-└── hubsystem-integration/     ← Integration tests
+  server/    Rails application — the hub (conversations, API, knowledge base)
+  world/     Ruby/Async application — the synthetic runtime
+  CLAUDE.md  this file
 ```
 
-## Quick Orientation
+**The two applications communicate exclusively via HTTP/WebSocket. They share no database and no process space.** Do not introduce direct dependencies between them.
 
-| Task | Read |
-|------|------|
-| Understand the overall design | `docs/ARCHITECTURE.md` |
-| Know what to build next | `docs/IMPLEMENTATION-PLAN.md` |
-| **Work on the Rails server** | **`hubsystem-server/AGENTS.md`** ← Start here for development |
-| Server tech stack & principles | `hubsystem-server/AGENTS.md` |
-| Synthetic agent architecture | `hubsystem-server/docs/SYNTHETIC-AGENTS.md` |
+## server/
 
-## Key Concepts
+See `server/CLAUDE.md` for full details.
 
-- **Participants** — every entity (human, agent, monitor, timer, output channel) is a `Participant`. All are first-class. Same inbox/outbox protocol for all.
-- **Security Passes** — grant capabilities, scoped to groups. Checked by the Amygdala before processing.
-- **Messages** — multipart (MIME-style). Multiple `MessagePart`s per message, each with a `content_type` and optional `channel_hint`.
-- **Memory** — three tiers: personal (per-agent), class (shared by agent type), knowledge base (org-scoped). All pgvector embeddings.
-- **Neural Architecture** — the trigger pipeline: Amygdala (threat + auth + emotion) → Hippocampus (RAG) → Prefrontal Cortex (LLM) → Hippocampus (write) → Brainstem (exhaustion).
-- **Emotional State** — jsonb column on agents: `{ happy: 75, focused: 80, irritated: 22 }`. Updates every turn. Colours system prompt. Also operational telemetry.
+The Rails hub application. Humans use the web UI. Synthetics use the JSON API. Key concerns: conversations, messages, shared knowledge base (pgvector RAG), task database, auth tokens, Governor event log, WebSocket publishing feed.
 
-## Development Standards
+**Never add synthetic runtime logic here.** The Rails app has no knowledge of how a Synthetic works internally.
 
-- **Test-first, outside-in** — write failing specs before implementation
-- **RSpec** throughout
-- **Small focused commits** — one logical change per commit
-- **Run specs before committing**: `bin/rspec`
-- **Rails API mode** — no views, no asset pipeline
-- **Async/Falcon** — fiber-based concurrency; use `Async` for I/O-bound work
+## world/
 
-## Current Phase
+See `world/CLAUDE.md` for full details.
 
-**Phase 1 — Rails Server Foundation**
+The synthetic runtime. A minimal Rails environment (no web server, no routes, no views) running long-lived Synthetic processes supervised by `async-service`. Synthetics communicate with `server/` exclusively via the HubSystem JSON API and WebSocket.
 
-See `docs/IMPLEMENTATION-PLAN.md` Phase 1 for the full task list.
+**Never add web-serving, routing, or view logic here.**
 
-TL;DR: create `hubsystem-server/` Rails API app, devcontainer with PostgreSQL + pgvector, core data model, basic messaging API, all with passing specs.
+## Shared Conventions
+
+- Ruby version: managed by mise, see `.ruby-version`
+- Tests: RSpec throughout, Turnip/Gherkin + Capybara for outside-in in `server/`
+- Development: devcontainer-based workflow
+- Outside-in BDD: start from the user's perspective, work inwards
+- YAGNI: resist adding complexity until it is needed

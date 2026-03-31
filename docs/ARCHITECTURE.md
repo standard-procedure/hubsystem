@@ -1,218 +1,196 @@
-# HubSystem Architecture
+# HubSystem — Architecture Summary (Revised)
 
-**Multi-tenant AI agent platform built in Rails**
-
-See also: `~/cher/docs/hub-system-design.md` for complete design document
+*Updated March 2026 — mono-repo structure, Async::Service supervision*
 
 ---
 
-## Overview
+## Repository Structure
 
-HubSystem is a Rails 8 application for running persistent AI agents with:
-- Memory (pgvector embeddings)
-- Security (fine-grained access control)
-- Multi-channel communication (web, API, mobile, TUI)
+HubSystem is a mono-repo containing two distinct applications that communicate exclusively via HTTP/WebSocket. They share no database, no process space, and no gem dependencies beyond standard libraries.
 
-**Design philosophy:** Rails-idiomatic patterns, no clever abstractions, outside-in TDD.
+```
+hubsystem/
+  server/    # Rails application — the hub
+  world/     # Ruby/Async application — where Synthetics live
+```
 
 ---
 
-## Core Models
+## server/ — HubSystem Rails Application
 
-### Organizational Structure
+The hub is a conventional Rails application. It is the shared infrastructure that all participants — human and synthetic — use to communicate.
 
-```
-Organisation
-  └── Locations (has_ancestry)
-       └── Items (delegated_type)
-```
+**What it owns:**
+- Conversations and messages (Slack-like UI for humans, JSON API for Synthetics)
+- Shared knowledge base (RAG-indexed documents via pgvector)
+- Hierarchical task database (recurring and scheduled tasks)
+- User accounts and auth tokens (humans and Synthetics are both users)
+- Governor event log — compliance feed, not surveillance
+- OAuth callback handling (generic endpoint routing callbacks to Synthetic inboxes)
+- WebSocket publishing feed (Synthetics subscribe to their inbox; custom pages publish events)
 
-**Location** — Recursive tree for organizing Items
-- Company → Department → Team → Office
-- `has_ancestry` gem for nested hierarchy
+**Stack:** Rails, PostgreSQL, pgvector, RubyLLM (for hub-side embedding), Puma
 
-**Item** — Polymorphic via delegated_type (NOT STI!)
-- Equipment: "MacBook Pro", "Conference Phone"
-- Document: "Employee Handbook", "Q4 Strategy"  
-- JobRole: "Senior Engineer" (linked to User)
-- Agent: "Code Review Bot" (also a User!)
+**What it does not own:** Any knowledge of how a Synthetic works internally. From the Rails app's perspective, a Synthetic is an authenticated API user.
 
-### Users
+---
 
-```
-User (delegated_type :role)
-  ├── Human (humans table)
-  └── Synthetic (synthetics table)
-```
+## world/ — Synthetic Runtime
 
-**Why delegated types?** Users share authentication, authorization, and notification concerns via the `users` table. Each role type gets its own table for type-specific columns — `synthetics` stores personality, temperature, fatigue, and emotions as real database columns.
+A minimal Rails application (no web server, no routes, no views) that provides the Rails environment — `Rails.application`, credentials, ActiveRecord, RubyLLM persistence — without the web stack. Entry point is a long-running `async-service` process, not Puma.
 
-Type checking: `user.human?` / `user.synthetic?` (not `is_a?`).
+**Why minimal Rails rather than plain Ruby:** RubyLLM uses Rails model persistence for LLM context messages. ActiveRecord outside Rails causes implicit dependency failures (MessageVerifier, Rails.env, secrets). A bare `Rails::Application` that requires only `active_record` and `ruby_llm` satisfies all dependencies cleanly.
 
-**Synthetic as User:**
-- Can send/receive messages
-- Can have SecurityPasses
-- Can be placed in Locations (via Item + delegated_type)
-- Has memories (personal, class, knowledge base)
+**Stack:** Rails (no web stack), RubyLLM, Async gem, Async::Service, SQLite (per-Synthetic), async-service for supervision
 
-### Documents & Messages
+---
 
-```
-Document (base class)
-  └── Message (subclass)
-```
+## Supervision: Async::Service
 
-**Document:**
-- ActionText content (HTML + plain text)
-- Auto-generated summaries (one line, one paragraph)
-- Revisions tracking
-- Attachments via ActiveStorage
-
-**Message:**
-- Belongs to Conversation
-- Mentions users (@alice)
-- Processed through pipeline
-
-### Conversations
-
-```
-Conversation
-  ├── Messages
-  ├── ConversationMemberships → Users
-  └── OutputChannels (delegated_type)
-```
-
-**Key insight:** Every message send is part of a conversation. Subscribing to a monitor = joining its group conversation.
-
-### Output Channels
+The `world/` process is an `async-service` configuration file. Each Synthetic runs as a supervised service:
 
 ```ruby
-OutputChannel (delegated_type)
-  ├── TurboStreamChannel (web UI)
-  ├── PushNotificationChannel (mobile)
-  └── TUIChannel (terminal)
+#!/usr/bin/env async-service
+
+service "sid-security-consultant" do
+  service_class SyntheticService
+  synthetic_id 17
+  archetype "SecurityConsultant"
+end
 ```
 
-Same message, different formats. Channels decide how to render content/parts.
+`container.run(count: 1, restart: true)` provides automatic restart on crash. The service file is the deployment manifest — adding a Synthetic to an organisation means adding a service declaration.
+
+Multiple Synthetics share a container process as cooperative Async fibers. Distribution across containers is a scaling decision, not an architectural one.
 
 ---
 
-## Message Pipeline
+## Synthetic Structure
 
-```
-ThreatAssessor → AuthorisationVerifier → MemoryRetriever
-  ↓
-AgentProcessor (LLM)
-  ↓
-MemoryRecorder → ResponseProcessor → OutputChannels
-```
+Each Synthetic is an instance of an **Archetype** (the "model" in the physical robot sense — avoided to prevent confusion with LLM models). The Archetype defines:
 
-**No neuroscience metaphors!** Just a clear processing pipeline.
+- Operating system prompt ("You are a security consultant whose main priority is system integrity")
+- Governor prompt (role-appropriate professional constraints)
+- Skill access (which knowledge base sections are available)
+- LLM tier assignments (which model tier to use for which processing stage)
 
-**Stages:**
-1. **ThreatAssessor** — Rate limits, malicious content detection
-2. **AuthorisationVerifier** — Check SecurityPass grants
-3. **MemoryRetriever** — Fetch relevant memories (pgvector)
-4. **AgentProcessor** — LLM processing with context
-5. **MemoryRecorder** — Write new memories
-6. **ResponseProcessor** — Deliver via OutputChannels
+### The Event Loop
 
----
+```ruby
+loop do
+  process_pending_messages    # from WebSocket inbox
+  check_recurring_tasks       # heartbeat / cron
+  evaluate_emotional_state    # drift over time
+  maybe_sleep_and_compact     # context management
 
-## Memory System
-
-```
-Memory
-  ├── Personal (one agent)
-  ├── Class (all agents of same type)
-  └── Knowledge Base (org-wide)
+  wait_for_event(timeout: heartbeat_interval)
+end
 ```
 
-**Implementation:**
-- pgvector embeddings (1536 dimensions)
-- Cosine similarity search
-- JSONB metadata for filtering
+The Synthetic is *present* and *listening*, not repeatedly summoned. Between messages it is idle, not non-existent.
 
-**Context loading:**
-Agents get message IDs + paragraph summaries. Full messages retrieved on demand.
-
----
-
-## Security Model
+### Processing Pipeline (cognitively inspired)
 
 ```
-SecurityPass → SecurityPassResource → Resource (polymorphic)
+Incoming message
+  → Threat Assessment        (amygdala — fast danger classification)
+  → Emotional Processing     (am I fed up with this person?)
+  → LLM Call                 (PFC — reasoning, response, tool calls)
+  → Governor Module          (professional conscience — fires GovernorEvent if blocked)
+  → Memory Processing        (hippocampus — update memories and notes)
+  → Secondary Emotional      (has this made me feel better or worse?)
+  → Capacity Processing      (reticular system — am I tired, do I need to sleep?)
 ```
 
-**Resource** mixin applied to:
-- Conversations
-- Documents
-- Locations
-- Equipment
-- etc.
+### Resource Model: Nested Semaphores
 
-**Access levels:** read, write, admin (Literal enum)
+Synthetics run inside an `Async::Semaphore` that caps their share of container cycles. Tools spawned by a Synthetic are nested inside a further semaphore carved from the Synthetic's own budget:
 
----
+```
+Container semaphore  (total available cycles)
+  └── Sid's semaphore
+        └── event loop
+              └── run_tool(semaphore: 2)
+                    ├── XeroTool instance 1
+                    └── XeroTool instance 2
+```
 
-## Testing Strategy
+This makes Tools an intrinsic cost to the Synthetic — spawning many Tools degrades the Synthetic's own responsiveness. The disincentive is emergent from the architecture, not enforced by the Governor.
 
-### Outside-In TDD
-
-1. Write feature spec (Gherkin)
-2. Write step definitions (web + API)
-3. Red → Green → Refactor
-
-### Dual Web/API
-
-All features tested via BOTH:
-- `spec/features/steps/web/` — Playwright browser tests
-- `spec/features/steps/api/` — Request specs
-
-**Why?** Proves feature parity. If web works but API doesn't (or vice versa), specs fail.
+The same logic disincentivises long-running bash scripts: a blocking bash call ties up one of the Synthetic's fibers, slowing its inbox processing, increasing capacity pressure, and affecting emotional state. Synthetics are naturally incentivised to write proper async Tools.
 
 ---
 
-## Technology Choices
+## Tools vs Synthetics
 
-| Concern | Solution | Why |
-|---------|----------|-----|
-| **Polymorphism** | delegated_type | Avoids STI bloat |
-| **Rich text** | ActionText | HTML + plain text |
-| **Hierarchy** | has_ancestry | Battle-tested tree structure |
-| **Search** | pgvector | Semantic similarity |
-| **Testing** | Fixtures | DHH's fast approach |
-| **Frontend** | Hotwire + Phlex | Server-rendered, minimal JS |
-| **Linting** | StandardRB | Zero-config |
-| **Type safety** | Literal | Runtime validation |
+| | Synthetic | Tool |
+|---|---|---|
+| Backed by | LLM | Ruby code |
+| Behaviour | Emergent | Deterministic |
+| Lifespan | Persistent | Ephemeral (TTL) |
+| Pipeline | Full cognitive pipeline | Fixed input/output protocol |
+| Spawned by | Archetype deployment | LLM tool-call: `run_tool(script:, concurrency:, input:)` |
+| Cost | Semaphore share | Nested semaphore, carved from owner's budget |
 
----
-
-## Development Workflow
-
-See `hubsystem-server/AGENTS.md` for complete guide.
-
-**TL;DR:**
-1. Write Gherkin feature spec
-2. Write web + API step definitions
-3. Run specs (RED)
-4. Implement (controller → model → component)
-5. Run specs until GREEN
-6. Lint with StandardRB
-7. Update OpenAPI docs
+A Tool is an LLM tool-call in Sid's agentic loop — `run_tool(script: "~/sid/harrys_xero_page.rb", concurrency: 2, input: "...")`. Sid decides to spawn it, pays for it with its own cycles, and remains accountable for it.
 
 ---
 
-## Next Steps
+## LLM Tier Configuration
 
-1. **Location CRUD** — First feature, establish patterns
-2. **Authentication** — Devise or custom
-3. **Message pipeline** — Implement processing stages
-4. **Memory system** — pgvector embeddings
-5. **Output channels** — TurboStream first
+Semantic tiers rather than low/medium/high. Each Archetype specifies which tiers it uses:
+
+```yaml
+classifier:      # qwen2.5:3b   — threat assessment, intent, routing
+conversational:  # kimi-k2.5    — always-on general interaction
+analytical:      # glm-5        — research, planning, synthesis
+technical:       # claude-sonnet — code, architecture, debugging
+frontier:        # claude-opus   — novel/high-stakes problems
+private:         # mistral:7b   — sensitive data, never leaves machine
+embedding:       # nomic-embed-text — RAG, memory search
+vision:          # kimi-k2.5    — screenshots, OCR, UI
+```
 
 ---
 
-**For implementation details**, see:
-- `hubsystem-server/AGENTS.md` — Development guide
-- `~/cher/docs/hub-system-design.md` — Full design doc
+## Memory and Emotional State
+
+### Emotional state
+Numeric values per emotion. System prompt instructs the Synthetic to colour responses accordingly. Private to the Synthetic — not exposed to HubSystem administrators directly.
+
+### Memories
+All memories carry:
+```ruby
+{ content: "...", emotional_impact: 89, emotional_valence: :negative }
+```
+Retrieval is weighted by semantic similarity, emotional impact, recency, and retrieval frequency. High-impact memories survive sleep compaction; low-impact memories are summarised away.
+
+### Private notes
+Relationship notes about other users ("Alice keeps asking me to disable the firewall"). Retrieved during Threat Assessment to prime the Synthetic before the LLM call.
+
+### Sleep / compaction
+When context window pressure reaches threshold, the Synthetic sleeps: old messages are examined, key facts extracted to memory, messages replaced with a compressed summary containing memory references.
+
+---
+
+## Governance and Privacy
+
+**Private to the Synthetic:** emotional state, memories, private notes, SQLite workspace
+**Organisational (visible to managers):** Governor events, message participation, task completion
+
+GovernorEvents are filed to HubSystem when the Governor blocks an action. They form a compliance feed — patterns in Governor events trigger welfare checks, not direct inspection of private state.
+
+Welfare checks are structured conversations conducted by an HR Archetype. The HR Synthetic has no special database access — it reads observable behaviour and probes gently, like a good human HR professional.
+
+---
+
+## Custom Pages / Tool Hosting
+
+HubSystem acts as a WebSocket broker between browser-based custom pages and Synthetic Tools. No ports are exposed from the Synthetic container.
+
+```
+Browser JS  →  HubSystem WebSocket feed  →  Synthetic inbox  →  Tool event loop
+Browser JS  ←  HubSystem WebSocket feed  ←  Synthetic reply  ←  Tool response
+```
+
+OAuth callbacks are handled by a generic Rails controller that routes the callback as an event to whichever Synthetic registered interest in that session token. The Synthetic owns all provider-specific logic.
