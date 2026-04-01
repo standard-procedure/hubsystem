@@ -1,0 +1,17 @@
+_fixture:
+  model_class: Conversation
+
+alpha:
+  subject: Alpha Team Chat
+  status: 0
+  status_badge: 10
+
+beta:
+  subject: Beta Project
+  status: 0
+  status_badge: 0
+
+archived_chat:
+  subject: Old Discussion
+  status: -1
+  status_badge: 0

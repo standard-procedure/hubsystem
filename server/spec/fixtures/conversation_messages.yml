@@ -1,0 +1,20 @@
+_fixture:
+  model_class: Conversation::Message
+
+alice_hello:
+  conversation: alpha
+  sender: alice
+  contents: Hello everyone
+  status_badge: 10
+
+bob_reply:
+  conversation: alpha
+  sender: bob
+  contents: Hi Alice, how are you?
+  status_badge: 10
+
+alice_multiline:
+  conversation: alpha
+  sender: alice
+  contents: "First line\nSecond line"
+  status_badge: 0

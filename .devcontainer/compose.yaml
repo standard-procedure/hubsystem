@@ -13,6 +13,7 @@ services:
       DB_HOST: postgres
       HUBSYSTEM_HOST: http://dev:3000
       OLLAMA_HOST: ${OLLAMA_HOST:-http://ollama:11434}
+      EMBEDDING_MODEL: nomic-embed-text
     depends_on:
       postgres:
         condition: service_healthy

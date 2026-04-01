@@ -1,0 +1,22 @@
+_fixture:
+  model_class: Conversation::Participant
+
+alice_in_alpha:
+  conversation: alpha
+  user: alice
+  participant_type: 100
+
+bob_in_alpha:
+  conversation: alpha
+  user: bob
+  participant_type: 0
+
+alice_in_beta:
+  conversation: beta
+  user: alice
+  participant_type: 0
+
+charlie_in_beta:
+  conversation: beta
+  user: charlie
+  participant_type: 0

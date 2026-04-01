@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_183700) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_01_160823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
@@ -41,6 +41,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_183700) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "conversation_messages", force: :cascade do |t|
+    t.text "contents"
+    t.bigint "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.vector "embedding", limit: 768
+    t.bigint "sender_id", null: false
+    t.integer "status_badge", default: 0, null: false
+    t.text "tags", default: [], null: false, array: true
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_conversation_messages_on_conversation_id"
+    t.index ["sender_id"], name: "index_conversation_messages_on_sender_id"
+  end
+
+  create_table "conversation_participants", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "participant_type", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["conversation_id"], name: "index_conversation_participants_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_participants_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "status_badge", default: 0, null: false
+    t.string "subject", default: "", null: false
+    t.text "tags", default: [], null: false, array: true
+    t.datetime "updated_at", null: false
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -217,6 +249,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_183700) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "conversation_messages", "conversations"
+  add_foreign_key "conversation_messages", "users", column: "sender_id"
+  add_foreign_key "conversation_participants", "conversations"
+  add_foreign_key "conversation_participants", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "rails_pulse_operations", "rails_pulse_queries", column: "query_id"
