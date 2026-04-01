@@ -15,9 +15,6 @@
   },
 
   "containerEnv": {
-    "DB_HOST": "postgres",
-    "OLLAMA_HOST": "http://ollama:11434",
-    "HUBSYSTEM_HOST": "http://dev:3000",
     "TERM": "xterm-256color"
   },
 
