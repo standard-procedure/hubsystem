@@ -4,9 +4,9 @@ class Components::StatusMatrix < Components::Slotted
   class Item < Literal::Data
     extend Components::Types
 
-    STATUSES = {critical: "matrix-cell--critical", warning: "matrix-cell--degraded", nominal: "matrix-cell--nominal", offline: "matrix-cell--offline"}.freeze
+    STATUSES = {critical: "matrix-cell--red", warning: "matrix-cell--amber", alert: "matrix-cell--blue", online: "matrix-cell--green", offline: "matrix-cell--dark"}.freeze
 
-    prop :state, Enum(STATUSES.keys), default: :nominal
+    prop :state, Enum(STATUSES.keys), default: :online
     prop :href, _String?
     prop :attributes, Hash, :**, default: {}.freeze
 
@@ -18,7 +18,7 @@ class Components::StatusMatrix < Components::Slotted
     super
   end
 
-  def item(state: :neutral, href: nil, **attributes)
+  def item(state: :online, href: nil, **attributes)
     @items << Item.new(state:, href:, attributes:)
   end
 

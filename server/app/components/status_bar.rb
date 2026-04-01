@@ -4,9 +4,9 @@ class Components::StatusBar < Components::Slotted
   class Item < Literal::Data
     extend Components::Types
 
-    STATUSES = {critical: "status-dot--red", warning: "status-dot--amber", info: "status-dot--blue", nominal: "status-dot--green", offline: "status-dot--dark"}.freeze
+    STATUSES = {critical: "status-dot--red", warning: "status-dot--amber", alert: "status-dot--blue", online: "status-dot--green", offline: "status-dot--dark"}.freeze
 
-    prop :state, Enum(STATUSES.keys), default: :nominal
+    prop :state, Enum(STATUSES.keys), default: :offline
     prop :label, _String?
     prop :contents, _Callable?
 
@@ -18,7 +18,7 @@ class Components::StatusBar < Components::Slotted
     super
   end
 
-  def item(state: :nominal, label: nil, &contents)
+  def item(state: :offline, label: nil, &contents)
     @items << Item.new(state:, label:, contents:)
   end
 
