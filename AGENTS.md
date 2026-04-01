@@ -51,6 +51,24 @@ devcontainer exec --workspace-folder . bash -lc "cd server && bin/rails db:migra
 
 Both `server/` and `world/` are available under `/workspaces/hubsystem/` inside the container.
 
+### Ruby and mise
+
+Ruby is managed by [mise](https://mise.jdx.dev/) and is **not on PATH in non-login shells**. The `-l` flag is required when running `bash` so that mise activates correctly.
+
+If a login shell is not an option (e.g. a raw `devcontainer exec` without `-l`), invoke Ruby by its full path:
+
+```
+/home/vscode/.local/share/mise/installs/ruby/$(cat .ruby-version)/bin/ruby
+```
+
+Or use `mise exec` to activate it explicitly:
+
+```
+devcontainer exec --workspace-folder . bash -c "mise exec -- ruby bin/rspec"
+```
+
+Always prefer the login shell form (`bash -l`) — it is simpler and picks up the correct Ruby version automatically.
+
 ## Shared Conventions
 
 - Ruby version: managed by mise, see `.ruby-version`

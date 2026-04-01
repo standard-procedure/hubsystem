@@ -151,18 +151,17 @@ API request specs under `spec/requests/api/v1/` describe each endpoint and gener
 ### Writing API request specs
 
 ```ruby
-RSpec.describe "API V1 Tasks", type: :request do
+RSpec.describe "API V1 Users", type: :request do
   fixtures :users, :oauth_applications, :oauth_access_tokens
 
   let(:headers) { {"Authorization" => "Bearer ALICE123"} }
 
-  describe "GET /api/v1/tasks" do
-    it "returns tasks assigned to the authenticated user" do
-      Task.create!(creator: users(:bob), assignee: users(:alice), subject: "My task")
-      get api_v1_tasks_path, headers: headers
+  describe "GET /api/v1/users" do
+    it "returns the list of users" do
+      get api_v1_users_path, headers: headers
       expect(response).to have_http_status(:ok)
       data = JSON.parse(response.body)
-      expect(data.first["subject"]).to eq("My task")
+      expect(data.map { _1["uid"] }).to include("alice")
     end
   end
 end
@@ -212,19 +211,63 @@ Unselected labels look like secondary buttons (transparent with border). The sel
 
 ### Broadcasting model changes
 
-Use `Turbo::Broadcastable` to push updates to connected browsers:
+Use [`Turbo::Broadcastable`](https://www.rubydoc.info/github/hotwired/turbo-rails/Turbo/Broadcastable) to push updates to connected browsers.
+
+There are two types of refresh: page refreshes and component refreshes.  
+
+**Page Refreshes**
 
 ```ruby
 class Conversation < ApplicationRecord
   include Turbo::Broadcastable
-  after_update_commit :broadcast_refresh
+  broadcasts_refreshes
 end
 
 class Message < ApplicationRecord
   include Turbo::Broadcastable
-  after_create_commit -> { broadcast_refresh_to conversation }
+  broadcasts_refreshes_to :conversation
 end
 ```
+
+Whenever a Conversation or Message is updated, a Turbo broadcast is sent.  Any view that uses `turbo_stream_from @conversation` will receive the broadcast and trigger a full page reload (Turbo uses page morphing to minimise the screen redraw).  This allows for very simple automated updates of pages - but care must be taken to ensure that the page refresh does not disrupt the user (for example, if they are in the middle of typing into a form and the page redraws).
+
+**Component Refreshes**
+
+```ruby
+class User < ApplicationRecord 
+  include Turbo::Broadcastable
+  include ActionView::RecordIdentifier
+  after_update_commit :redraw_status_badge, if: -> { saved_change_to? :status_badge }
+  
+  private def redraw_status_badge
+    broadcast_update_later_to "user_status_badges", target: dom_id(self, :status_badge), renderable: Components::UserStatusBadge.new(user: self)
+  end 
+end
+```
+Whenever the User's `status_badge` field is updated, a Turbo broadcast is sent.  Any view that uses `turbo_stream_from "user_status_badges"` will receive the broadcast.  It then searches for an element with the ID `dom_id(@user, :status_badge)` (which resolves to "status_badge_user_123") and replaces the inner HTML with the rendered content.  
+
+### When to use which type of refresh
+
+Prefer page refreshes unless the view contains form fields (where the user may be typing when the refresh arrives) or if the update affects only a tiny part of the page's function.
+
+**Page refresh advantages:**
+
+- Simple — views express an interest in a model and the model updates them without any dependencies between model and view
+- Auth-aware — the page is reloaded by the browser using the current session and cookies, so the redraw respects the user's permissions
+
+**Page refresh disadvantages:**
+
+- Redraw — potentially loses any input fields that are partially completed
+- Expensive — 100 logged-in users will trigger 100 simultaneous page requests to the server
+
+**Component refresh advantages:**
+
+- Targeted — only individual components are updated, so minimal redrawing occurs
+
+**Component refresh disadvantages:**
+
+- Auth-unaware — the `renderable` is drawn in a background thread, outside of the request/response cycle, so it cannot vary the output based on the current user's permissions
+- Mixes layers — the model layer requires knowledge of the view layer, breaking encapsulation
 
 ### Action Cable connection
 
@@ -232,13 +275,7 @@ The WebSocket connection authenticates via the session cookie in [app/channels/a
 
 ### Known limitation: async-cable and Puma
 
-The project uses `async-cable` for WebSocket support, which requires Falcon's async event loop. Puma (used as the Capybara test server) cannot run the async-cable middleware. To enable live broadcasts in tests, the test server would need to switch to Falcon.
-
-## Concurrent Operations with Async::Barrier
-
-> **This pattern belongs to `world/`, not `server/`.** The synthetic processing pipeline (including concurrent threat assessment + emotional processing) runs in `world/` as an `Async::Service` supervised event loop. See `world/AGENTS.md` for the pipeline architecture.
->
-> `server/` does not run LLM pipeline stages and has no need for this pattern. Async concurrency within `server/` (e.g. parallel database queries) uses standard Rails patterns.
+The project uses `async-cable` for WebSocket support, which requires Falcon's async event loop. Puma (used as the Capybara test server) cannot run the async-cable middleware. Tests cannot use live broadcasts.  
 
 ## RESTful State Transitions
 

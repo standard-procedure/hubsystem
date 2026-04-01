@@ -1,24 +1,37 @@
-# README
+# HubSystem Server
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This server is a communication and productivity hub for the HubSystem.  
 
-Things you may want to cover:
+Users of HubSystem will be human or synthetic.  The system makes no distinction between the two.  
 
-* Ruby version
+The web user interface is designed for humans, the JSON API is designed for synthetics.  
 
-* System dependencies
+There is **feature parity** between the two.  
 
-* Configuration
+## Web User Interface
 
-* Database creation
+### High level information architecture
 
-* Database initialization
+```
+Dashboard: search, tiles, status indicators, superintendent
+|    
+|
++--- Messages: search, unread messages, conversations
+|
+|
++--- Projects: search, active tickets, projects
+|
+|
++--- Documents: search, folders
+|
+|
++--- Terminals: search, active terminals
+|
+|
++--- Users: search, users
+|
+|
++--- Settings: profile, security credentials, security passes
+```
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## JSON API
