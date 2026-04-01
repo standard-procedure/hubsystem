@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Components::CrtMonitor, type: :component do
-  fixtures :users, :humans, :synthetics, :synthetic_classes
+  fixtures :users
 
   def controller
     @controller ||= ActionView::TestCase::TestController.new

@@ -1,47 +1,31 @@
 alice:
   uid: alice
   name: Alice Aardvark
-  role_type: Human
-  role_id: <%= ActiveRecord::FixtureSet.identify(:alice_human) %>
 
 bob:
   uid: bob
   name: Bob Badger
-  role_type: Human
-  role_id: <%= ActiveRecord::FixtureSet.identify(:bob_human) %>
 
 charlie:
   uid: charlie
   name: Charlie Cheetah
-  role_type: Human
-  role_id: <%= ActiveRecord::FixtureSet.identify(:charlie_human) %>
 
 dave:
   uid: dave
   name: Dave Dolphin
-  role_type: Human
-  role_id: <%= ActiveRecord::FixtureSet.identify(:dave_human) %>
 
 eve:
   uid: eve
   name: Eve Eagle
-  role_type: Human
-  role_id: <%= ActiveRecord::FixtureSet.identify(:eve_human) %>
 
 frank:
   uid: frank
   name: Frank Falcon
-  role_type: Human
-  role_id: <%= ActiveRecord::FixtureSet.identify(:frank_human) %>
 
 bishop:
   uid: bishop
   name: Bishop
-  role_type: Synthetic
-  role_id: <%= ActiveRecord::FixtureSet.identify(:bishop_synthetic) %>
 
 ash:
   uid: ash
   name: Ash
-  role_type: Synthetic
-  role_id: <%= ActiveRecord::FixtureSet.identify(:ash_synthetic) %>

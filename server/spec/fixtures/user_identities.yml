@@ -2,11 +2,11 @@ _fixture:
   model_class: User::Identity
 
 alice_developer:
-  human: alice_human
+  user: alice
   provider: developer
   uid: alice-google-123
 
 bob_developer:
-  human: bob_human
+  user: bob
   provider: developer
   uid: bob-apple-456
