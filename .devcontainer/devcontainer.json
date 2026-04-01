@@ -3,7 +3,7 @@
 {
   "name": "HubSystem",
   "dockerComposeFile": "compose.yaml",
-  "service": "server",
+  "service": "dev",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
@@ -17,7 +17,7 @@
   "containerEnv": {
     "DB_HOST": "postgres",
     "OLLAMA_HOST": "http://ollama:11434",
-    "HUBSYSTEM_HOST": "http://server:3000",
+    "HUBSYSTEM_HOST": "http://dev:3000",
     "TERM": "xterm-256color"
   },
 
@@ -32,5 +32,5 @@
     "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
   ],
   
-  "postCreateCommand": "bin/setup --skip-server && (docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text &)"
+  "postCreateCommand": "server/bin/setup --skip-server && world/bin/setup --skip-server && (docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text &)"
 }

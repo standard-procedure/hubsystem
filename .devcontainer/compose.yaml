@@ -1,30 +1,17 @@
 name: "hubsystem"
 
 services:
-  server:
+  dev:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     volumes:
-    - ../server:/workspaces/hubsystem/server:cached
-    command: sleep infinity
-    environment:
-      DB_HOST: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  world:
-    build:
-      context: ..
-      dockerfile: .devcontainer/Dockerfile
-    volumes:
-    - ../world:/workspaces/hubsystem/world:cached
+    - ../:/workspaces/hubsystem:cached
     env_file: devcontainer.env
     command: sleep infinity
     environment:
       DB_HOST: postgres
-      HUBSYSTEM_HOST: http://server:3000
+      HUBSYSTEM_HOST: http://dev:3000
       OLLAMA_HOST: http://ollama:11434
     depends_on:
       postgres:

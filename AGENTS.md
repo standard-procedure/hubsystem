@@ -33,6 +33,24 @@ The synthetic runtime. A minimal Rails environment (no web server, no routes, no
 
 `docs/IDEAS.md` — scratch pad for ideas and things to revisit. Add entries there rather than letting them get lost.
 
+## Running Scripts
+
+This project runs inside a devcontainer. If you need to execute scripts (tests, generators, migrations, etc.) you must run them inside the container, not on the host.
+
+Use the `devsh` alias (or the full form) to get a shell:
+
+```
+devcontainer exec --workspace-folder . bash -l
+```
+
+Or run a command directly:
+
+```
+devcontainer exec --workspace-folder . bash -lc "cd server && bin/rails db:migrate"
+```
+
+Both `server/` and `world/` are available under `/workspaces/hubsystem/` inside the container.
+
 ## Shared Conventions
 
 - Ruby version: managed by mise, see `.ruby-version`
