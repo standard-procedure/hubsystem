@@ -31,7 +31,7 @@ ENV PATH="${BUN_INSTALL}/bin:${PATH}"
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # Pre-cache Playwright browsers
-COPY --chown=vscode package.json bun.lock* /tmp/playwright-setup/
+COPY --chown=vscode server/package.json server/bun.lock* /tmp/playwright-setup/
 RUN cd /tmp/playwright-setup && \
     bun install 2>/dev/null && \
     bunx playwright install chromium || true && \

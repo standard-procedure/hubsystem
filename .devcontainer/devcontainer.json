@@ -1,9 +1,9 @@
 // For format details, see https://containers.dev/implementors/json_reference/.
 // For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ruby
 {
-  "name": "world",
+  "name": "HubSystem",
   "dockerComposeFile": "compose.yaml",
-  "service": "rails-app",
+  "service": "server",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
@@ -17,6 +17,7 @@
   "containerEnv": {
     "DB_HOST": "postgres",
     "OLLAMA_HOST": "http://ollama:11434",
+    "HUBSYSTEM_HOST": "http://server:3000",
     "TERM": "xterm-256color"
   },
 
@@ -31,13 +32,5 @@
     "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
   ],
   
-  // Configure tool-specific properties.
-  // "customizations": {},
-
-  // Uncomment to connect as root instead. More info: https://containers.dev/implementors/json_reference/#remoteUser.
-  // "remoteUser": "root",
-
-
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "bin/setup --skip-server && docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text"
+  "postCreateCommand": "bin/setup --skip-server && (docker exec ollama ollama pull qwen2.5:3b && docker exec ollama ollama pull nomic-embed-text &)"
 }

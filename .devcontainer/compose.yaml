@@ -1,21 +1,34 @@
-name: "world"
+name: "hubsystem"
 
 services:
-  rails-app:
+  server:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     volumes:
-    - ../../hubsystem:/workspaces/hubsystem:cached
+    - ../server:/workspaces/hubsystem/server:cached
+    command: sleep infinity
+    environment:
+      DB_HOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  world:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+    - ../world:/workspaces/hubsystem/world:cached
     env_file: devcontainer.env
     command: sleep infinity
     environment:
       DB_HOST: postgres
+      HUBSYSTEM_HOST: http://server:3000
       OLLAMA_HOST: http://ollama:11434
     depends_on:
       postgres:
         condition: service_healthy
-    command: sleep infinity
 
   postgres:
     image: pgvector/pgvector:pg16
@@ -43,8 +56,6 @@ services:
     restart: unless-stopped
     volumes:
       - ollama-data:/root/.ollama
-    ports:
-      - "11434:11434"
   
 volumes:
   postgres-data:
