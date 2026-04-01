@@ -29,6 +29,10 @@ The synthetic runtime. A minimal Rails environment (no web server, no routes, no
 
 **Never add web-serving, routing, or view logic here.**
 
+## Ideas and Notes
+
+`docs/IDEAS.md` — scratch pad for ideas and things to revisit. Add entries there rather than letting them get lost.
+
 ## Shared Conventions
 
 - Ruby version: managed by mise, see `.ruby-version`
