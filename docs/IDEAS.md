@@ -23,9 +23,32 @@ Example — ticket lifecycle:
 5. Ticket marked done → workflow triggers code review
 6. Code review complete → workflow reports outcome to creator
 
-**Design notes to consider**
+**Design notes**
 - Event bus should live in `server/` as the shared hub (all participants publish/subscribe via the API or ActionCable)
 - Workflows are likely their own bounded context — separate from conversations, tasks, and the Governor feed
 - Synthetic participation in a workflow is just the normal API/WebSocket interface — no special coupling
 - State machine could be something like `state_machines` gem or a simple JSONB column with explicit transition methods
 - "Ask a user for input" could be modelled as a conversation turn — the workflow parks itself waiting for a reply event
+
+---
+
+## Sandbox container: per-Synthetic Unix users + Superintendent
+
+The spare Ubuntu sandbox container mounts a volume at `/home`. Each Synthetic gets its own Unix user (`/home/sid`, `/home/alice`, etc.), giving them isolated home directories and file permissions — Synthetics cannot read each other's workspaces by default.
+
+**The Superintendent**
+
+A dedicated Superintendent Synthetic is the only account with `sudo` access. When any other Synthetic wants to install software or run a privileged command, it must ask the Superintendent via a normal HubSystem conversation. The Superintendent evaluates the request and — if approved — runs the `sudo` command itself.
+
+Benefits:
+- All privileged operations are logged as conversations in HubSystem, not buried in a shell history
+- The Governor applies to the Superintendent's decisions like any other Synthetic response
+- A rogue or compromised Synthetic cannot escalate privileges unilaterally
+- The approval trail is human-readable and auditable without any extra tooling
+
+**Design notes**
+- Container user provisioning could be handled at startup by the devcontainer setup or a world/ bootstrap script
+- The Superintendent's Archetype would need a specific Governor prompt around software installation policy (what's allowed, what requires human sign-off)
+- SSH or `nsenter` from `world/` into the sandbox as the correct Unix user keeps the isolation clean
+- Could extend to resource limits per user (`ulimit`, cgroups) so one Synthetic can't monopolise CPU/disk
+- The "ask the Superintendent" pattern is a good template for other capability-gating scenarios beyond sudo
