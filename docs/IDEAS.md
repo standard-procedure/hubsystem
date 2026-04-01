@@ -52,3 +52,21 @@ Benefits:
 - SSH or `nsenter` from `world/` into the sandbox as the correct Unix user keeps the isolation clean
 - Could extend to resource limits per user (`ulimit`, cgroups) so one Synthetic can't monopolise CPU/disk
 - The "ask the Superintendent" pattern is a good template for other capability-gating scenarios beyond sudo
+
+**Scalability of Linux users**
+
+Linux itself handles tens of thousands of user accounts without issue — `/etc/passwd` is just a flat file and the kernel doesn't care. The real constraints at scale would be:
+- Disk: each home directory consuming space (mitigated by quotas)
+- Process limits: per-user `ulimit` keeping any one Synthetic from forking out of control
+- The sandbox container's RAM/CPU, not the user account count itself
+
+At very large scale (thousands of active Synthetics) the bigger question is whether a single sandbox container is the right unit — you'd likely shard Synthetics across multiple sandbox containers, each with their own Superintendent, rather than fight OS limits. The per-user isolation model still holds at that point, just distributed.
+
+**Superintendent as process supervisor**
+
+The Superintendent should also have read access to process and resource information on the `world/` container — `top`, `ps`, `/proc` stats, or equivalent. This lets it:
+- Notice a Synthetic consuming runaway CPU or memory and intervene (or report to a human)
+- Correlate "Sid asked to install X" with "Sid's process spiked immediately after" 
+- Act as a genuine supervisor-of-supervisors: async-service restarts crashed Synthetics automatically, but the Superintendent watches for degraded-but-not-crashed behaviour that automated restart can't catch
+
+This keeps operational visibility inside the same conversation/Governor/audit-trail system rather than requiring separate monitoring infrastructure.
