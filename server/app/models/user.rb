@@ -2,7 +2,6 @@
 
 class User < ApplicationRecord
   include HasStatusBadge
-  include HasAttachments
   include HasTags
   include User::Conversations
 

@@ -23,7 +23,7 @@ class Components::Navigation < Components::Slotted
   end
 
   def view_template
-    div class: "nav-rails" do
+    div class: "nav-rail" do
       @items.each { |item| item.href.present? ? render_item_link(item) : render_item(item) }
     end
   end

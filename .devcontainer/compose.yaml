@@ -9,6 +9,8 @@ services:
     - ../:/workspaces/hubsystem:cached
     env_file: devcontainer.env
     command: sleep infinity
+    ports:
+      - 3000:3000
     environment:
       DB_HOST: postgres
       HUBSYSTEM_HOST: http://dev:3000

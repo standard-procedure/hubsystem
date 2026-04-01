@@ -2,46 +2,40 @@
 
 class Views::Dashboard::Show < Views::Base
   prop :user, User
-  prop :conversations, _Any, default: [].freeze
-  prop :tasks, _Any, default: [].freeze
-  prop :all_users, _Any, default: [].freeze
+  prop :unread_messages, ActiveRecord::Relation(Conversation::Message)
+  prop :all_users, ActiveRecord::Relation(User)
 
   def view_template
     render Views::Layouts::Application.new(title: "HubSystem", user: @user) do
-      Components::SystemPanel(title: "Welcome back #{@user}", subtitle: "Human \u2194 Agent Interface Protocol") do
-        Terminal do |terminal|
-          terminal.bright_line { "HUBSYSTEM INTERFACE TERMINAL v1.0" }
-          terminal.line { "MU/TH/UR 6000 BIOS rev 4.2.1" }
-          terminal.line { "#{@conversations.count} active conversation(s)" }
-          terminal.line { "#{@tasks.count} task(s) assigned" }
-          terminal.bright_line do
-            plain "SYSTEM READY"
-            span(class: "cursor")
-          end
+      div class: %w[flex flex-row] do
+        Navigation do |nav|
+          nav.item active: true, label: "Dashboard", href: root_path
+          nav.item label: "Messages", href: messages_path
         end
-      end
+        Column justify: "between", class: %w[grow-1] do
+          SystemPanel(title: "Welcome back #{@user}", subtitle: "Human \u2194 Agent Interface Protocol") do
+            Terminal do |terminal|
+              terminal.bright_line { "HUBSYSTEM INTERFACE TERMINAL v1.0" }
+              terminal.line { "MU/TH/UR 6000 BIOS rev 4.2.1" }
+              terminal.line { unread_message_label }
+              terminal.bright_line do
+                plain "SYSTEM READY"
+                span(class: "cursor")
+              end
+            end
+          end
 
-      render Components::Panel.new(title: "Conversations") do
-        render Components::ConversationMatrix.new(user: @user, conversations: @conversations)
-      end
-
-      render Components::Panel.new(title: "User Activity") do
-        render Components::UserActivityMatrix.new(users: @all_users)
-      end
-
-      if @tasks.any?
-        render Components::Panel.new(title: "Tasks") do
-          StatusBar do |status|
-            pending_count = @tasks.count(&:pending?)
-            blocked_count = @tasks.count(&:blocked?)
-            due_count = @tasks.count { |t| t.due_at.present? && t.due_at <= Time.current }
-
-            status.item label: "#{pending_count} Pending", state: :nominal
-            status.item label: "#{blocked_count} Blocked", state: (blocked_count > 0) ? :warning : :nominal
-            status.item label: "#{due_count} Overdue", state: (due_count > 0) ? :critical : :nominal
+          Panel(title: "Messages") do
+            Row justify: "between" do
+              StatusItem(state: unread_message_state, label: unread_message_label)
+              UserActivityMatrix(users: @all_users)
+            end
           end
         end
       end
     end
   end
+
+  private def unread_message_state = @unread_messages.any? ? :alert : :online
+  private def unread_message_label = t(".unread_messages", count: @unread_messages.size)
 end

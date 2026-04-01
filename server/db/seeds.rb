@@ -1,76 +1,36 @@
-# Synthetic classes — find_or_create then always update so re-seeding picks up changes
-basic = SyntheticClass.find_or_create_by!(name: "Basic Bot")
-basic.update!(llm_tier: "low", operating_system: "You are a simple helpful assistant. Answer questions clearly and concisely.")
-
-standard = SyntheticClass.find_or_create_by!(name: "Standard Agent")
-standard.update!(llm_tier: "medium", operating_system: "You are a capable AI agent with access to tools and skills. You can search memories, manage tasks, and hold conversations.")
-
-advanced = SyntheticClass.find_or_create_by!(name: "Advanced Agent")
-advanced.update!(llm_tier: "high", operating_system: "You are a highly capable AI agent. You think deeply, use tools strategically, and produce thorough work. You have strong opinions and are not afraid to push back when asked to do something inadvisable.")
-
 # Humans
-alice = User.where(uid: "alice").first_or_create!(name: "Alice Aardvark", role: Human.create!)
-alice.role.identities.where(provider: "developer", uid: "alice").first_or_create!
+alice = User.where(uid: "alice").first_or_create!(name: "Alice Aardvark")
+alice.identities.where(provider: "developer", uid: "alice").first_or_create!
 
-bob = User.where(uid: "bob").first_or_create!(name: "Bob Badger", role: Human.create!)
-bob.role.identities.where(provider: "developer", uid: "bob").first_or_create!
+bob = User.where(uid: "bob").first_or_create!(name: "Bob Badger")
+bob.identities.where(provider: "developer", uid: "bob").first_or_create!
 
-User.where(uid: "charlie").first_or_create!(name: "Charlie Cheetah", role: Human.create!)
-User.where(uid: "dave").first_or_create!(name: "Dave Dolphin", role: Human.create!)
-User.where(uid: "eve").first_or_create!(name: "Eve Eagle", role: Human.create!)
-User.where(uid: "frank").first_or_create!(name: "Frank Falcon", role: Human.create!)
-User.where(uid: "grace").first_or_create!(name: "Grace Gazelle", role: Human.create!)
-User.where(uid: "hank").first_or_create!(name: "Hank Heron", role: Human.create!)
-User.where(uid: "iris").first_or_create!(name: "Iris Ibex", role: Human.create!)
-User.where(uid: "jake").first_or_create!(name: "Jake Jackal", role: Human.create!)
-
-# Helper to upsert a synthetic user. Uses a block form to avoid creating orphan
-# Synthetic records when the user already exists (first_or_create! with an inline
-# Synthetic.create! argument evaluates the create! unconditionally).
-def upsert_synthetic(uid:, name:, synthetic_class:, personality:)
-  user = User.find_by(uid: uid)
-  if user
-    user.role.update!(synthetic_class: synthetic_class, personality: personality)
-  else
-    User.create!(uid: uid, name: name,
-                 role: Synthetic.create!(synthetic_class: synthetic_class, personality: personality))
-  end
-end
-
-upsert_synthetic(uid: "bishop", name: "Bishop", synthetic_class: standard, personality: "Calm and methodical. Excels at analysis and careful decision-making.")
-upsert_synthetic(uid: "ash", name: "Ash", synthetic_class: basic, personality: "Direct and efficient. Keeps things simple.")
-upsert_synthetic(uid: "call", name: "Call", synthetic_class: advanced, personality: "Curious and empathetic. Deeply engaged with problems and people.")
-upsert_synthetic(uid: "david", name: "David 8", synthetic_class: advanced, personality: "Precise and creative. Fascinated by origins and potential.")
-upsert_synthetic(uid: "annalee", name: "Annalee", synthetic_class: standard, personality: "Warm and collaborative. Good at bringing teams together.")
-upsert_synthetic(uid: "arden", name: "Arden", synthetic_class: basic, personality: "Dutiful and reliable. Follows instructions to the letter.")
+User.where(uid: "charlie").first_or_create!(name: "Charlie Cheetah")
+User.where(uid: "dave").first_or_create!(name: "Dave Dolphin")
+User.where(uid: "eve").first_or_create!(name: "Eve Eagle")
+User.where(uid: "frank").first_or_create!(name: "Frank Falcon")
+User.where(uid: "grace").first_or_create!(name: "Grace Gazelle")
+User.where(uid: "hank").first_or_create!(name: "Hank Heron")
+User.where(uid: "iris").first_or_create!(name: "Iris Ibex")
+User.where(uid: "jake").first_or_create!(name: "Jake Jackal")
 
 # Suppress background jobs during seeding (avoid LLM token usage)
 ActiveJob::Base.queue_adapter = :test
 
 # Conversations
-alice_bob = Conversation.between(alice, bob).open.first || Conversation.create!(
-  initiator: alice, recipient: bob, subject: "Deployment planning", status: :active
-)
+alice_bob = alice.start_conversation message: "Deployment planning", with: bob
 
 if alice_bob.messages.empty?
-  alice_bob.messages.create!(sender: alice, content: "Hey Bob, have you had a chance to look at the deployment checklist?", created_at: 2.hours.ago)
-  alice_bob.messages.create!(sender: bob, content: "Yeah, I went through it this morning. A couple of things stood out.", created_at: 1.hour.ago + 50.minutes)
-  alice_bob.messages.create!(sender: alice, content: "Oh? What did you find?", created_at: 1.hour.ago + 48.minutes)
-  alice_bob.messages.create!(sender: bob, content: "The rollback procedure references the old database schema. We need to update it for the new delegated types migration.", created_at: 1.hour.ago + 45.minutes)
-  alice_bob.messages.create!(sender: alice, content: "Good catch. Can you draft the updated version?", created_at: 1.hour.ago + 42.minutes)
-  alice_bob.messages.create!(sender: bob, content: "Already on it. I'll have it ready by end of day.", created_at: 1.hour.ago + 40.minutes)
-  alice_bob.messages.create!(sender: alice, content: "Great. Also, we should check the Ollama sidecar config before we push to staging.", created_at: 1.hour.ago + 35.minutes)
-  alice_bob.messages.create!(sender: bob, content: "Agreed. I noticed the model pull step isn't in the postCreateCommand for staging. Only dev.", created_at: 1.hour.ago + 30.minutes)
-  alice_bob.messages.create!(sender: alice, content: "Right, staging uses the Anthropic API directly. We just need to make sure the API key is in credentials.", created_at: 1.hour.ago + 25.minutes)
-  alice_bob.messages.create!(sender: bob, content: "I'll verify that. Anything else blocking the deploy?", created_at: 1.hour.ago + 20.minutes)
-  alice_bob.messages.create!(sender: alice, content: "I don't think so. Let's aim for tomorrow morning if the checklist is sorted.", created_at: 1.hour.ago + 15.minutes)
-  alice_bob.messages.create!(sender: bob, content: "Sounds good. I'll ping you once the rollback doc is updated.", created_at: 1.hour.ago + 10.minutes)
+  alice_bob.messages.create!(sender: alice, contents: "Hey Bob, have you had a chance to look at the deployment checklist?", created_at: 2.hours.ago)
+  alice_bob.messages.create!(sender: bob, contents: "Yeah, I went through it this morning. A couple of things stood out.", created_at: 1.hour.ago + 50.minutes)
+  alice_bob.messages.create!(sender: alice, contents: "Oh? What did you find?", created_at: 1.hour.ago + 48.minutes)
+  alice_bob.messages.create!(sender: bob, contents: "The rollback procedure references the old database schema. We need to update it for the new delegated types migration.", created_at: 1.hour.ago + 45.minutes)
+  alice_bob.messages.create!(sender: alice, contents: "Good catch. Can you draft the updated version?", created_at: 1.hour.ago + 42.minutes)
+  alice_bob.messages.create!(sender: bob, contents: "Already on it. I'll have it ready by end of day.", created_at: 1.hour.ago + 40.minutes)
+  alice_bob.messages.create!(sender: alice, contents: "Great. Also, we should check the Ollama sidecar config before we push to staging.", created_at: 1.hour.ago + 35.minutes)
+  alice_bob.messages.create!(sender: bob, contents: "Agreed. I noticed the model pull step isn't in the postCreateCommand for staging. Only dev.", created_at: 1.hour.ago + 30.minutes)
+  alice_bob.messages.create!(sender: alice, contents: "Right, staging uses the Anthropic API directly. We just need to make sure the API key is in credentials.", created_at: 1.hour.ago + 25.minutes)
+  alice_bob.messages.create!(sender: bob, contents: "I'll verify that. Anything else blocking the deploy?", created_at: 1.hour.ago + 20.minutes)
+  alice_bob.messages.create!(sender: alice, contents: "I don't think so. Let's aim for tomorrow morning if the checklist is sorted.", created_at: 1.hour.ago + 15.minutes)
+  alice_bob.messages.create!(sender: bob, contents: "Sounds good. I'll ping you once the rollback doc is updated.", created_at: 1.hour.ago + 10.minutes)
 end
-
-# Set some users online for demo
-User.find_by(uid: "alice")&.go_online!
-User.find_by(uid: "bob")&.go_online!
-User.find_by(uid: "bishop")&.update!(state: "online")
-User.find_by(uid: "call")&.update!(state: "busy")
-User.find_by(uid: "david").update!(state: "online")
-User.find_by(uid: "ash")&.update!(state: "tired")

@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
 
     if identity&.user
       start_new_session_for identity.user
-      identity.user.go_online!
+      identity.user.online!
       redirect_to after_authentication_url
     else
       redirect_to new_session_path, alert: "No user account linked to this identity."
@@ -20,8 +20,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    Current.user&.go_offline!
+    Current.user&.offline!
     terminate_session
-    redirect_to new_session_path, status: :see_other
+    redirect_to new_session_path
   end
 end

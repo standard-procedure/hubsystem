@@ -6,6 +6,7 @@ class Conversation::Message < ApplicationRecord
   belongs_to :conversation, inverse_of: :messages
   belongs_to :sender, class_name: "User", inverse_of: :sent_messages
   validate :sender_belongs_to_conversation, if: -> { sender_id_changed? }
+  has_many :message_readings, dependent: :destroy
   has_attachments :attachments
 
   def to_s = excerpt

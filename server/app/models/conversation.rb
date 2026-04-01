@@ -9,6 +9,8 @@ class Conversation < ApplicationRecord
   has_many :messages, -> { eager_load(:sender, :attachments_attachments).order(Arel.sql("conversation_messages.created_at")) }, class_name: "Conversation::Message", dependent: :destroy
   enum :status, active: 0, archived: -1
 
+  scope :involving, ->(*users) { joins(participants: :user).where(participants: {user: users.flatten}) }
+
   def to_s = subject
   def to_param = "#{id}-#{subject}".parameterize
 
