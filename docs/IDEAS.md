@@ -70,3 +70,19 @@ The Superintendent should also have read access to process and resource informat
 - Act as a genuine supervisor-of-supervisors: async-service restarts crashed Synthetics automatically, but the Superintendent watches for degraded-but-not-crashed behaviour that automated restart can't catch
 
 This keeps operational visibility inside the same conversation/Governor/audit-trail system rather than requiring separate monitoring infrastructure.
+
+**Horizontal scaling model**
+
+The same sharding logic applies to `world/` containers. Because Synthetics communicate with `server/` exclusively via HTTP/WebSocket — no shared state, no shared database — multiple world containers can run simultaneously without coordination between them. Each world container runs some subset of Synthetics; each sandbox container pairs with one (or more) world containers and has its own Superintendent.
+
+```
+server/  (horizontally scaled Rails — stateless behind a load balancer)
+  │
+  ├── world-1  (Synthetics: Sid, Alice)  ←→  sandbox-1  (Superintendent-1)
+  ├── world-2  (Synthetics: Bob, Carol)  ←→  sandbox-2  (Superintendent-2)
+  └── world-N  ...
+```
+
+The key invariant that makes this work: `server/` is the only source of truth. All persistent state — conversations, tasks, memories, Governor events — lives there. World containers are stateless workers. A Synthetic can be moved between world containers (or restarted on a different host) by updating the service declaration; it re-establishes its WebSocket connection and carries on.
+
+This also means world containers can be sized independently of `server/` — more LLM-heavy workloads get bigger world containers; `server/` scales on request throughput instead.
