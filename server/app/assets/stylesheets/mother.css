@@ -579,6 +579,7 @@
       inset 0 0 60px hsla(142, 40%, 10%, 0.15),
       inset 0 0 120px hsla(0, 0%, 0%, 0.4),
       0 0 2px hsla(142, 50%, 30%, 0.1);
+    height: 100%;
   }
 
   .crt-screen::after {
@@ -1390,10 +1391,13 @@
       padding-right: 16px;
     }
     .crt-bezel {
-      padding: 8px;
+      padding: 64px 8px 48px;
     }
     .screen-content {
-      padding: 20px 16px 28px;
+      padding: 60px 16px 28px;
+    }
+    .nav-panel .nav-rail {
+      display: none;
     }
   }
 
@@ -1403,15 +1407,12 @@
       border-radius: 0;
     }
     .crt-bottom {
-      padding: 10px 12px 14px;
+      padding: 16px 12px 14px;
       border-radius: 0;
     }
     .crt-bezel {
-      padding: 4px;
-    }
-    .screen-content {
-      padding: 12px 8px 20px;
-    }
+      padding: 64px 8px 72px;
+    }    
     .crt-housing {
       border-radius: 0;
     }
