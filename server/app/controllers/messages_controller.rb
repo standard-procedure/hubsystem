@@ -1,6 +1,8 @@
 class MessagesController < ApplicationController
+  include Pagination
+
   def index
-    @unread_messages = Current.user.unread_messages
-    render Views::Messages::Index.new(user: Current.user, unread_messages: @unread_messages)
+    @messages = Current.user.messages.page(page_number)
+    render Views::Messages::Index.new(user: Current.user, messages: @messages, search: params[:search].to_s, params: params)
   end
 end

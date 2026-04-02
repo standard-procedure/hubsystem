@@ -9,6 +9,7 @@ class Components::StatusBar < Components::Slotted
     prop :state, OneOf(STATUSES.keys), default: :offline
     prop :label, _String?
     prop :contents, _Callable?
+    prop :href, _String?
 
     def dot_class = STATUSES[@state]
   end
@@ -18,8 +19,8 @@ class Components::StatusBar < Components::Slotted
     super
   end
 
-  def item(state: :offline, label: nil, &contents)
-    @items << Item.new(state:, label:, contents:)
+  def item(state: :offline, label: nil, href: nil, &contents)
+    @items << Item.new(state:, label:, href:, contents:)
   end
 
   def view_template
@@ -30,9 +31,9 @@ class Components::StatusBar < Components::Slotted
 
   private def render_item(item)
     if item.contents
-      render(Components::StatusItem.new(state: item.state), &item.contents)
+      render(Components::StatusItem.new(state: item.state, href: item.href), &item.contents)
     else
-      render Components::StatusItem.new(state: item.state, label: item.label)
+      render Components::StatusItem.new(state: item.state, href: item.href, label: item.label)
     end
   end
 end

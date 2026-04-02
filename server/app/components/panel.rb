@@ -4,9 +4,10 @@ class Components::Panel < Components::Base
   prop :title, _String?, default: nil
   prop :variant, OneOf(:default, :active, :warning, :alert), default: :default
   prop :controls, Integer, default: 3
+  prop :attributes, Hash, :**, default: {}.freeze
 
   def view_template(&)
-    div class: panel_classes do
+    div(**mix(class: ["panel", ("panel--#{@variant}" unless @variant == :default), @attributes.delete(:class)], **@attributees)) do
       render_header if @title
       div(class: "panel-body", &)
     end
@@ -19,11 +20,5 @@ class Components::Panel < Components::Base
         @controls.times { div(class: "panel-control") }
       end
     end
-  end
-
-  private def panel_classes
-    classes = ["panel"]
-    classes << "panel--#{@variant}" unless @variant == :default
-    classes.join(" ")
   end
 end

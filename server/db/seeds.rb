@@ -20,7 +20,7 @@ ActiveJob::Base.queue_adapter = :test
 # Conversations
 alice_bob = alice.start_conversation message: "Deployment planning", with: bob
 
-if alice_bob.messages.empty?
+if alice_bob.messages.size == 1
   alice_bob.messages.create!(sender: alice, contents: "Hey Bob, have you had a chance to look at the deployment checklist?", created_at: 2.hours.ago)
   alice_bob.messages.create!(sender: bob, contents: "Yeah, I went through it this morning. A couple of things stood out.", created_at: 1.hour.ago + 50.minutes)
   alice_bob.messages.create!(sender: alice, contents: "Oh? What did you find?", created_at: 1.hour.ago + 48.minutes)

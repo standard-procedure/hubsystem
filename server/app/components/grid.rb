@@ -15,6 +15,7 @@ class Components::Grid < Components::Slotted
 
     prop :value, String
     prop :color, _Nilable(OneOf(COLORS)), default: nil
+    prop :href, _String?
     prop :column_width, Integer, default: 1
   end
 
@@ -35,33 +36,24 @@ class Components::Grid < Components::Slotted
     cells = values.each_with_index.map do |value, i|
       col_width = @columns[i]&.width || 1
       if value.is_a?(Hash)
-        Cell.new(value: value[:value].to_s, color: value[:color], column_width: col_width)
+        Cell.new(value: value[:value].to_s, color: value[:color], href: value[:href], column_width: col_width)
       else
-        Cell.new(value: value.to_s, column_width: col_width)
+        Cell.new(value: value.to_s, href: value[:href], column_width: col_width)
       end
     end
     @rows << Row.new(cells: cells)
   end
 
   def view_template
-    style = "".dup
-    style << "max-height: #{@max_height};" if @max_height
-    attrs = {class: "grid-viewer"}
-    attrs[:style] = style if style.present?
-    attrs[:data_controller] = "scroll-anchor"
-    attrs[:data_scroll_anchor_position_value] = @scroll_to.to_s
-
-    div(**attrs) do
+    div(style: {max_height: @max_height}, data: {controller: "scroll-anchor", scroll_anchor_position_value: @scroll_to.to_s}) do
       render_header
-      div(class: "grid-body") do
+      div(class: %w[grid-body]) do
         @rows.each { |r| render_row(r) }
       end
     end
   end
 
-  private
-
-  def render_header
+  private def render_header
     div class: "grid-header" do
       @columns.each do |col|
         span(style: "flex: #{col.width}") { col.label }
@@ -69,13 +61,15 @@ class Components::Grid < Components::Slotted
     end
   end
 
-  def render_row(row)
+  private def render_row(row)
     div class: "grid-row" do
       row.cells.each do |cell|
-        css = ["grid-cell"]
-        css << "grid-cell--#{cell.color}" if cell.color
-        span(class: css.join(" "), style: "flex: #{cell.column_width}") { cell.value }
+        cell.href.blank? ? draw(cell) : draw_link_for(cell)
       end
     end
   end
+
+  private def draw(cell) = span(class: css_for(cell), style: {flex: cell.column_width}) { cell.value }
+  private def draw_link_for(cell) = a(href: cell.href, class: css_for(cell), style: {flex: cell.column_width}) { cell.value }
+  private def css_for(cell) = ["grid-cell", ("grid-cell--#{cell.color}" if cell.color)]
 end

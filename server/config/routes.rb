@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     resources :conversations, only: [:new, :create], controller: "user_conversations"
   end
 
+  resources :messages
   resources :conversations, only: [:index, :show, :new] do
     resources :messages, only: [:create], module: :conversations
     resource :acceptance, only: [:create], controller: "conversation_acceptances"
@@ -20,8 +21,6 @@ Rails.application.routes.draw do
     resource :completion, only: [:create], controller: "task_completions"
     resource :cancellation, only: [:create], controller: "task_cancellations"
   end
-
-  resources :messages, only: [:index]
 
   namespace :api do
     namespace :v1 do

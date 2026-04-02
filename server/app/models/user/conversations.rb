@@ -2,12 +2,12 @@ module User::Conversations
   extend ActiveSupport::Concern
 
   included do
-    has_many :sent_messages, -> { order :created_at }, class_name: "Conversation::Message", inverse_of: :sender, dependent: :destroy
+    has_many :sent_messages, -> { order(Arel.sql("conversation_messages.created_at desc")) }, class_name: "Conversation::Message", inverse_of: :sender, dependent: :destroy
     has_many :conversation_memberships, class_name: "Conversation::Participant", inverse_of: :user, dependent: :destroy
-    has_many :conversations, -> { order :created_at }, through: :conversation_memberships
-    has_many :messages, -> { order :created_at }, through: :conversations
+    has_many :conversations, -> { eager_load(participants: :user, messages: {message_readings: :user}).order "conversations.created_at desc" }, through: :conversation_memberships
+    has_many :messages, -> { eager_load(:conversation, message_readings: :user).order(Arel.sql("conversation_messages.created_at desc")) }, through: :conversations
     has_many :message_readings, class_name: "Conversation::MessageReading", dependent: :destroy
-    has_many :read_messages, -> { order :created_at }, through: :message_readings, source: :message
+    has_many :read_messages, -> { order(Arel.sql("conversation_messages.created_at desc")) }, through: :message_readings, source: :message
   end
 
   def unread_messages = messages.where.not(id: message_readings.pluck(:message_id)).order(:created_at)

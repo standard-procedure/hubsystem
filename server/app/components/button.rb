@@ -7,6 +7,7 @@ class Components::Button < Components::Base
   prop :tag, OneOf(:button, :a), default: :button
   prop :href, _String?, default: nil
   prop :disabled, _Boolean, default: false
+  prop :type, String, default: "submit"
   prop :attributes, Hash, :**, default: {}.freeze
 
   def view_template(&)
@@ -14,11 +15,7 @@ class Components::Button < Components::Base
   end
 
   private def render_link(&) = a(class: class_list, href: @href, **@attributes) { contents(&) }
-  private def render_button(&) = button(class: class_list, disabled: @disabled, **@attributes) { contents(&) }
+  private def render_button(&) = button(class: class_list, type: @type, disabled: @disabled, **@attributes) { contents(&) }
   private def contents(&rendering) = rendering&.call || plain(@label)
-  private def class_list
-    classes = ["btn", "btn-#{@variant}"]
-    classes << "btn-#{@size}" unless @size == :md
-    classes.join(" ")
-  end
+  private def class_list = ["btn", "btn-#{@variant}", ("btn-#{@size}" unless @size == :md)]
 end

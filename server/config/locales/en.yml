@@ -1,5 +1,14 @@
 ---
 en:
+  components:
+    search:
+      placeholder: Search
+      search: Search
+    messages_grid:
+      time: Time
+      from: From
+      subject: Subject 
+      message: Message
   application:
     dashboard: Dashboard
     logout: Power
@@ -11,6 +20,20 @@ en:
     title: HubSystem
     users: Users
   views:
+    conversations:
+      index:
+        inbox: Inbox 
+        conversations: Conversations
+        subject: Subject 
+        participants: People
+      show:
+        send_message: Send message 
+        send: Send
+    messages:
+      index:
+        inbox: Inbox 
+        conversations: Conversations
+        title: Inbox
     dashboard:
       show:
         unread_messages:

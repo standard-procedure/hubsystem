@@ -7,7 +7,7 @@ class Views::Sessions::New < Views::Base
   def view_template
     render Views::Layouts::Application.new(title: "HubSystem") do
       render_flash
-      render Components::Panel.new(title: "Authentication Required", variant: :active) do
+      render Components::Panel.new(title: "Authentication Required", variant: :active, class: %w[grow-1]) do
         Column do
           if Rails.env.local?
             Row justify: "end" do
@@ -21,9 +21,7 @@ class Views::Sessions::New < Views::Base
     end
   end
 
-  private
-
-  def render_flash
+  private def render_flash
     if flash[:alert].present?
       render Components::AlertBanner.new(variant: :critical) do
         plain flash[:alert]

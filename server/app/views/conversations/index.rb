@@ -2,57 +2,27 @@
 
 class Views::Conversations::Index < Views::Base
   prop :user, User
-  prop :conversations, _Any
-  prop :archived, _Boolean, default: false
+  prop :conversations, ActiveRecord::Relation(Conversation)
+  prop :search, String
+  prop :params, _Any
 
   def view_template
-    render Views::Layouts::Application.new(title: "Conversations", return_href: root_path, user: @user, active_nav: :messages) do
-      render Components::Panel.new(title: "Conversations") do
-        Navigation do |nav|
-          nav.item label: "Active", active: !@archived, href: conversations_path
-          nav.item label: "Archived", active: @archived, href: conversations_path(archived: true)
-        end
-
-        div class: "conversation-list" do
-          if @conversations.any?
-            @conversations.each { |conversation| render_conversation(conversation) }
-          else
-            p(class: "text-muted") { @archived ? "No archived conversations." : "No active conversations." }
+    render Views::Layouts::Application.new title: t(".title"), return_href: root_path, user: @user, nav_active: :messages, nav_alerts: [] do
+      Column justify: "between", class: %w[grow-1] do
+        Column do
+          Row justify: "between" do
+            StatusBar do |tabs|
+              tabs.item state: :offline, href: messages_path, label: t(".inbox")
+              tabs.item state: :online, href: conversations_path, label: t(".conversations")
+            end
+            Search url: conversations_path, search: @search
           end
+          ConversationsGrid user: @user, conversations: @conversations
         end
-
         Row justify: "end" do
-          Button label: "Find User", variant: :primary, tag: :a, href: users_path
+          Paginate records: @conversations, params: @params
         end
       end
-    end
-  end
-
-  private
-
-  def render_conversation(conversation)
-    css = ["conversation-item"]
-    css << "conversation-item--request" if conversation.requested? && conversation.recipient == @user
-    css << "conversation-item--unread" if conversation.has_unread_messages_for?(@user)
-
-    a href: conversation_path(conversation), class: css.join(" ") do
-      span(class: "conversation-subject") { conversation.subject }
-      span(class: "conversation-participant") { conversation.other_participant(@user).name }
-      span(class: "conversation-status") { conversation_status_label(conversation) }
-    end
-  end
-
-  def conversation_status_label(conversation)
-    if conversation.requested? && conversation.recipient == @user
-      "Pending request"
-    elsif conversation.requested?
-      "Awaiting response"
-    elsif conversation.closed?
-      "Closed"
-    elsif conversation.has_unread_messages_for?(@user)
-      "Unread"
-    else
-      "Active"
     end
   end
 end

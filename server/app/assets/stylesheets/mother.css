@@ -711,7 +711,6 @@
     animation: flash-alert 1.2s ease-in-out infinite;
   }
 
-
   .crt-label {
     font-family: var(--font-sans);
     font-size: 8px;
@@ -1172,6 +1171,10 @@
     color: var(--color-text-muted);
   }
 
+  .status-item:hover {
+    background: var(--color-screen-500);
+  }
+
   .status-dot {
     width: 6px;
     height: 6px;
@@ -1287,16 +1290,21 @@
   }
 
   .grid-row:nth-child(even) {
-    background: hsla(160, 8%, 9%, 0.6);
+    background: var(--color-screen-700);
   }
 
+  .grid-row:hover {
+    background: var(--color-screen-500);
+  }
+  
   .grid-cell {
     color: var(--color-text-secondary);
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: wrap;
+    font-size: 12px;
   }
-
+  
   .grid-cell--bright {
     color: var(--color-text-bright);
   }
