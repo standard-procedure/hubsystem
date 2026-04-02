@@ -308,3 +308,242 @@ end
 - Standard REST verbs — no custom actions like `PUT /conversations/:id/accept`
 - Easy to add confirmation pages via `GET new`
 - Clear authorisation boundaries per transition
+
+## Main Navigation Pattern
+
+`Components::MainNavigation` ([app/components/main_navigation.rb](../app/components/main_navigation.rb)) is the single source of truth for the application's top-level navigation. It holds the ordered list of locations and provides iterators used by both `CrtMonitor` (the navigation buttons on the bottom bezel) and `NavigationPanel` (the side-rail inside the screen).
+
+### LOCATIONS
+
+```ruby
+Components::MainNavigation::LOCATIONS = {
+  dashboard: :root_path,
+  messages:  :messages_path,
+  projects:  :root_path,
+  terminals: :root_path,
+  settings:  :root_path,
+}.freeze
+```
+
+Keys are `Symbol` names; values are route helper method names.
+
+### Iterating over locations
+
+```ruby
+Components::MainNavigation.each active: :messages, alerts: [:projects] do |name:, label:, href:, status:|
+  # name   — Symbol key  (:dashboard, :messages, …)
+  # label  — I18n string ("Dashboard", "Messages", …)
+  # href   — resolved URL string
+  # status — :active | :alert | :nominal
+end
+```
+
+`status` is `:active` when `name == active`, `:alert` when `name` is in `alerts`, otherwise `:nominal`.
+
+### Type constraints
+
+The module exposes two type-constraint methods used by component props:
+
+```ruby
+prop :active, Components::MainNavigation.Location   # OneOf(LOCATIONS.keys) — a single symbol
+prop :alerts, Components::MainNavigation.Locations  # SomeOf(*LOCATIONS.keys) — an array of symbols
+```
+
+### Adding a new location
+
+1. Add an entry to `LOCATIONS` in `main_navigation.rb`
+2. Add a route helper for it in `config/routes.rb`
+3. Add an I18n key `application.<name>` in `config/locales/en.yml` (run `yaml-sort -i config/locales/*.yml` afterwards)
+
+### CrtMonitor and NavigationPanel
+
+`CrtMonitor` accepts `active:` and `alerts:` props and passes them both to the bottom bezel buttons and to `NavigationPanel`:
+
+```ruby
+Components::CrtMonitor.new(active: :messages, alerts: [:projects])
+```
+
+`NavigationPanel` renders the side rail inside the screen and also accepts `active:` and `alerts:`.
+
+## Internationalisation
+
+All user-visible strings must go through I18n. Never hardcode display text in components or views.
+
+### Always use `t()`
+
+```ruby
+# In a Phlex component (Components::Base includes Phlex::Rails::Helpers::T)
+t("application.logout")      # => "Power"
+t("views.dashboard.show.unread_messages", count: 3)
+```
+
+### Key conventions
+
+Top-level keys under `en:`:
+
+| Namespace | Purpose |
+|-----------|---------|
+| `application.*` | Shared UI labels (navigation, actions, titles) |
+| `views.<controller>.<action>.*` | Strings specific to a single view |
+
+### Adding new strings
+
+1. Add the key to `config/locales/en.yml`
+2. Run `yaml-sort -i config/locales/en.yml` to keep the file alphabetically sorted
+3. Reference via `t("...")` — never interpolate raw strings into templates
+
+## Type Safety
+
+HubSystem uses [Literal](https://literal.fun) for typed component props, with project-specific extensions.
+
+### Literal built-in types
+
+Common types available in any `Phlex::HTML` subclass (via `extend Literal::Properties`):
+
+```ruby
+prop :name,     String              # required String
+prop :label,    _String?            # nilable String
+prop :count,    Integer, default: 0 # Integer with default
+prop :active,   _Boolean            # true or false
+prop :callback, _Callable           # anything that responds to #call
+prop :anything, _Any?               # unconstrained, nilable
+```
+
+See [Literal's built-in types](https://literal.fun/docs/built-in-types.html) for the full list.
+
+### Components::Types — project extensions
+
+`Components::Types` (included in `Components::Base`) adds two constraint builders:
+
+```ruby
+prop :size,    OneOf(:sm, :md, :lg)               # exactly one of these symbols
+prop :targets, SomeOf(:users, :groups, :bots)     # an array containing only these symbols
+```
+
+`OneOf` and `SomeOf` return procs used with `===` — they work as Literal type constraints and also with `_check`.
+
+### HasTypeChecks — runtime assertions
+
+`HasTypeChecks` provides `_check` for validating values at module boundaries:
+
+```ruby
+include HasTypeChecks
+
+def self.some_method(value, kind:)
+  _check value, is: _String?       # nilable string
+  _check kind,  is: OneOf(:a, :b)  # symbol constraint
+end
+```
+
+Use `_check` in module-level methods and service objects, especially when accepting values from external callers. Component props are already validated by Literal on initialisation.
+
+## Status Displays
+
+Status is represented as a coloured dot (`.status-dot`) paired with a label. Two components handle this.
+
+### StatusItem
+
+A single dot + label:
+
+```ruby
+Components::StatusItem.new(state: :online, label: "Alice")
+Components::StatusItem.new(state: :alert) { "Bob (unread)" }
+```
+
+| state | colour |
+|-------|--------|
+| `:offline` | dark (grey) |
+| `:online` | green |
+| `:alert` | blue (cryo) |
+| `:warning` | amber |
+| `:critical` | red |
+
+### StatusBar
+
+Groups multiple status items with a builder API:
+
+```ruby
+render Components::StatusBar.new do |bar|
+  bar.item state: :online,  label: "Alice"
+  bar.item state: :warning, label: "Bob"
+  bar.item state: :alert  do
+    a(href: inbox_path) { "Charlie (3 unread)" }
+  end
+end
+```
+
+### HasStatusBadge
+
+The `HasStatusBadge` concern adds a `status_badge` enum to any model:
+
+```ruby
+include HasStatusBadge
+# Adds: enum :status_badge, offline: 0, online: 10, alert: 20, warning: 30, critical: 50
+```
+
+Rails enums return strings (e.g. `"online"`). When passing to a Literal/Phlex prop that expects a symbol, call `.to_sym`:
+
+```ruby
+StatusItem(state: user.status_badge.to_sym)
+```
+
+## CSS Classes as Arrays in Phlex
+
+Phlex accepts an `Array` for the `class:` attribute — it compacts the array and joins with spaces. Use this for conditional classes:
+
+```ruby
+a href: href,
+  class: [
+    "crt-button",
+    ("crt-button--active" if active),
+    ("crt-button--alert"  if alert),
+  ]
+```
+
+`nil` entries (from false conditions) are dropped automatically. No ternaries or string interpolation needed.
+
+### mix helper
+
+When merging caller-supplied classes with component defaults, use `mix`:
+
+```ruby
+div(mix({ class: "status-bar" }, @html_attrs))
+```
+
+`mix` concatenates `class` values rather than overwriting them. Use the bang form (`class!:`) to force-override instead of merge.
+
+## Concerns and Background Jobs Organisation
+
+### Cross-cutting concerns
+
+Concerns that apply to many models live in `app/models/concerns/`:
+
+- `HasStatusBadge` — adds `status_badge` enum
+- `HasTags` — tagging support
+- `HasAttachments` — Active Storage attachments
+- `HasEmbeddings` — pgvector embedding generation
+- `HasTypeChecks` — runtime type assertion helper
+
+### Background jobs nested inside concerns
+
+When a job is tightly coupled to one concern and has no use outside it, nest the job class inside the concern:
+
+```ruby
+module HasEmbeddings
+  extend ActiveSupport::Concern
+  # … concern logic …
+
+  class GenerateEmbedding < ApplicationJob
+    def perform(object)
+      _check object, is: HasEmbeddings
+      object.update_columns embedding: Embedding.new(text: object.embeddable_text).vectors
+    end
+  end
+end
+```
+
+This keeps the job co-located with the behaviour that triggers it. Jobs with broader use (e.g. sending emails) live in `app/jobs/` as usual.
+
+### Model-specific concerns
+
+Concerns used by only one model can live alongside it or inline in the model file. Prefer a separate file only if the concern is large enough to warrant it.

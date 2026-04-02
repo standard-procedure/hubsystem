@@ -69,6 +69,17 @@ devcontainer exec --workspace-folder . bash -c "mise exec -- ruby bin/rspec"
 
 Always prefer the login shell form (`bash -l`) — it is simpler and picks up the correct Ruby version automatically.
 
+### Running from the host via docker exec
+
+`devcontainer exec` with `bash -l` may not activate mise when invoked from the host (the login profile doesn't fire). If that happens, use `docker exec` directly and prepend mise's bin directory to PATH explicitly:
+
+```
+docker exec -u vscode hubsystem-dev-1 bash -c \
+  "export PATH=\"/home/vscode/.local/bin:\$PATH\" && cd /workspaces/hubsystem/server && mise exec -- bin/rspec"
+```
+
+The container name is `hubsystem-dev-1` (verify with `docker ps`). The `mise exec --` prefix activates the correct Ruby version before running the command.
+
 ## Shared Conventions
 
 - Ruby version: managed by mise, see `.ruby-version`

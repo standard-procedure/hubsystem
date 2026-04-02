@@ -2,7 +2,7 @@
 
 class Components::Panel < Components::Base
   prop :title, _String?, default: nil
-  prop :variant, Enum(:default, :active, :warning, :alert), default: :default
+  prop :variant, OneOf(:default, :active, :warning, :alert), default: :default
   prop :controls, Integer, default: 3
 
   def view_template(&)

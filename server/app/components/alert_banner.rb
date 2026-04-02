@@ -3,7 +3,7 @@
 class Components::AlertBanner < Components::Base
   DEFAULT_ICONS = {critical: "\u25B2", warning: "\u25B2", info: "\u25CF", success: "\u2713"}.freeze
 
-  prop :variant, Enum(:critical, :warning, :info, :success), default: :info
+  prop :variant, OneOf(:critical, :warning, :info, :success), default: :info
   prop :icon, _String?, default: nil
 
   def view_template(&)

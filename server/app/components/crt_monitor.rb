@@ -4,23 +4,24 @@ class Components::CrtMonitor < Components::Base
   prop :title, String, default: "HubSystem"
   prop :return_href, _String?, default: nil
   prop :user, _Any?, default: nil
-  prop :active_nav, Enum(:dashboard, :messages, :users, :system), default: :dashboard
+  prop :active, MainNavigation.Location, default: :dashboard
+  prop :alerts, MainNavigation.Locations, default: [].freeze
 
   def view_template(&)
     div class: "crt-housing" do
       render_top
       div class: "crt-bezel" do
         div class: "crt-screen" do
-          main(class: "screen-content", &)
+          main(class: "screen-content") do
+            NavigationPanel(active: @active, alerts: @alerts, &)
+          end
         end
       end
       render_bottom
     end
   end
 
-  private
-
-  def render_top
+  private def render_top
     div class: "crt-top" do
       div class: "crt-top-inner" do
         div class: "crt-brand-group" do
@@ -34,7 +35,7 @@ class Components::CrtMonitor < Components::Base
         if @user
           a href: logout_path, class: "crt-badge", data_turbo_method: :delete do
             div class: "crt-badge-led"
-            span(class: "crt-badge-text") { "Power" }
+            span(class: "crt-badge-text") { t("application.logout") }
           end
         end
       end
@@ -44,24 +45,13 @@ class Components::CrtMonitor < Components::Base
     end
   end
 
-  def nav_knob(name, label, href = nil)
-    css = "crt-knob"
-    css += " crt-knob--power" if @active_nav == name
-    if href
-      a(href: href, class: css, title: label)
-    else
-      div(class: css, title: label)
-    end
-  end
-
-  def render_bottom
+  private def render_bottom
     div class: "crt-bottom" do
       div class: "crt-bottom-inner" do
         div class: "crt-controls" do
-          nav_knob :dashboard, "Dashboard", root_path
-          nav_knob :messages, "Messages", conversations_path
-          nav_knob :users, "Users", users_path
-          nav_knob :system, "System", tasks_path
+          MainNavigation.each active: @active, alerts: @alerts do |name:, label:, href:, status:|
+            a href: href, class: ["crt-button", ("crt-button--active" if status == :active), ("crt-button--alert" if status == :alert)], title: label
+          end
         end
         div class: "crt-nameplate" do
           span(class: "crt-nameplate-text") { "MU/TH/UR 6000" }

@@ -93,70 +93,55 @@ RSpec.describe Components::CrtMonitor, type: :component do
       expect(badge).to be_present
       expect(badge["href"]).to eq("/logout")
       expect(badge.at_css(".crt-badge-led")).to be_present
-      expect(badge.at_css(".crt-badge-text").text).to eq("Power")
+      expect(badge.at_css(".crt-badge-text").text).to eq(I18n.t("application.logout"))
     end
   end
 
-  describe "navigation knobs" do
-    it "renders four navigation knobs" do
+  describe "navigation buttons" do
+    it "renders one button per navigation location" do
       html = render_fragment(described_class.new)
 
-      expect(html.css(".crt-controls .crt-knob").length).to eq(4)
+      expect(html.css(".crt-controls .crt-button").length).to eq(Components::MainNavigation::LOCATIONS.size)
     end
 
-    it "renders Dashboard and Messages as links" do
+    it "renders all navigation labels as button titles" do
       html = render_fragment(described_class.new)
-      knobs = html.css(".crt-controls .crt-knob")
+      titles = html.css(".crt-controls .crt-button").map { |b| b["title"] }
 
-      expect(knobs[0].name).to eq("a")
-      expect(knobs[0]["title"]).to eq("Dashboard")
-      expect(knobs[0]["href"]).to eq("/")
-
-      expect(knobs[1].name).to eq("a")
-      expect(knobs[1]["title"]).to eq("Messages")
-      expect(knobs[1]["href"]).to eq("/conversations")
+      expect(titles).to eq(["Dashboard", "Messages", "Projects", "Terminals", "Settings"])
     end
 
-    it "renders Users as a link" do
+    it "renders the dashboard button as the first link pointing to root" do
       html = render_fragment(described_class.new)
-      knobs = html.css(".crt-controls .crt-knob")
+      first = html.css(".crt-controls .crt-button").first
 
-      expect(knobs[2].name).to eq("a")
-      expect(knobs[2]["title"]).to eq("Users")
-      expect(knobs[2]["href"]).to eq("/users")
+      expect(first.name).to eq("a")
+      expect(first["title"]).to eq("Dashboard")
+      expect(first["href"]).to eq("/")
     end
 
-    it "renders System as a link to tasks" do
+    it "marks the dashboard button as active by default" do
       html = render_fragment(described_class.new)
-      knobs = html.css(".crt-controls .crt-knob")
+      buttons = html.css(".crt-controls .crt-button")
 
-      expect(knobs[3].name).to eq("a")
-      expect(knobs[3]["title"]).to eq("System")
-      expect(knobs[3]["href"]).to eq("/tasks")
+      expect(buttons[0]["class"]).to include("crt-button--active")
+      expect(buttons[1]["class"]).not_to include("crt-button--active")
     end
 
-    it "highlights the dashboard knob by default" do
-      html = render_fragment(described_class.new)
-      knobs = html.css(".crt-controls .crt-knob")
+    it "marks the specified button as active" do
+      html = render_fragment(described_class.new(active: :messages))
+      buttons = html.css(".crt-controls .crt-button")
 
-      expect(knobs[0]["class"]).to include("crt-knob--power")
-      expect(knobs[1]["class"]).not_to include("crt-knob--power")
-      expect(knobs[2]["class"]).not_to include("crt-knob--power")
+      expect(buttons[0]["class"]).not_to include("crt-button--active")
+      expect(buttons[1]["class"]).to include("crt-button--active")
     end
 
-    it "highlights the messages knob when active_nav is messages" do
-      html = render_fragment(described_class.new(active_nav: :messages))
-      knobs = html.css(".crt-controls .crt-knob")
+    it "marks specified buttons as alerts" do
+      html = render_fragment(described_class.new(alerts: [:messages]))
+      buttons = html.css(".crt-controls .crt-button")
 
-      expect(knobs[0]["class"]).not_to include("crt-knob--power")
-      expect(knobs[1]["class"]).to include("crt-knob--power")
-    end
-
-    it "highlights the system knob when active_nav is system" do
-      html = render_fragment(described_class.new(active_nav: :system))
-      knobs = html.css(".crt-controls .crt-knob")
-
-      expect(knobs[3]["class"]).to include("crt-knob--power")
+      expect(buttons[1]["class"]).to include("crt-button--alert")
+      expect(buttons[0]["class"]).not_to include("crt-button--alert")
     end
   end
 end

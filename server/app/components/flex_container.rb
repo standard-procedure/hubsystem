@@ -28,9 +28,9 @@ class Components::FlexContainer < Components::Base
     13 => "gap-13", 14 => "gap-14", 15 => "gap-15", 16 => "gap-16"
   }.freeze
 
-  prop :justify, Enum(*JUSTIFY.keys), default: "start"
-  prop :align, Enum(*ALIGN.keys), default: "stretch"
-  prop :gap, Enum(*GAP.keys), default: 2
+  prop :justify, OneOf(*JUSTIFY.keys), default: "start"
+  prop :align, OneOf(*ALIGN.keys), default: "stretch"
+  prop :gap, OneOf(*GAP.keys), default: 2
   prop :attributes, Hash, :**, default: {}.freeze
 
   def view_template(&)

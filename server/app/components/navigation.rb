@@ -5,12 +5,13 @@ class Components::Navigation < Components::Slotted
     extend Components::Types
 
     prop :active, _Boolean, default: false
+    prop :alert, _Boolean, default: false
     prop :icon, _String?, default: "\u25CF"
     prop :label, String, default: ""
     prop :href, _String?
     prop :attributes, Hash, :**, default: {}.freeze
 
-    def item_class = @active ? %w[nav-item nav-item--active] : %w[nav-item]
+    def item_class = ["nav-item", ("nav-item--active" if @active), ("nav-item--alert" if @alert)]
   end
 
   def initialize(...)
@@ -18,8 +19,8 @@ class Components::Navigation < Components::Slotted
     super
   end
 
-  def item(active: false, icon: "\u25CF", label: "", href: nil, **attributes)
-    @items << Item.new(active:, icon:, label:, href:, attributes:)
+  def item(active: false, alert: false, icon: "\u25CF", label: "", href: nil, **attributes)
+    @items << Item.new(active:, alert:, icon:, label:, href:, attributes:)
   end
 
   def view_template

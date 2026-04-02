@@ -19,8 +19,8 @@ class Components::Switcher < Components::FlexContainer
     "stretch" => "@md:items-stretch",
     "baseline" => "@md:items-baseline"
   }.freeze
-  prop :justify_md, Enum(*JUSTIFY_MD.keys), default: "between"
-  prop :align_md, Enum(*ALIGN_MD.keys), default: "start"
+  prop :justify_md, OneOf(*JUSTIFY_MD.keys), default: "between"
+  prop :align_md, OneOf(*ALIGN_MD.keys), default: "start"
 
   def view_template(&)
     div(class: "@container") do

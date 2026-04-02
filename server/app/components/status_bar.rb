@@ -6,7 +6,7 @@ class Components::StatusBar < Components::Slotted
 
     STATUSES = {critical: "status-dot--red", warning: "status-dot--amber", alert: "status-dot--blue", online: "status-dot--green", offline: "status-dot--dark"}.freeze
 
-    prop :state, Enum(STATUSES.keys), default: :offline
+    prop :state, OneOf(STATUSES.keys), default: :offline
     prop :label, _String?
     prop :contents, _Callable?
 

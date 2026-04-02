@@ -3,7 +3,7 @@
 class Components::StatusItem < Components::Base
   STATUSES = {critical: "status-dot--red", warning: "status-dot--amber", alert: "status-dot--blue", online: "status-dot--green", offline: "status-dot--dark"}.freeze
 
-  prop :state, Enum(STATUSES.keys), default: :offline
+  prop :state, OneOf(STATUSES.keys), default: :offline
   prop :label, _String?, default: nil
 
   def view_template(&block)

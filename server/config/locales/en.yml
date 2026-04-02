@@ -1,4 +1,15 @@
+---
 en:
+  application:
+    dashboard: Dashboard
+    logout: Power
+    messages: Messages
+    projects: Projects
+    settings: Settings
+    system: System 
+    terminals: Terminals
+    title: HubSystem
+    users: Users
   views:
     dashboard:
       show:

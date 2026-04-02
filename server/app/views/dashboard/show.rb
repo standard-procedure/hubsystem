@@ -6,30 +6,24 @@ class Views::Dashboard::Show < Views::Base
   prop :all_users, ActiveRecord::Relation(User)
 
   def view_template
-    render Views::Layouts::Application.new(title: "HubSystem", user: @user) do
-      div class: %w[flex flex-row] do
-        Navigation do |nav|
-          nav.item active: true, label: "Dashboard", href: root_path
-          nav.item label: "Messages", href: messages_path
-        end
-        Column justify: "between", class: %w[grow-1] do
-          SystemPanel(title: "Welcome back #{@user}", subtitle: "Human \u2194 Agent Interface Protocol") do
-            Terminal do |terminal|
-              terminal.bright_line { "HUBSYSTEM INTERFACE TERMINAL v1.0" }
-              terminal.line { "MU/TH/UR 6000 BIOS rev 4.2.1" }
-              terminal.line { unread_message_label }
-              terminal.bright_line do
-                plain "SYSTEM READY"
-                span(class: "cursor")
-              end
+    render Views::Layouts::Application.new(title: t("application.title"), user: @user, nav_active: :dashboard) do
+      Column justify: "between", class: %w[grow-1] do
+        SystemPanel(title: "Welcome back #{@user}", subtitle: "Human \u2194 Agent Interface Protocol") do
+          Terminal do |terminal|
+            terminal.bright_line { "HUBSYSTEM INTERFACE TERMINAL v1.0" }
+            terminal.line { "MU/TH/UR 6000 BIOS rev 4.2.1" }
+            terminal.line { unread_message_label }
+            terminal.bright_line do
+              plain "SYSTEM READY"
+              span(class: "cursor")
             end
           end
+        end
 
-          Panel(title: "Messages") do
-            Row justify: "between" do
-              StatusItem(state: unread_message_state, label: unread_message_label)
-              UserActivityMatrix(users: @all_users)
-            end
+        Panel(title: t("application.messages")) do
+          Row justify: "between" do
+            StatusItem(state: unread_message_state, label: unread_message_label)
+            UserActivityMatrix(users: @all_users)
           end
         end
       end

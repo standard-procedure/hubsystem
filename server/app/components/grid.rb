@@ -14,7 +14,7 @@ class Components::Grid < Components::Slotted
     extend Components::Types
 
     prop :value, String
-    prop :color, _Nilable(Enum(COLORS)), default: nil
+    prop :color, _Nilable(OneOf(COLORS)), default: nil
     prop :column_width, Integer, default: 1
   end
 
@@ -24,7 +24,7 @@ class Components::Grid < Components::Slotted
 
   prop :columns, _Any
   prop :max_height, _Nilable(String), default: nil
-  prop :scroll_to, Enum(:last, :first), default: :last
+  prop :scroll_to, OneOf(:last, :first), default: :last
 
   def initialize(...)
     @rows = []

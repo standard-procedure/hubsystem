@@ -221,12 +221,11 @@ end
 
 ## Rails Helpers
 
-**Never** `include` Rails helper modules directly — they can override core Phlex methods.
+**Never** `include` Rails helper modules directly — they can override core Phlex methods.  Instead use `include Phlex::Rails::Helpers::HELPER_NAME` (for example, FormWith for the `form_with` helper).
 
 ### Base Component
 
 Route Helpers and `dom_id` are automatically included in the [base class](app/components/base.rb), as are several common Rails helper modules.  
-
 
 ### Custom helpers
 
@@ -248,8 +247,8 @@ The module is included in the [base class](app/components/base.rb), with a rich 
 ```ruby
 class Components::Button < Components::Base
   # Enum is an extended type
-  Size = Enum(:sm, :md, :lg)
-  Variant = Enum(:primary, :secondary, :danger, :ghost)
+  Size = OneOf(:sm, :md, :lg)
+  Variant = OneOf(:primary, :secondary, :danger, :ghost)
 
   prop :label, String
   prop :size, Size, default: :md

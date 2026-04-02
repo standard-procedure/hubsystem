@@ -2,9 +2,9 @@
 
 class Components::Button < Components::Base
   prop :label, _String?, default: nil
-  prop :variant, Enum(:primary, :secondary, :danger, :ghost), default: :primary
-  prop :size, Enum(:sm, :md, :lg), default: :md
-  prop :tag, Enum(:button, :a), default: :button
+  prop :variant, OneOf(:primary, :secondary, :danger, :ghost), default: :primary
+  prop :size, OneOf(:sm, :md, :lg), default: :md
+  prop :tag, OneOf(:button, :a), default: :button
   prop :href, _String?, default: nil
   prop :disabled, _Boolean, default: false
   prop :attributes, Hash, :**, default: {}.freeze

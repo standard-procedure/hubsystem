@@ -2,9 +2,10 @@
 
 class Components::Base < Phlex::HTML
   extend Literal::Properties
-  extend Components::Types
+  include Components::Types
   include ActionView::RecordIdentifier
   include Phlex::Rails::Helpers::Routes
+  include Phlex::Rails::Helpers::T
   include Phlex::Rails::Helpers::L
 
   if Rails.env.development?

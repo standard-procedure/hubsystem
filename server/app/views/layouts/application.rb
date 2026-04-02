@@ -9,13 +9,18 @@ class Views::Layouts::Application < Views::Base
   include Phlex::Rails::Helpers::ClassNames
   include Phlex::Rails::Helpers::ImageTag
 
+  prop :lang, String, default: "en"
+  prop :head, _Callable?
+
   prop :title, String
   prop :subtitle, String, default: ""
   prop :return_href, _String?, default: nil
+
   prop :user, _Any?, default: nil
-  prop :active_nav, Enum(:dashboard, :messages, :users, :system), default: :dashboard
-  prop :lang, String, default: "en"
-  prop :head, _Callable?
+
+  prop :nav_active, MainNavigation.Location, default: :dashboard
+  prop :nav_alerts, MainNavigation.Locations, default: [].freeze
+
   prop :attributes, Hash, :**, default: {}.freeze
 
   def view_template(&)
@@ -23,7 +28,7 @@ class Views::Layouts::Application < Views::Base
     html(lang: @lang) do
       head { render_head }
       body do
-        render Components::CrtMonitor.new(title: @title, return_href: @return_href, user: @user, active_nav: @active_nav), &
+        render Components::CrtMonitor.new(title: @title, return_href: @return_href, user: @user, active: @nav_active, alerts: @nav_alerts), &
       end
     end
   end

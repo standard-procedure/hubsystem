@@ -6,7 +6,7 @@ class Components::StatusMatrix < Components::Slotted
 
     STATUSES = {critical: "matrix-cell--red", warning: "matrix-cell--amber", alert: "matrix-cell--blue", online: "matrix-cell--green", offline: "matrix-cell--dark"}.freeze
 
-    prop :state, Enum(STATUSES.keys), default: :online
+    prop :state, OneOf(STATUSES.keys), default: :online
     prop :href, _String?
     prop :attributes, Hash, :**, default: {}.freeze
 

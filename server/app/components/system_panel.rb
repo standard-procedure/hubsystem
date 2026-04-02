@@ -7,7 +7,7 @@ class Components::SystemPanel < Components::Base
   prop :subtitle, String, default: ""
   prop :header_text, String, default: "HubSystem"
   prop :header_status_text, String, default: -> { I18n.l Time.current, format: :short }
-  prop :header_status, Enum(STATUSES.keys), default: :online
+  prop :header_status, OneOf(STATUSES.keys), default: :online
 
   def view_template(&content)
     div class: "sys-header" do
