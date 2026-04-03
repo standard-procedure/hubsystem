@@ -2,6 +2,7 @@ class Conversation::Message < ApplicationRecord
   include HasTags
   include HasAttachments
   include HasStatusBadge
+  include HasNotifications
 
   belongs_to :conversation, inverse_of: :messages
   delegate :participants, to: :conversation
@@ -21,6 +22,9 @@ class Conversation::Message < ApplicationRecord
   def send_reply sender:, contents:, status_badge: :online, attachments: []
     conversation.send_message sender:, contents:, status_badge:, attachments:
   end
+
+  def notification_recipients = conversation.users
+  def notification_payload = {conversation_id: conversation_id, message_id: id}
 
   private def sender_belongs_to_conversation
     errors.add :sender, :invalid unless conversation.users.include? sender
