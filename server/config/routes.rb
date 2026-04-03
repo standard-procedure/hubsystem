@@ -5,7 +5,6 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index, :show] do
     resources :notes, only: [:new, :create, :edit, :update, :destroy]
-    resources :conversations, only: [:new, :create], controller: "user_conversations"
   end
 
   resources :messages
@@ -19,9 +18,6 @@ Rails.application.routes.draw do
       resources :messages, only: [:index, :show]
       resources :conversations, only: [:index, :show, :create] do
         resources :messages, only: [:index, :create], controller: "conversations/messages"
-        resource :acceptance, only: [:create], controller: "conversation_acceptances"
-        resource :rejection, only: [:create], controller: "conversation_rejections"
-        resource :closure, only: [:create], controller: "conversation_closures"
       end
 
       resources :tasks, only: [:index, :show, :create] do
