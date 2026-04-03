@@ -480,6 +480,8 @@
   .crt-brand-group {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    flex: 1;
   }
 
   .crt-back {
@@ -489,6 +491,7 @@
     margin-right: 8px;
     opacity: 0.6;
     transition: opacity 0.15s;
+    flex-shrink: 0;
   }
 
   .crt-back:hover {
@@ -502,6 +505,8 @@
     letter-spacing: 0.25em;
     text-transform: uppercase;
     text-decoration: none;
+    text-align: center;
+    flex-grow: 1;
   }
 
   .crt-model {
@@ -1209,8 +1214,9 @@
 
   /* ---- Status Matrix ---- */
   .status-matrix {
-    display: grid;
-    grid-template-columns: repeat(8, 14px);
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(16, 14px);
     gap: 3px;
   }
   .matrix-cell {

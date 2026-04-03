@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-class Components::ConversationsGrid < Components::Base
+class Components::Messages::ConversationsGrid < Components::Base
   prop :user, User
   prop :conversations, ActiveRecord::Relation(Conversation)
 
   def view_template
     Grid(
       columns: [
-        Components::Grid::Column.new(label: t(".subject"), width: 2),
-        Components::Grid::Column.new(label: t(".participants"), width: 1)
+        Components::Grid::Column.new(label: Conversation.an(:subject), width: 2),
+        Components::Grid::Column.new(label: Conversation.an(:participants), width: 1)
       ],
       max_height: "400px"
     ) do |grid|

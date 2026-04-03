@@ -4,6 +4,7 @@ class Conversation::Message < ApplicationRecord
   include HasStatusBadge
 
   belongs_to :conversation, inverse_of: :messages
+  delegate :participants, to: :conversation
   belongs_to :sender, class_name: "User", inverse_of: :sent_messages
   validate :sender_belongs_to_conversation, if: -> { sender_id_changed? }
   has_many :message_readings, dependent: :destroy

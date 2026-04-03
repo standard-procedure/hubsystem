@@ -11,15 +11,7 @@ Rails.application.routes.draw do
   resources :messages
   resources :conversations, only: [:index, :show, :new] do
     resources :messages, only: [:create], module: :conversations
-    resource :acceptance, only: [:create], controller: "conversation_acceptances"
-    resource :rejection, only: [:create], controller: "conversation_rejections"
     resource :closure, only: [:new, :create], controller: "conversation_closures"
-  end
-
-  resources :tasks, only: [:index, :show, :new, :create] do
-    resource :assignment, only: [:update], controller: "task_assignments"
-    resource :completion, only: [:create], controller: "task_completions"
-    resource :cancellation, only: [:create], controller: "task_cancellations"
   end
 
   namespace :api do

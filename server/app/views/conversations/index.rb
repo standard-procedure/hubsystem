@@ -7,17 +7,14 @@ class Views::Conversations::Index < Views::Base
   prop :params, _Any
 
   def view_template
-    render Views::Layouts::Application.new title: t(".title"), return_href: root_path, user: @user, nav_active: :messages, nav_alerts: [] do
+    render Views::Layouts::Application.new title: ::Conversation.pn, return_href: messages_path, user: @user, nav_active: :messages, nav_alerts: [] do
       Column justify: "between", class: %w[grow-1] do
         Column do
           Row justify: "between" do
-            StatusBar do |tabs|
-              tabs.item state: :offline, href: messages_path, label: t(".inbox")
-              tabs.item state: :online, href: conversations_path, label: t(".conversations")
-            end
+            Messages::TabBar user: @user, active: :conversations
             Search url: conversations_path, search: @search
           end
-          ConversationsGrid user: @user, conversations: @conversations
+          Messages::ConversationsGrid user: @user, conversations: @conversations
         end
         Row justify: "end" do
           Paginate records: @conversations, params: @params

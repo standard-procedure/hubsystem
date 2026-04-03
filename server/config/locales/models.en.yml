@@ -1,0 +1,30 @@
+---
+en:
+  activerecord:
+    attributes:
+      conversation/messages:
+        attachments: Attachments 
+        close_conversation: Close
+        created_at: Sent at
+        excerpt: Excerpt
+        inbox: Inbox 
+        read: Read 
+        send_message: Send
+        sender: Sender 
+        unread: Unread
+      conversation:
+        add_participant: Add
+        archive: Archive
+        participants: People
+        remove_participant: Remove
+        status:
+          active: Active
+          archived: Archived 
+        subject: Subject
+    models:
+      conversation/message:
+        one: Message 
+        other: Messages
+      conversation:
+        one: Conversation
+        other: Conversations

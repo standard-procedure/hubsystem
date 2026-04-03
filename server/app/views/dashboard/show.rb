@@ -20,7 +20,7 @@ class Views::Dashboard::Show < Views::Base
           end
         end
 
-        Panel(title: t("application.messages")) do
+        Panel(title: Conversation::Message.pn) do
           Row justify: "between" do
             StatusItem(state: unread_message_state, label: unread_message_label)
             UserActivityMatrix(users: @all_users)

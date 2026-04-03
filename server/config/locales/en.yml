@@ -1,14 +1,5 @@
 ---
 en:
-  components:
-    search:
-      placeholder: Search
-      search: Search
-    messages_grid:
-      time: Time
-      from: From
-      subject: Subject 
-      message: Message
   application:
     dashboard: Dashboard
     logout: Power
@@ -19,21 +10,24 @@ en:
     terminals: Terminals
     title: HubSystem
     users: Users
+  components:
+    messages:
+      conversations_grid:
+        participants: Participants
+        subject: Subject 
+      messages_grid:
+        from: From
+        message: Message
+        subject: Subject 
+        time: Time
+    search:
+      placeholder: Search
+      search: Search
   views:
     conversations:
-      index:
-        inbox: Inbox 
-        conversations: Conversations
-        subject: Subject 
-        participants: People
       show:
-        send_message: Send message 
-        send: Send
-    messages:
-      index:
-        inbox: Inbox 
-        conversations: Conversations
-        title: Inbox
+        confirm_close_conversation: End this conversation?
+        send_message_placeholder: Send message 
     dashboard:
       show:
         unread_messages:

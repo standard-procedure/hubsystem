@@ -15,26 +15,23 @@ class Views::Conversations::Show < Views::Base
       turbo_stream_from @conversation
       Column justify: "between", class: %w[grow-1] do
         Column do
-          Row justify: "between" do
-            StatusBar do |status|
-              @conversation.users.each do |user|
-                status.item label: user.to_s, state: @user.status_badge.to_sym
-              end
-            end
+          Switcher do
+            Messages::TabBar user: @user, active: :conversations
             Search url: conversation_path(@conversation), search: @search
           end
-          MessagesGrid user: @user, messages: @messages
+          Messages::MessagesGrid user: @user, messages: @messages
         end
         Column do
-          Row justify: "end" do
+          Switcher do
+            Users::TabBar user: @user, users: @conversation.users
             Paginate records: @messages, params: @params
           end
-          Row justify: "between" do
-            span { Button label: "Close Conversation", variant: :danger, size: :sm, tag: :a, href: new_conversation_closure_path(@conversation) if @conversation.active? }
-            form_with model: @conversation.messages.build, url: conversation_messages_path(@conversation), method: :post do |form|
+          Row justify: "between", gap: 4 do
+            span { Button label: Conversation::Message.an(:close_conversation), variant: :secondary, size: :sm, tag: :a, href: new_conversation_closure_path(@conversation), data: {turbo_confirm: t(".confirm_close_conversation")} if @conversation.active? }
+            form_with model: @conversation.messages.build, url: conversation_messages_path(@conversation), method: :post, class: %w[grow-1] do |form|
               Row justify: "between", wrap: false, gap: 2 do
-                form.text_field :contents, placeholder: t(".send_message"), autofocus: true, required: true, class: %w[input-field grow-1]
-                Button label: t(".send"), variant: :primary, size: :sm
+                form.text_field :contents, placeholder: t(".send_message_placeholder"), autofocus: true, required: true, class: %w[input-field grow-1]
+                Button label: Conversation::Message.an(:send_message), variant: :primary, size: :sm
               end
             end
           end

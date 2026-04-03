@@ -31,8 +31,8 @@ RSpec.describe Conversation::Participant, type: :model do
 
   describe "#to_s" do
     it "returns the participant_type as a string" do
-      expect(conversation_participants(:alice_in_alpha).to_s).to eq("admin")
-      expect(conversation_participants(:bob_in_alpha).to_s).to eq("member")
+      expect(conversation_participants(:alice_in_alpha).to_s).to eq("Alice Aardvark")
+      expect(conversation_participants(:bob_in_alpha).to_s).to eq("Bob Badger")
     end
   end
 end

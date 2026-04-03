@@ -33,5 +33,5 @@ module Components::MainNavigation
     :nominal
   end
 
-  LOCATIONS = {dashboard: :root_path, messages: :messages_path, projects: :root_path, terminals: :root_path, settings: :root_path}.freeze
+  LOCATIONS = {dashboard: :root_path, messages: :messages_path, projects: :root_path, terminals: :root_path, settings: :component_path}.freeze
 end

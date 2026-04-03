@@ -5,5 +5,6 @@ class ApplicationRecord < ActiveRecord::Base
   include ActionView::RecordIdentifier
   include HasAttachments
   include HasTypeChecks
+  include Naming
   include Literal::Types
 end
