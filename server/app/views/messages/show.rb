@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-class Views::Conversations::Show < Views::Base
+# NOTE: this view intentionally mirrors Views::Conversations::Show — twice is a marker, three times refactor
+class Views::Messages::Show < Views::Base
   include Phlex::Rails::Helpers::FormWith
   include Phlex::Rails::Helpers::TurboStreamFrom
 
   prop :user, User
+  prop :message, Conversation::Message
   prop :conversation, Conversation
   prop :messages, ActiveRecord::Relation(Conversation::Message)
   prop :search, String, default: ""
@@ -17,9 +19,9 @@ class Views::Conversations::Show < Views::Base
         Column do
           Switcher do
             Messages::TabBar user: @user, active: :conversations
-            Search url: conversation_path(@conversation), search: @search
+            Search url: message_path(@message), search: @search
           end
-          Messages::MessagesGrid user: @user, messages: @messages, show_subject: false
+          Messages::MessagesGrid user: @user, messages: @messages, selected_message: @message, show_subject: false
         end
         Column do
           Switcher do

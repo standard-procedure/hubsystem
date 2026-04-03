@@ -28,6 +28,10 @@ en:
       show:
         confirm_close_conversation: End this conversation?
         send_message_placeholder: Send message 
+    messages:
+      show:
+        confirm_close_conversation: End this conversation?
+        send_message_placeholder: Send message
     dashboard:
       show:
         unread_messages:

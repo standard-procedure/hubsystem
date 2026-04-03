@@ -21,18 +21,20 @@ class Components::Grid < Components::Slotted
 
   class Row < Literal::Data
     prop :cells, _Array(Cell)
+    prop :id, _String?
+    prop :expanded, _Boolean, default: false
   end
 
   prop :columns, _Any
   prop :max_height, _Nilable(String), default: nil
-  prop :scroll_to, OneOf(:last, :first), default: :last
+  prop :scroll_to, OneOf(:last, :first, :selected), default: :last
 
   def initialize(...)
     @rows = []
     super
   end
 
-  def row(*values)
+  def row(*values, id: nil, &block)
     cells = values.each_with_index.map do |value, i|
       col_width = @columns[i]&.width || 1
       if value.is_a?(Hash)
@@ -41,14 +43,16 @@ class Components::Grid < Components::Slotted
         Cell.new(value: value.to_s, href: value[:href], column_width: col_width)
       end
     end
-    @rows << Row.new(cells: cells)
+    @rows << Row.new(cells: cells, id: id, expanded: block_given?)
+    @blocks ||= {}
+    @blocks[@rows.length - 1] = block if block_given?
   end
 
   def view_template
     div(style: {max_height: @max_height}, data: {controller: "scroll-anchor", scroll_anchor_position_value: @scroll_to.to_s}) do
       render_header
       div(class: %w[grid-body]) do
-        @rows.each { |r| render_row(r) }
+        @rows.each_with_index { |r, i| render_row(r, i) }
       end
     end
   end
@@ -61,10 +65,16 @@ class Components::Grid < Components::Slotted
     end
   end
 
-  private def render_row(row)
-    div class: "grid-row" do
+  private def render_row(row, index)
+    row_attrs = {class: "grid-row"}
+    row_attrs[:id] = row.id if row.id
+    row_attrs[:data] = {scroll_anchor_target: "selected"} if row.expanded
+    div(**row_attrs) do
       row.cells.each do |cell|
         cell.href.blank? ? draw(cell) : draw_link_for(cell)
+      end
+      if row.expanded && @blocks[index]
+        div(class: "grid-row-expanded") { @blocks[index].call }
       end
     end
   end
