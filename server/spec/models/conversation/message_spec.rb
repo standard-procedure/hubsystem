@@ -75,6 +75,36 @@ RSpec.describe Conversation::Message, type: :model do
     end
   end
 
+  describe "#read_by?" do
+    fixtures :conversation_message_readings
+
+    it "returns truthy when the user has read the message" do
+      expect(conversation_messages(:bob_reply).read_by?(users(:alice))).to be_truthy
+    end
+
+    it "returns falsy when the user has not read the message" do
+      expect(conversation_messages(:alice_hello).read_by?(users(:bob))).to be_falsy
+    end
+  end
+
+  describe "#embeddable_text" do
+    it "returns the contents as a string" do
+      expect(conversation_messages(:alice_hello).embeddable_text).to eq("Hello everyone")
+    end
+  end
+
+  describe "#embedding_content_changed?" do
+    it "returns true when contents has changed" do
+      message = conversation_messages(:alice_hello)
+      message.contents = "Updated"
+      expect(message.embedding_content_changed?).to be true
+    end
+
+    it "returns false when contents has not changed" do
+      expect(conversation_messages(:alice_hello).embedding_content_changed?).to be false
+    end
+  end
+
   describe "HasStatusBadge" do
     it "exposes the status_badge enum" do
       expect(conversation_messages(:alice_hello)).to be_online

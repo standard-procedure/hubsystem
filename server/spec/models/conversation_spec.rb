@@ -107,6 +107,22 @@ RSpec.describe Conversation, type: :model do
     end
   end
 
+  describe "#has_unread_messages_for?" do
+    fixtures :conversation_message_readings
+
+    it "returns true when the user has unread messages" do
+      expect(conversations(:alpha).has_unread_messages_for?(users(:bob))).to be true
+    end
+
+    it "returns false when the user has read all messages" do
+      alice = users(:alice)
+      conversations(:alpha).messages.each do |m|
+        Conversation::MessageReading.find_or_create_by!(message: m, user: alice)
+      end
+      expect(conversations(:alpha).has_unread_messages_for?(alice)).to be false
+    end
+  end
+
   describe "HasStatusBadge" do
     it "exposes the status_badge enum" do
       expect(conversations(:alpha)).to be_online

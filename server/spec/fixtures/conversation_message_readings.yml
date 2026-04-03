@@ -1,0 +1,6 @@
+_fixture:
+  model_class: Conversation::MessageReading
+
+alice_read_bob_reply:
+  message: bob_reply
+  user: alice
