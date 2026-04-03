@@ -20,3 +20,13 @@ charlie_in_beta:
   conversation: beta
   user: charlie
   participant_type: 0
+
+alice_in_archived:
+  conversation: archived_chat
+  user: alice
+  participant_type: 0
+
+eve_in_archived:
+  conversation: archived_chat
+  user: eve
+  participant_type: 0

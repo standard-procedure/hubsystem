@@ -4,7 +4,16 @@ class ConversationsController < ApplicationController
   include Pagination
 
   def index
-    @conversations = Current.user.conversations.page(page_number).per(3)
+    @conversations = Current.user.conversations
+    @conversations = params[:archive].present? ? @conversations.archived : @conversations.active
+    if params[:search].present?
+      matching_conversation_ids = Conversation::Participant
+        .joins(:user)
+        .where("users.name ILIKE ?", "%#{params[:search]}%")
+        .select(:conversation_id)
+      @conversations = @conversations.where(id: matching_conversation_ids)
+    end
+    @conversations = @conversations.page(page_number).per(3)
     render Views::Conversations::Index.new(user: Current.user, conversations: @conversations, search: params[:search].to_s, params: params)
   end
 

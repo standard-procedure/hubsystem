@@ -2,7 +2,11 @@ class MessagesController < ApplicationController
   include Pagination
 
   def index
-    @messages = Current.user.messages.page(page_number)
+    @messages = if params[:search].present?
+      Current.user.messages.where("conversation_messages.contents ILIKE ?", "%#{params[:search]}%").page(page_number)
+    else
+      Current.user.unread_messages.page(page_number)
+    end
     render Views::Messages::Index.new(user: Current.user, messages: @messages, search: params[:search].to_s, params: params)
   end
 

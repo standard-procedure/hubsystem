@@ -4,3 +4,23 @@ _fixture:
 alice_read_bob_reply:
   message: bob_reply
   user: alice
+
+alice_read_alice_hello:
+  message: alice_hello
+  user: alice
+
+alice_read_alice_multiline:
+  message: alice_multiline
+  user: alice
+
+alice_read_alice_beta_reply:
+  message: alice_beta_reply
+  user: alice
+
+alice_read_eve_archived_msg:
+  message: eve_archived_msg
+  user: alice
+
+alice_read_alice_archived_reply:
+  message: alice_archived_reply
+  user: alice

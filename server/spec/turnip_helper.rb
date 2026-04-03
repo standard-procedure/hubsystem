@@ -25,6 +25,9 @@ elsif test_interface.api?
 end
 
 RSpec.configure do |config|
+  config.fixture_paths = [Rails.root.join("spec/fixtures")]
+  config.global_fixtures = :all
+
   config.before :all do
     Dir["spec/features/steps/*_steps.rb"].each do |step_file|
       require File.expand_path(step_file)

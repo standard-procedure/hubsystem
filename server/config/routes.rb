@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :messages, only: [:index, :show]
       resources :conversations, only: [:index, :show, :create] do
         resources :messages, only: [:index, :create], controller: "conversations/messages"
         resource :acceptance, only: [:create], controller: "conversation_acceptances"

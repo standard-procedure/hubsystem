@@ -103,7 +103,7 @@ RSpec.describe User, type: :model do
       end
 
       it "destroys dependent message_readings" do
-        expect { users(:alice).destroy }.to change(Conversation::MessageReading, :count).by(-1)
+        expect { users(:alice).destroy }.to change(Conversation::MessageReading, :count).by(-6)
       end
     end
 
@@ -111,8 +111,9 @@ RSpec.describe User, type: :model do
       it "returns messages the user has not read" do
         alice = users(:alice)
         unread = alice.unread_messages
-        expect(unread).to include(conversation_messages(:alice_hello))
+        expect(unread).to include(conversation_messages(:charlie_beta_msg))
         expect(unread).not_to include(conversation_messages(:bob_reply))
+        expect(unread).not_to include(conversation_messages(:alice_hello))
       end
 
       it "orders by created_at ascending" do

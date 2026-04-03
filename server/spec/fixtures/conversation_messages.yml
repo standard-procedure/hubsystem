@@ -18,3 +18,27 @@ alice_multiline:
   sender: alice
   contents: "First line\nSecond line"
   status_badge: 0
+
+charlie_beta_msg:
+  conversation: beta
+  sender: charlie
+  contents: Have you reviewed the quarterly projections?
+  status_badge: 0
+
+alice_beta_reply:
+  conversation: beta
+  sender: alice
+  contents: Yes, the quarterly projections look good
+  status_badge: 0
+
+eve_archived_msg:
+  conversation: archived_chat
+  sender: eve
+  contents: This was an old discussion topic
+  status_badge: 0
+
+alice_archived_reply:
+  conversation: archived_chat
+  sender: alice
+  contents: Agreed, let us close this out
+  status_badge: 0
