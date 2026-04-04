@@ -1,5 +1,53 @@
 # Development Patterns
 
+## Development Workflow
+
+When building new features, follow this cycle:
+
+### 1. Write the Gherkin scenario
+
+Start with a `.feature` file in `spec/features/`. Define the user-facing behaviour before writing any implementation code.
+
+### 2. Update fixtures AND seeds
+
+**Fixtures** (`spec/fixtures/`) provide test data for RSpec. **Seeds** (`db/seeds.rb`) provide development data for the running app. Both must reflect the current data model. Seeds must be idempotent (`first_or_create!` pattern) so `rails db:seed` can be re-run safely.
+
+When adding new models, associations, or test scenarios: update both fixtures and seeds in the same change.
+
+### 3. Implement and run specs
+
+Write step definitions, controllers, views, and models to make the scenarios pass. Run the full suite:
+
+```bash
+# Inside devcontainer
+bin/rspec                                          # Full suite (web features + unit/request specs)
+TEST_INTERFACE=api bin/rspec spec/features/         # API features only
+TEST_INTERFACE=web bin/rspec spec/features/         # Web features only
+bin/rspec spec/requests/api/                        # API request specs (for OpenAPI generation)
+```
+
+### 4. Evaluate UI with Playwright
+
+After implementation, visually verify the UI using Playwright (via MCP or manually). The app runs at `http://localhost:3000` inside the devcontainer.
+
+**Logging in via the developer strategy:**
+
+1. Navigate to `http://localhost:3000` — redirects to the login page
+2. Click "Developer login" — shows the OmniAuth developer form asking for a UID
+3. Enter a UID from `db/seeds.rb` (e.g. `alice` for Alice Aardvark, `bob` for Bob Badger)
+4. Click "Sign In" — logs in and redirects to the dashboard
+
+The UID must match a `User::Identity` record with `provider: "developer"`. Seeds create identities for alice and bob.
+
+### 5. Run a code review
+
+After implementation and visual verification, review the code for:
+
+- **Performance**: N+1 queries, in-memory loading of large collections, missing pagination
+- **Security**: ILIKE wildcard escaping, mass assignment, authorization gaps
+- **Consistency**: API response shapes, duplicated helpers, naming conventions
+- **Error handling**: `ErrorHandlers::Api` and `ErrorHandlers::Web` catch common exceptions — check for unhandled edge cases
+
 ## Using OmniAuth in features
 The Developer strategy is available in test mode and [feature tests](spec/turnip_helper.rb) are configured to [mock the OmniAuth provider](https://github.com/omniauth/omniauth/wiki/Integration-Testing).
 
@@ -297,10 +345,7 @@ end
 
 | Action | Route | Controller |
 |--------|-------|------------|
-| Accept a request | `POST /conversations/:id/acceptance` | `ConversationAcceptancesController` |
-| Reject a request | `POST /conversations/:id/rejection` | `ConversationRejectionsController` |
-| Close a conversation | `GET /conversations/:id/closure/new` | `ConversationClosuresController#new` |
-| | `POST /conversations/:id/closure` | `ConversationClosuresController#create` |
+| Archive a conversation | `POST /conversations/:id/closure` | `ConversationClosuresController#create` |
 
 ### Why
 
@@ -511,6 +556,32 @@ div(mix({ class: "status-bar" }, @html_attrs))
 ```
 
 `mix` concatenates `class` values rather than overwriting them. Use the bang form (`class!:`) to force-override instead of merge.
+
+## Error Handling
+
+`ErrorHandlers` (`app/controllers/concerns/error_handlers.rb`) provides centralised error handling for both web and API controllers.
+
+### ErrorHandlers::Api
+
+Included in `Api::V1::BaseController`. Renders JSON responses for:
+
+| Exception | Status | Response |
+|-----------|--------|----------|
+| `ActiveRecord::RecordNotFound` | 404 | `{error: "not_found"}` |
+| `ActiveRecord::RecordInvalid` | 422 | `{error: "invalid_data", errors: [...]}` |
+| `ArgumentError` | 400 | `{error: "bad_request", message: "..."}` |
+| `StandardError` (production only) | 500 | `{error: "...", message: "..."}` |
+
+### ErrorHandlers::Web
+
+Included in `ApplicationController`. Redirects with flash alerts for:
+
+| Exception | Behaviour |
+|-----------|-----------|
+| `ActiveRecord::RecordNotFound` | Redirect to root with "Not found" alert |
+| `StandardError` (production only) | Redirect to root with generic alert |
+
+Individual controllers can still rescue specific exceptions for custom behaviour (e.g. re-rendering a form on validation failure).
 
 ## Concerns and Background Jobs Organisation
 
