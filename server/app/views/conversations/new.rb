@@ -24,6 +24,10 @@ class Views::Conversations::New < Views::Base
             Panel(title: t(".no_results_title")) do
               p(class: "text-muted") { t(".no_results", query: @query) }
             end
+          else
+            Panel(title: t(".title")) do
+              p(class: "text-muted") { t(".get_started", query: @query) }
+            end
           end
         end
       end
@@ -36,7 +40,7 @@ class Views::Conversations::New < Views::Base
     form action: new_conversation_path, method: :get do
       Row justify: "between", wrap: false, gap: 2 do
         Input name: "q", placeholder: t(".search_placeholder"), value: @query
-        Button label: t(".search"), variant: :secondary
+        Button label: t(".search"), variant: ((@selected_user.nil? && @users.empty?) ? :primary : :secondary)
       end
     end
   end
@@ -65,7 +69,8 @@ class Views::Conversations::New < Views::Base
           form.hidden_field :participant_ids, value: @selected_user.id, name: "conversation[participant_ids][]"
           Input name: "conversation[subject]", label: Conversation.an(:subject), placeholder: t(".subject_placeholder"), required: true
           Input name: "conversation[message]", label: Conversation::Message.fn, placeholder: t(".message_placeholder"), required: true
-          Row justify: "end" do
+          Row justify: "between" do
+            Button href: new_conversation_path, label: t("application.cancel"), variant: :ghost, tag: :a
             Button label: t(".send"), variant: :primary
           end
         end

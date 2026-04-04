@@ -1,6 +1,7 @@
 ---
 en:
   application:
+    cancel: "⊗"
     dashboard: Dashboard
     logout: Power
     messages: Messages
@@ -26,30 +27,24 @@ en:
   views:
     conversations:
       index:
+        empty_active: "Start a conversation"
+        empty_archived: "No archived conversations"
+        empty_title: "No conversations"
         new_conversation: New Conversation
         search_placeholder: Search for people
-        empty_title: "No conversations"
-        empty_active: "Start a conversation."
-        empty_archived: "No archived conversations."
       new:
-        title: New Conversation
-        search_placeholder: Search for a user...
+        get_started: "Use search to get started"
+        message_placeholder: Your message
+        no_results: "No users matching \"%{query}\""
+        no_results_title: No users found
         search: Find
-        user_name: Name
-        user_status: Status
+        search_placeholder: Search for a person
+        send: Start Conversation
         start_with: "Conversation with %{name}"
         subject_placeholder: What's this about?
-        message_placeholder: Your message
-        send: Start Conversation
-        no_results_title: No users found
-        no_results: "No users matching \"%{query}\""
-      show:
-        confirm_close_conversation: Archive this conversation?
-        search_placeholder: Search this conversation
-        send_message_placeholder: Send message
-    messages:
-      index:
-        search_placeholder: Search for messages
+        title: New Conversation
+        user_name: Name
+        user_status: Status
       show:
         confirm_close_conversation: Archive this conversation?
         search_placeholder: Search this conversation
@@ -59,3 +54,10 @@ en:
         unread_messages:
           one: 1 unread message
           other: "%{count} unread messages"
+    messages:
+      index:
+        search_placeholder: Search for messages
+      show:
+        confirm_close_conversation: Archive this conversation?
+        search_placeholder: Search this conversation
+        send_message_placeholder: Send message
