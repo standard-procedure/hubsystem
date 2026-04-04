@@ -2,9 +2,9 @@
 en:
   activerecord:
     attributes:
-      conversation/messages:
+      conversation/message:
         attachments: Attachments 
-        close_conversation: Close
+        close_conversation: Archive
         created_at: Sent at
         excerpt: Excerpt
         inbox: Inbox 

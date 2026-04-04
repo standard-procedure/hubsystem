@@ -31,7 +31,7 @@ class Views::Messages::Show < Views::Base
           Row justify: "between", gap: 4 do
             if @conversation.active?
               form_with url: conversation_closure_path(@conversation), method: :post do
-                Button label: Conversation::Message.an(:close_conversation), variant: :secondary, size: :sm, data: {turbo_confirm: t(".confirm_close_conversation")}
+                Button label: Conversation::Message.an(:close_conversation), variant: :ghost, size: :sm, data: {turbo_confirm: t(".confirm_close_conversation")}
               end
             end
             form_with model: @conversation.messages.build, url: conversation_messages_path(@conversation), method: :post, class: %w[grow-1] do |form|

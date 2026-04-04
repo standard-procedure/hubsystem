@@ -35,11 +35,22 @@ class Components::Messages::MessagesGrid < Components::Base
   end
 
   def build_cells(message)
+    color = row_color(message)
     [
-      {value: l(message.created_at, format: :short), color: (message.read_by?(@user) ? :dim : :phosphor), href: message_path(message)},
-      {value: message.sender.to_s, href: message_path(message)},
-      ({value: message.conversation.subject, href: message_path(message)} if @show_subject),
-      {value: message.contents, href: message_path(message)}
+      {value: l(message.created_at, format: :short), color: color, href: message_path(message)},
+      {value: message.sender.to_s, color: color, href: message_path(message)},
+      ({value: message.conversation.subject, color: color, href: message_path(message)} if @show_subject),
+      {value: message.contents, color: color, href: message_path(message)}
     ].compact
+  end
+
+  def row_color(message)
+    if message.sender == @user
+      :dim
+    elsif message.read_by?(@user)
+      :muted
+    else
+      :phosphor
+    end
   end
 end

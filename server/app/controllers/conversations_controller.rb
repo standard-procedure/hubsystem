@@ -13,13 +13,13 @@ class ConversationsController < ApplicationController
         .select(:conversation_id)
       @conversations = @conversations.where(id: matching_conversation_ids)
     end
-    @conversations = @conversations.page(page_number).per(3)
+    @conversations = @conversations.page(page_number)
     render Views::Conversations::Index.new(user: Current.user, conversations: @conversations, search: params[:search].to_s, params: params)
   end
 
   def show
     @conversation = Current.user.conversations.find params[:id]
-    @messages = @conversation.messages.page(page_number).per(3)
+    @messages = @conversation.messages.page(page_number)
     render Views::Conversations::Show.new(user: Current.user, conversation: @conversation, messages: @messages, params: params)
   end
 

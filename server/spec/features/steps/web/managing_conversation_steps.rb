@@ -55,7 +55,7 @@ module WebManagingConversationSteps
 
   step "I send a message" do
     fill_in "conversation_message[contents]", with: @reply_message
-    click_button "Send message"
+    click_button "Send"
   end
 
   step "I should see my message in the conversation" do
@@ -63,7 +63,7 @@ module WebManagingConversationSteps
   end
 
   step "I close the conversation" do
-    click_button "Close"
+    click_button "Archive"
   end
 
   step "the conversation should be archived" do

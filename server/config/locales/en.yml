@@ -27,19 +27,26 @@ en:
     conversations:
       index:
         new_conversation: New Conversation
+        empty_title: "No conversations"
+        empty_message: "Search for a user and start a conversation."
       new:
         title: New Conversation
         search_placeholder: Search for a user...
         search: Find
+        user_name: Name
+        user_status: Status
+        start_with: "Conversation with %{name}"
         subject_placeholder: What's this about?
         message_placeholder: Your message
         send: Start Conversation
+        no_results_title: No users found
+        no_results: "No users matching \"%{query}\""
       show:
-        confirm_close_conversation: End this conversation?
+        confirm_close_conversation: Archive this conversation?
         send_message_placeholder: Send message 
     messages:
       show:
-        confirm_close_conversation: End this conversation?
+        confirm_close_conversation: Archive this conversation?
         send_message_placeholder: Send message
     dashboard:
       show:

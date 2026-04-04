@@ -66,7 +66,7 @@ module WebMessageSteps
   end
 
   step "I select one of the conversations" do
-    conversation_link = page.all("a[href*='/conversations/']").first
+    conversation_link = page.all(".grid-row a[href*='/conversations/']").first
     @selected_conversation_id = conversation_link[:href].match(/conversations\/(\d+)/)[1]
     @selected_conversation = Conversation.find(@selected_conversation_id)
     conversation_link.click
