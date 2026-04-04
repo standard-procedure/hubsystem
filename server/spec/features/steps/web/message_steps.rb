@@ -4,11 +4,13 @@ module WebMessageSteps
   extend Turnip::DSL
 
   step "I log in" do
-    session = user_sessions(:alice_session)
-    jar = ActionDispatch::Request.new(Rails.application.env_config.dup).cookie_jar
-    jar.signed[:session_id] = {value: session.id, httponly: true}
-    page.driver.browser.set_cookie("session_id=#{jar[:session_id]}")
+    OmniAuth.config.mock_auth[:developer] = OmniAuth::AuthHash.new(
+      provider: "developer",
+      uid: @user.identities.first.uid,
+      info: {name: @user.name}
+    )
     visit root_path
+    click_button "Developer login"
   end
 
   step "I should see a count of my unread messages on the dashboard" do

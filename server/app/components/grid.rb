@@ -79,7 +79,8 @@ class Components::Grid < Components::Slotted
     end
   end
 
-  private def draw(cell) = span(class: css_for(cell), style: {flex: cell.column_width}) { cell.value }
-  private def draw_link_for(cell) = a(href: cell.href, class: css_for(cell), style: {flex: cell.column_width}) { cell.value }
+  private def draw(cell) = span(class: css_for(cell), style: {flex: cell.column_width}) { draw_contents_for(cell.value) }
+  private def draw_link_for(cell) = a(href: cell.href, class: css_for(cell), style: {flex: cell.column_width}) { draw_contents_for(cell.value) }
   private def css_for(cell) = ["grid-cell", ("grid-cell--#{cell.color}" if cell.color)]
+  private def draw_contents_for(value) = value
 end
