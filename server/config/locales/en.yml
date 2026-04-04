@@ -25,6 +25,15 @@ en:
       search: Search
   views:
     conversations:
+      index:
+        new_conversation: New Conversation
+      new:
+        title: New Conversation
+        search_placeholder: Search for a user...
+        search: Find
+        subject_placeholder: What's this about?
+        message_placeholder: Your message
+        send: Start Conversation
       show:
         confirm_close_conversation: End this conversation?
         send_message_placeholder: Send message 

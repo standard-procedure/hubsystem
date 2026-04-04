@@ -22,7 +22,7 @@ class Views::Users::Show < Views::Base
       end
 
       Row justify: "end" do
-        Button label: "Start Conversation", variant: :primary, tag: :a, href: new_user_conversation_path(@user)
+        Button label: "Start Conversation", variant: :primary, tag: :a, href: new_conversation_path(with: @user.id)
       end
     end
   end

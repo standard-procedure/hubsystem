@@ -24,6 +24,26 @@ class ConversationsController < ApplicationController
   end
 
   def new
-    redirect_to users_path, notice: "Find a user to start a conversation with."
+    @users = if params[:q].present?
+      User.active.in_order.search_by_name_or_uid(params[:q])
+    else
+      User.none
+    end
+    @selected_user = User.find_by(id: params[:with])
+    render Views::Conversations::New.new(user: Current.user, users: @users, selected_user: @selected_user, query: params[:q].to_s)
+  end
+
+  def create
+    participants = User.where(id: params[:conversation][:participant_ids])
+    conversation = Current.user.start_conversation(
+      message: params[:conversation][:message],
+      subject: params[:conversation][:subject],
+      with: participants
+    )
+    redirect_to conversation_path(conversation)
+  rescue ActiveRecord::RecordInvalid => e
+    @users = User.none
+    @selected_user = participants.first
+    render Views::Conversations::New.new(user: Current.user, users: @users, selected_user: @selected_user, query: ""), status: :unprocessable_entity
   end
 end

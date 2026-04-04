@@ -124,4 +124,26 @@ RSpec.describe "API V1 Conversations", type: :request do
       expect(body["errors"]).to be_an(Array)
     end
   end
+
+  describe "PATCH /api/v1/conversations/:id" do
+    it "updates the conversation status" do
+      conversation = conversations(:alpha)
+      patch api_v1_conversation_path(conversation), params: {
+        conversation: {status: "archived"}
+      }, headers: headers, as: :json
+      expect(response).to have_http_status(:ok)
+      body = JSON.parse(response.body)
+      expect(body["status"]).to eq("archived")
+      expect(conversation.reload).to be_archived
+    end
+
+    it "returns 404 for conversations the user is not part of" do
+      bob_token = oauth_access_tokens(:bob).token
+      bob_headers = {"Authorization" => "Bearer #{bob_token}"}
+      patch api_v1_conversation_path(conversations(:beta)), params: {
+        conversation: {status: "archived"}
+      }, headers: bob_headers, as: :json
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

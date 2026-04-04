@@ -8,15 +8,15 @@ Rails.application.routes.draw do
   end
 
   resources :messages
-  resources :conversations, only: [:index, :show, :new] do
+  resources :conversations, only: [:index, :show, :new, :create] do
     resources :messages, only: [:create], module: :conversations
-    resource :closure, only: [:new, :create], controller: "conversation_closures"
+    resource :closure, only: [:create], controller: "conversation_closures"
   end
 
   namespace :api do
     namespace :v1 do
       resources :messages, only: [:index, :show]
-      resources :conversations, only: [:index, :show, :create] do
+      resources :conversations, only: [:index, :show, :create, :update] do
         resources :messages, only: [:index, :create], controller: "conversations/messages"
       end
 

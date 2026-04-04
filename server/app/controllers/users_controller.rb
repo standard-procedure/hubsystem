@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @page = [params[:page].to_i, 1].max
     @total_pages = (scope.count.to_f / PER_PAGE).ceil
     @users = scope.offset((@page - 1) * PER_PAGE).limit(PER_PAGE)
-    @active_conversation_user_ids = Conversation.open.involving(Current.user).pluck(:initiator_id, :recipient_id).flatten.uniq - [Current.user.id]
+    @active_conversation_user_ids = Conversation.active.involving(Current.user).joins(:participants).pluck("conversation_participants.user_id").uniq - [Current.user.id]
     render Views::Users::Index.new(users: @users, page: @page, total_pages: @total_pages, query: params[:q], active_conversation_user_ids: @active_conversation_user_ids)
   end
 

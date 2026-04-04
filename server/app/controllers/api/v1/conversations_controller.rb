@@ -31,6 +31,14 @@ class Api::V1::ConversationsController < Api::V1::BaseController
     render json: {errors: e.record.errors.full_messages}, status: :unprocessable_entity
   end
 
+  def update
+    conversation = current_user.conversations.find(params[:id])
+    conversation.update!(status: params.dig(:conversation, :status))
+    render json: conversation_json(conversation)
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: e.record.errors.full_messages}, status: :unprocessable_entity
+  end
+
   private
 
   def conversation_json(conversation, include_messages: false)

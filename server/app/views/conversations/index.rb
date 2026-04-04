@@ -16,7 +16,8 @@ class Views::Conversations::Index < Views::Base
           end
           Messages::ConversationsGrid user: @user, conversations: @conversations
         end
-        Row justify: "end" do
+        Row justify: "between" do
+          Button label: t(".new_conversation"), variant: :primary, size: :sm, tag: :a, href: new_conversation_path
           Paginate records: @conversations, params: @params
         end
       end

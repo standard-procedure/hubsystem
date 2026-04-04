@@ -27,7 +27,11 @@ class Views::Conversations::Show < Views::Base
             Paginate records: @messages, params: @params
           end
           Row justify: "between", gap: 4 do
-            span { Button label: Conversation::Message.an(:close_conversation), variant: :secondary, size: :sm, tag: :a, href: new_conversation_closure_path(@conversation), data: {turbo_confirm: t(".confirm_close_conversation")} if @conversation.active? }
+            if @conversation.active?
+              form_with url: conversation_closure_path(@conversation), method: :post do
+                Button label: Conversation::Message.an(:close_conversation), variant: :secondary, size: :sm, data: {turbo_confirm: t(".confirm_close_conversation")}
+              end
+            end
             form_with model: @conversation.messages.build, url: conversation_messages_path(@conversation), method: :post, class: %w[grow-1] do |form|
               Row justify: "between", wrap: false, gap: 2 do
                 form.text_field :contents, placeholder: t(".send_message_placeholder"), autofocus: true, required: true, class: %w[input-field grow-1]
