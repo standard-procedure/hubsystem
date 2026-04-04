@@ -23,8 +23,8 @@ RSpec.describe "API V1 Conversation Messages", type: :request do
     it "includes sender, contents, and read status for each message" do
       get api_v1_conversation_messages_path(conversation), headers: headers
       message = JSON.parse(response.body).first
-      expect(message).to include("id", "sender", "contents", "read", "created_at")
-      expect(message["sender"]).to include("id", "name")
+      expect(message).to include("id", "conversation_id", "sender", "contents", "read", "created_at")
+      expect(message["sender"]).to include("id", "name", "uid")
     end
 
     it "returns messages in chronological order" do
@@ -62,7 +62,8 @@ RSpec.describe "API V1 Conversation Messages", type: :request do
       expect(response).to have_http_status(:created)
       body = JSON.parse(response.body)
       expect(body["contents"]).to eq("A new message")
-      expect(body).to include("id", "created_at")
+      expect(body).to include("id", "conversation_id", "sender", "contents", "read", "created_at")
+      expect(body["sender"]).to include("id", "name", "uid")
     end
 
     it "returns 404 for archived conversations" do

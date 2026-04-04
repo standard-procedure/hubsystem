@@ -30,7 +30,7 @@ RSpec.describe "API V1 Messages", type: :request do
       get api_v1_messages_path, headers: headers
       message = JSON.parse(response.body).first
       expect(message).to include("id", "conversation_id", "sender", "contents", "read", "created_at")
-      expect(message["sender"]).to include("id", "name")
+      expect(message["sender"]).to include("id", "name", "uid")
     end
 
     context "with search parameter" do

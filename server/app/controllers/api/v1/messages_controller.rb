@@ -7,7 +7,7 @@ class Api::V1::MessagesController < Api::V1::BaseController
     else
       current_user.unread_messages
     end
-    render json: messages.map { |m| message_json(m) }
+    render json: messages.page(page_number).map { |m| message_json(m) }
   end
 
   def show
@@ -20,19 +20,6 @@ class Api::V1::MessagesController < Api::V1::BaseController
         subject: conversation.subject,
         messages: conversation.messages.order(:created_at).map { |m| message_json(m) }
       }
-    }
-  end
-
-  private
-
-  def message_json(message)
-    {
-      id: message.id,
-      conversation_id: message.conversation_id,
-      sender: {id: message.sender.id, name: message.sender.name},
-      contents: message.contents,
-      read: message.read_by?(current_user).present?,
-      created_at: message.created_at
     }
   end
 end

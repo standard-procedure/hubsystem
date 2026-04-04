@@ -13,7 +13,7 @@ class Views::Messages::Show < Views::Base
   prop :params, _Any
 
   def view_template
-    render Views::Layouts::Application.new(title: @conversation.subject, return_href: conversations_path, user: @user, nav_active: :messages, nav_alerts: []) do
+    render Views::Layouts::Application.new(title: @conversation.subject, return_href: messages_path, user: @user, nav_active: :messages, nav_alerts: []) do
       turbo_stream_from @conversation
       Column justify: "between", class: %w[grow-1] do
         Column do

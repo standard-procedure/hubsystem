@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Components::Grid < Components::Slotted
+  include HasTypeChecks
+
   COLORS = %i[bright primary muted dim phosphor amber alert cryo].freeze
 
   class Column < Literal::Data
@@ -25,6 +27,8 @@ class Components::Grid < Components::Slotted
     prop :expanded, _Boolean, default: false
   end
 
+  CellHash = proc { |v| v.is_a?(Hash) && v.key?(:value) }
+
   prop :columns, _Any
   prop :max_height, _Nilable(String), default: nil
   prop :scroll_to, OneOf(:last, :first, :selected), default: :last
@@ -36,12 +40,9 @@ class Components::Grid < Components::Slotted
 
   def row(*values, id: nil, &block)
     cells = values.each_with_index.map do |value, i|
+      _check value, is: CellHash
       col_width = @columns[i]&.width || 1
-      if value.is_a?(Hash)
-        Cell.new(value: value[:value].to_s, color: value[:color], href: value[:href], column_width: col_width)
-      else
-        Cell.new(value: value.to_s, href: value[:href], column_width: col_width)
-      end
+      Cell.new(value: value[:value].to_s, color: value[:color], href: value[:href], column_width: col_width)
     end
     @rows << Row.new(cells: cells, id: id, expanded: block_given?)
     @blocks ||= {}
@@ -79,8 +80,7 @@ class Components::Grid < Components::Slotted
     end
   end
 
-  private def draw(cell) = span(class: css_for(cell), style: {flex: cell.column_width}) { draw_contents_for(cell.value) }
-  private def draw_link_for(cell) = a(href: cell.href, class: css_for(cell), style: {flex: cell.column_width}) { draw_contents_for(cell.value) }
+  private def draw(cell) = span(class: css_for(cell), style: {flex: cell.column_width}) { cell.value }
+  private def draw_link_for(cell) = a(href: cell.href, class: css_for(cell), style: {flex: cell.column_width}) { cell.value }
   private def css_for(cell) = ["grid-cell", ("grid-cell--#{cell.color}" if cell.color)]
-  private def draw_contents_for(value) = value
 end
