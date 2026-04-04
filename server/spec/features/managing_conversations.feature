@@ -18,6 +18,14 @@ Feature: Managing conversations
     And I send a message
     Then I should see my message in the conversation
 
+  Scenario: Searching within a conversation
+
+    Given I am logged in
+    And I have an active conversation
+    When I view the conversation
+    And I search for a message within the conversation
+    Then I should only see matching messages
+
   Scenario: Closing a conversation
 
     Given I am logged in

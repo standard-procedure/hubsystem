@@ -14,13 +14,17 @@ class ConversationsController < ApplicationController
       @conversations = @conversations.where(id: matching_conversation_ids)
     end
     @conversations = @conversations.page(page_number)
-    render Views::Conversations::Index.new(user: Current.user, conversations: @conversations, search: params[:search].to_s, params: params)
+    render Views::Conversations::Index.new(user: Current.user, conversations: @conversations, search: params[:search].to_s, archive: params[:archive].present?, params: params)
   end
 
   def show
     @conversation = Current.user.conversations.find params[:id]
-    @messages = @conversation.messages.page(page_number)
-    render Views::Conversations::Show.new(user: Current.user, conversation: @conversation, messages: @messages, params: params)
+    @messages = @conversation.messages
+    if params[:search].present?
+      @messages = @messages.where("conversation_messages.contents ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:search])}%")
+    end
+    @messages = @messages.page(page_number)
+    render Views::Conversations::Show.new(user: Current.user, conversation: @conversation, messages: @messages, search: params[:search].to_s, params: params)
   end
 
   def new

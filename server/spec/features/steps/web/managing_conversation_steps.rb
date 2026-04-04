@@ -9,6 +9,7 @@ module WebManagingConversationSteps
     @new_subject = "Hello Dave"
     @new_message = "How are you doing?"
     @reply_message = "This is a new reply"
+    @in_conversation_search = "Alice"
     OmniAuth.config.mock_auth[:developer] = OmniAuth::AuthHash.new(
       provider: "developer",
       uid: @user.identities.first.uid,
@@ -60,6 +61,21 @@ module WebManagingConversationSteps
 
   step "I should see my message in the conversation" do
     expect(page).to have_content(@reply_message)
+  end
+
+  step "I search for a message within the conversation" do
+    fill_in "search", with: @in_conversation_search
+    click_button "Search"
+  end
+
+  step "I should only see matching messages" do
+    @conversation.messages.each do |msg|
+      if msg.contents.include?(@in_conversation_search)
+        expect(page).to have_content(msg.excerpt)
+      else
+        expect(page).not_to have_content(msg.excerpt)
+      end
+    end
   end
 
   step "I close the conversation" do

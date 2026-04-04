@@ -9,6 +9,7 @@ module ApiManagingConversationSteps
     @new_subject = "Hello Dave"
     @new_message = "How are you doing?"
     @reply_message = "This is a new reply"
+    @in_conversation_search = "Alice"
     @auth_token = oauth_access_tokens(:alice)
     @auth_headers = auth_header(@auth_token)
   end
@@ -60,6 +61,17 @@ module ApiManagingConversationSteps
     get api_v1_conversation_path(@conversation), headers: @auth_headers
     body = JSON.parse(response.body)
     expect(body["messages"].any? { |m| m["contents"] == @reply_message }).to be true
+  end
+
+  step "I search for a message within the conversation" do
+    get api_v1_conversation_messages_path(@conversation, search: @in_conversation_search), headers: @auth_headers
+    @search_results = JSON.parse(response.body)
+  end
+
+  step "I should only see matching messages" do
+    matching_ids = @conversation.messages.where("contents ILIKE ?", "%#{@in_conversation_search}%").pluck(:id)
+    result_ids = @search_results.map { |m| m["id"] }
+    expect(result_ids).to match_array(matching_ids)
   end
 
   step "I close the conversation" do

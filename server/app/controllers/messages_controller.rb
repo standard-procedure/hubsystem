@@ -20,7 +20,11 @@ class MessagesController < ApplicationController
   def show
     @message = Current.user.messages.find params[:id]
     @conversation = @message.conversation
-    @messages = @conversation.messages.page(page_number)
+    @messages = @conversation.messages
+    if params[:search].present?
+      @messages = @messages.where("conversation_messages.contents ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:search])}%")
+    end
+    @messages = @messages.page(page_number)
     render Views::Messages::Show.new(user: Current.user, message: @message, conversation: @conversation, messages: @messages, search: params[:search].to_s, params: params)
   end
 end

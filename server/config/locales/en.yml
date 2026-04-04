@@ -27,8 +27,10 @@ en:
     conversations:
       index:
         new_conversation: New Conversation
+        search_placeholder: Search for people
         empty_title: "No conversations"
-        empty_message: "Search for a user and start a conversation."
+        empty_active: "Start a conversation."
+        empty_archived: "No archived conversations."
       new:
         title: New Conversation
         search_placeholder: Search for a user...
@@ -43,10 +45,14 @@ en:
         no_results: "No users matching \"%{query}\""
       show:
         confirm_close_conversation: Archive this conversation?
-        send_message_placeholder: Send message 
+        search_placeholder: Search this conversation
+        send_message_placeholder: Send message
     messages:
+      index:
+        search_placeholder: Search for messages
       show:
         confirm_close_conversation: Archive this conversation?
+        search_placeholder: Search this conversation
         send_message_placeholder: Send message
     dashboard:
       show:

@@ -19,7 +19,7 @@ class Views::Messages::Show < Views::Base
         Column do
           Switcher do
             Messages::TabBar user: @user, active: :conversations
-            Search url: message_path(@message), search: @search
+            Search url: message_path(@message), search: @search, placeholder: t(".search_placeholder")
           end
           Messages::MessagesGrid user: @user, messages: @messages, selected_message: @message, show_subject: false
         end

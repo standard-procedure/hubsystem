@@ -12,7 +12,7 @@ class Views::Messages::Index < Views::Base
         Column do
           Row justify: "between" do
             Messages::TabBar user: @user, active: :inbox
-            Search url: messages_path, search: @search
+            Search url: messages_path, search: @search, placeholder: t(".search_placeholder")
           end
           Messages::MessagesGrid user: @user, messages: @messages
         end
