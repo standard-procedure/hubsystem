@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "kaminari/helpers/helper_methods"
+
 class Components::Paginate < Components::Base
   include Phlex::Rails::Helpers::LinkTo
   include Kaminari::Helpers::HelperMethods

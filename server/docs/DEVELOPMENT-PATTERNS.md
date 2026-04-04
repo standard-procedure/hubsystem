@@ -39,9 +39,22 @@ After implementation, visually verify the UI using Playwright (via MCP or manual
 
 The UID must match a `User::Identity` record with `provider: "developer"`. Seeds create identities for alice and bob.
 
-### 5. Run a code review
+### 5. Run `bin/ci`
 
-After implementation and visual verification, review the code for:
+Before considering a feature complete, run the full CI check:
+
+```bash
+# Inside devcontainer
+bin/ci
+```
+
+This runs the complete pipeline defined in `config/ci.rb`: setup, style checks (StandardRB), security audits (bundler-audit, brakeman), and all specs. Critically, `bin/rails spec` **eager-loads all application code** before running tests — this catches autoloading issues (missing requires, constant resolution bugs) that `bin/rspec` misses because it loads files lazily on demand.
+
+If `bin/ci` passes, the feature is ready for review.
+
+### 6. Run a code review
+
+After implementation, CI, and visual verification, review the code for:
 
 - **Performance**: N+1 queries, in-memory loading of large collections, missing pagination
 - **Security**: ILIKE wildcard escaping, mass assignment, authorization gaps
