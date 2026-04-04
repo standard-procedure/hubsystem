@@ -12,7 +12,7 @@ class Views::Sessions::New < Views::Base
           if Rails.env.local?
             Row justify: "end" do
               form_with url: "/auth/developer", method: :post, data: {turbo: false} do |form|
-                render Components::Button.new(label: "Developer login", href: "/auth/developer", variant: :primary, size: :lg)
+                render Components::Button.new(label: "Developer login", variant: :primary, size: :lg)
               end
             end
           end

@@ -4,14 +4,13 @@ class Components::Button < Components::Base
   prop :label, _String?, default: nil
   prop :variant, OneOf(:primary, :secondary, :danger, :ghost), default: :primary
   prop :size, OneOf(:sm, :md, :lg), default: :md
-  prop :tag, OneOf(:button, :a), default: :button
   prop :href, _String?, default: nil
   prop :disabled, _Boolean, default: false
   prop :type, String, default: "submit"
   prop :attributes, Hash, :**, default: {}.freeze
 
   def view_template(&)
-    (@tag == :a) ? render_link(&) : render_button(&)
+    @href ? render_link(&) : render_button(&)
   end
 
   private def render_link(&) = a(class: class_list, href: @href, **@attributes) { contents(&) }

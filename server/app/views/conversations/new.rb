@@ -70,7 +70,7 @@ class Views::Conversations::New < Views::Base
           Input name: "conversation[subject]", label: Conversation.an(:subject), placeholder: t(".subject_placeholder"), required: true
           Input name: "conversation[message]", label: Conversation::Message.fn, placeholder: t(".message_placeholder"), required: true
           Row justify: "between" do
-            Button href: new_conversation_path, label: t("application.cancel"), variant: :ghost, tag: :a
+            Button href: new_conversation_path, label: t("application.cancel"), variant: :ghost
             Button label: t(".send"), variant: :primary
           end
         end

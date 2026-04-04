@@ -15,7 +15,7 @@ class Views::Conversations::Index < Views::Base
             Messages::TabBar user: @user, active: @archive ? :archive : :conversations
             Row gap: 2, wrap: false do
               Search url: conversations_path, search: @search, placeholder: t(".search_placeholder")
-              Button label: t(".new_conversation"), variant: :primary, size: :sm, tag: :a, href: new_conversation_path
+              Button label: t(".new_conversation"), variant: :primary, size: :sm, href: new_conversation_path
             end
           end
           if @conversations.any?
