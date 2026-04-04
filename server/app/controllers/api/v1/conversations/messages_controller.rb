@@ -5,7 +5,7 @@ class Api::V1::Conversations::MessagesController < Api::V1::BaseController
     conversation = current_user.conversations.find(params[:conversation_id])
     messages = conversation.messages.order(:created_at)
     if params[:search].present?
-      messages = messages.where("conversation_messages.contents ILIKE ?", "%#{params[:search]}%")
+      messages = messages.where("conversation_messages.contents ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:search])}%")
     end
     render json: messages.map { |m| message_json(m) }
   end

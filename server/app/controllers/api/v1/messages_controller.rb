@@ -3,7 +3,7 @@
 class Api::V1::MessagesController < Api::V1::BaseController
   def index
     messages = if params[:search].present?
-      current_user.messages.where("conversation_messages.contents ILIKE ?", "%#{params[:search]}%")
+      current_user.messages.where("conversation_messages.contents ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:search])}%")
     else
       current_user.unread_messages
     end

@@ -9,7 +9,7 @@ class ConversationsController < ApplicationController
     if params[:search].present?
       matching_conversation_ids = Conversation::Participant
         .joins(:user)
-        .where("users.name ILIKE ?", "%#{params[:search]}%")
+        .where("users.name ILIKE ?", "%#{Conversation::Participant.sanitize_sql_like(params[:search])}%")
         .select(:conversation_id)
       @conversations = @conversations.where(id: matching_conversation_ids)
     end

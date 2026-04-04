@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::BaseController < ActionController::API
+  include ErrorHandlers::Api
   before_action :doorkeeper_authorize!
 
   private

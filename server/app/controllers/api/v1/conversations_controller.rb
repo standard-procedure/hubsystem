@@ -7,7 +7,7 @@ class Api::V1::ConversationsController < Api::V1::BaseController
     if params[:search].present?
       matching_conversation_ids = Conversation::Participant
         .joins(:user)
-        .where("users.name ILIKE ?", "%#{params[:search]}%")
+        .where("users.name ILIKE ?", "%#{Conversation::Participant.sanitize_sql_like(params[:search])}%")
         .select(:conversation_id)
       conversations = conversations.where(id: matching_conversation_ids)
     end
@@ -27,16 +27,12 @@ class Api::V1::ConversationsController < Api::V1::BaseController
       with: User.where(id: Array.wrap(params.dig(:conversation, :participant_ids)))
     )
     render json: conversation_json(conversation), status: :created
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: e.record.errors.full_messages}, status: :unprocessable_entity
   end
 
   def update
     conversation = current_user.conversations.find(params[:id])
     conversation.update!(status: params.dig(:conversation, :status))
     render json: conversation_json(conversation)
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: e.record.errors.full_messages}, status: :unprocessable_entity
   end
 
   private
@@ -72,8 +68,9 @@ class Api::V1::ConversationsController < Api::V1::BaseController
   end
 
   def mark_as_read(conversation)
-    conversation.messages.where.not(sender: current_user).each do |message|
-      current_user.message_readings.find_or_create_by(message: message) unless message.read_by?(current_user)
-    end
+    already_read_ids = current_user.message_readings.where(message_id: conversation.messages.select(:id)).pluck(:message_id)
+    unread_ids = conversation.messages.where.not(sender: current_user).where.not(id: already_read_ids).pluck(:id)
+    return if unread_ids.empty?
+    Conversation::MessageReading.insert_all(unread_ids.map { |mid| {message_id: mid, user_id: current_user.id, created_at: Time.current, updated_at: Time.current} })
   end
 end

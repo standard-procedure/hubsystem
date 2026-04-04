@@ -1,12 +1,18 @@
+# frozen_string_literal: true
+
 class MessagesController < ApplicationController
   include Pagination
 
   def index
     @messages = if params[:search].present?
-      Current.user.messages.where("conversation_messages.contents ILIKE ?", "%#{params[:search]}%").page(page_number)
+      Current.user.messages.where("conversation_messages.contents ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:search])}%").page(page_number)
     else
-      latest_ids = Current.user.unread_messages.group_by(&:conversation_id).map { |_, msgs| msgs.first.id }
-      Current.user.messages.where(id: latest_ids).page(page_number)
+      latest_per_conversation = Conversation::Message
+        .where(conversation_id: Current.user.conversations.select(:id))
+        .where.not(id: Current.user.message_readings.select(:message_id))
+        .select("DISTINCT ON (conversation_id) id")
+        .order(Arel.sql("conversation_id, created_at DESC"))
+      Current.user.messages.where(id: latest_per_conversation).page(page_number)
     end
     render Views::Messages::Index.new(user: Current.user, messages: @messages, search: params[:search].to_s, params: params)
   end
