@@ -45,7 +45,7 @@ class ConversationsController < ApplicationController
       with: participants
     )
     redirect_to conversation_path(conversation)
-  rescue ActiveRecord::RecordInvalid => e
+  rescue ActiveRecord::RecordInvalid
     @users = User.none
     @selected_user = participants.first
     render Views::Conversations::New.new(user: Current.user, users: @users, selected_user: @selected_user, query: ""), status: :unprocessable_entity
