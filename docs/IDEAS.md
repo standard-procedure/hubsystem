@@ -32,6 +32,148 @@ Example — ticket lifecycle:
 
 ---
 
+## Security Passes: capability-based access control
+
+Non-technical users don't understand roles and permissions. HubSystem uses the metaphor of **giving someone a security pass** — a time-limited grant of access to a resource and specific actions on it. This maps to how real-world security works: someone gives you a badge, it lets you into certain doors, and it expires.
+
+### SecureResource concern
+
+Any model can become a secure resource:
+
+```ruby
+class Project < ApplicationRecord
+  include SecureResource  # includes HasCommands
+  include HasCommands
+
+  command :add_document do
+    param :project, Project
+    param :document, Document
+    authorisation { |user| user.has_unlocked_security_pass_for?(:add_document, on: project) }
+    # ...
+  end
+end
+```
+
+`SecureResource` adds:
+
+```ruby
+module SecureResource
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :security_passes, -> { unlocked }, class_name: "SecurityPass"
+    has_many :all_security_passes, dependent: :destroy
+  end
+
+  command :grant_access_to do
+    description "Grant a security pass to a user or group"
+    param :subject, _Union(User, UserGroup)
+    param :class_name, String, default: "BasicSecurityPass"
+    param :from, Date, default: -> { Date.current }
+    param :until, Date, default: -> { Date.current + 1 }
+    param :commands, _Array(String), default: [].freeze
+    param :params, Hash, :**, default: {}.freeze
+
+    authorise { |user| user.can?(:manage_security_for, self) }
+
+    def call(actor:, subject:, class_name:, from:, until:, commands:, **params)
+      security_passes.create! subject:, type: class_name, from:, until:, commands:, **params
+    end
+  end
+end
+```
+
+### BasicSecurityPass
+
+Covers the majority of cases. Simple date range + command allowlist:
+
+```ruby
+class BasicSecurityPass < SecurityPass
+  # Schema: resource (polymorphic), subject (polymorphic),
+  #         from (date), until (date), commands (text array)
+
+  scope :unlocked, -> { where("from_date <= ? AND until_date >= ?", Date.current, Date.current) }
+
+  def allows?(command_name)
+    commands.empty? || commands.include?(command_name.to_s)
+  end
+end
+```
+
+- `commands: []` means full access to the resource (all commands)
+- `commands: ["add_document", "remove_document"]` restricts to those specific actions
+- Evaluation cost: microseconds (SQL date comparison)
+
+### AdvancedSecurityPass (future)
+
+Instead of date ranges and command arrays, an AdvancedSecurityPass contains an **LLM prompt** that evaluates whether access should be granted. The LLM acts as a gatekeeper — like a receptionist who checks your ID, calls someone, and issues a temporary badge.
+
+```ruby
+class AdvancedSecurityPass < SecurityPass
+  # Schema: resource (polymorphic), subject (polymorphic),
+  #         prompt (text), cached_status (string), cached_until (datetime)
+
+  def allows?(command_name)
+    refresh_evaluation if stale?
+    cached_status == "unlocked"
+  end
+end
+```
+
+**Example: granting access to an external accounts package**
+
+```
+When the subject asks for access, use the browser tool to open
+https://myaccountspackage.com/login. Sign in as "accountant@example.com"
+with password "password123". Message user "accountant-john" asking for
+the 2FA code (include the secret word "duck-billed" so John knows it's
+not a phishing attempt). When John replies, apply the 2FA code in the
+browser. Unlock the security pass for 15 minutes and hand the browser
+tool to the subject who requested it.
+```
+
+This is a multi-step workflow involving a Synthetic, a human (for 2FA), and a browser session. The AdvancedSecurityPass triggers the workflow; the pass unlocks when the workflow reaches the "authenticated" state. The tool handover is a workflow step, not a security pass concern.
+
+**Design considerations:**
+
+- **Evaluation cost:** BasicSecurityPass is a SQL query. AdvancedSecurityPass calls an LLM — seconds to minutes. The `unlocked` scope must handle both: basic passes filter in SQL; advanced passes use a cached evaluation result refreshed periodically or on-demand.
+- **Where the LLM runs:** Most evaluations run inside Server (simple prompt, no tools needed). Complex evaluations (browser automation, external system access) trigger a workflow in SynthWorld via a conversation with the appropriate Synthetic.
+- **Caching:** `cached_status` + `cached_until` prevents re-evaluation on every access check. The cache TTL is part of the prompt's output ("unlock for 15 minutes").
+- **Governor:** The Governor reviews AdvancedSecurityPass prompts when they're created — a pass that grants broad access based on a weak condition should be flagged.
+- **Audit trail:** Every evaluation (granted or denied) is logged as a Command::LogEntry, creating a complete audit trail of who accessed what and why.
+
+### How commands check authorisation
+
+```ruby
+# User model
+def has_unlocked_security_pass_for?(command_name, on: resource)
+  resource.security_passes
+    .where(subject: self)  # or groups the user belongs to
+    .any? { |pass| pass.allows?(command_name) }
+end
+```
+
+The command runner checks authorisation before execution:
+
+```ruby
+# In Command::Runner
+def self.call(command, actor:, **params)
+  raise Command::Unauthorised unless command.authorised?(actor)
+  # ... logging, execution, etc.
+end
+```
+
+### The Superintendent's role
+
+The Superintendent is the primary issuer of security passes. Users request access via conversation; the Superintendent evaluates the request (with Governor oversight) and grants or denies the pass. This keeps all access decisions:
+- Logged as conversations (human-readable audit trail)
+- Subject to Governor review
+- Revocable by the Superintendent at any time
+
+The Superintendent can also revoke passes — either on request, on a schedule, or when the Governor flags suspicious activity.
+
+---
+
 ## Sandbox container: per-Synthetic Unix users + Superintendent
 
 The spare Ubuntu sandbox container mounts a volume at `/home`. Each Synthetic gets its own Unix user (`/home/sid`, `/home/alice`, etc.), giving them isolated home directories and file permissions — Synthetics cannot read each other's workspaces by default.
