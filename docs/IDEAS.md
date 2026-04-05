@@ -83,42 +83,75 @@ module SecureResource
 end
 ```
 
-### BasicSecurityPass
-
-Covers the majority of cases. Simple date range + command allowlist:
+### SecurityPass base class and `unlock_for`
 
 ```ruby
-class BasicSecurityPass < SecurityPass
+class SecurityPass < ApplicationRecord
   # Schema: resource (polymorphic), subject (polymorphic),
-  #         from (date), until (date), commands (text array)
+  #         type (STI), commands (text array)
 
-  scope :unlocked, -> { where("from_date <= ? AND until_date >= ?", Date.current, Date.current) }
+  belongs_to :resource, polymorphic: true
+  belongs_to :subject, polymorphic: true  # User or UserGroup
 
-  def allows?(command_name)
-    commands.empty? || commands.include?(command_name.to_s)
+  def unlock_for(actor)
+    raise NotImplementedError, "subclasses must implement unlock_for"
+  end
+
+  def unlocked_for?(actor)
+    unlock_for(actor) && allows_commands?(requested_commands)
+  end
+
+  private def allows_commands?(command_names)
+    commands.empty? || command_names.all? { |c| commands.include?(c.to_s) }
   end
 end
 ```
 
-- `commands: []` means full access to the resource (all commands)
-- `commands: ["add_document", "remove_document"]` restricts to those specific actions
-- Evaluation cost: microseconds (SQL date comparison)
+`unlock_for(actor)` is the single interface. The caller never knows or cares how the evaluation works — date check, LLM prompt, external API call, or something not yet imagined. Subclasses implement the strategy:
+
+### BasicSecurityPass
+
+```ruby
+class BasicSecurityPass < SecurityPass
+  # Additional schema: from_date (date), until_date (date)
+
+  scope :currently_valid, -> { where("from_date <= ? AND until_date >= ?", Date.current, Date.current) }
+
+  def unlock_for(actor)
+    Date.current.between?(from_date, until_date)
+  end
+end
+```
+
+- Evaluation cost: microseconds
+- SQL-filterable via `currently_valid` scope for bulk queries
 
 ### AdvancedSecurityPass (future)
 
-Instead of date ranges and command arrays, an AdvancedSecurityPass contains an **LLM prompt** that evaluates whether access should be granted. The LLM acts as a gatekeeper — like a receptionist who checks your ID, calls someone, and issues a temporary badge.
+Instead of date ranges, contains an **LLM prompt** that evaluates whether access should be granted. The LLM acts as a gatekeeper — like a receptionist who checks your ID, calls someone, and issues a temporary badge.
 
 ```ruby
 class AdvancedSecurityPass < SecurityPass
-  # Schema: resource (polymorphic), subject (polymorphic),
-  #         prompt (text), cached_status (string), cached_until (datetime)
+  # Additional schema: prompt (text), cached_status (string), cached_until (datetime)
 
-  def allows?(command_name)
-    refresh_evaluation if stale?
+  def unlock_for(actor)
+    refresh_evaluation(actor) if stale?
     cached_status == "unlocked"
   end
 end
 ```
+
+### Other subclass possibilities
+
+The `unlock_for` contract is open for extension:
+
+| Subclass | `unlock_for` strategy | Use case |
+|----------|----------------------|----------|
+| `BasicSecurityPass` | Date range check | Standard time-limited access |
+| `AdvancedSecurityPass` | LLM prompt evaluation | Complex conditional access, external system auth |
+| `ApprovalSecurityPass` | Check if an approval conversation has been completed | Access requires sign-off from a specific person |
+| `QuotaSecurityPass` | Check usage count against a limit | Rate-limited access (e.g. 10 API calls per day) |
+| `CompositeSecurityPass` | All/any of several child passes must unlock | Layered security (time range AND approval AND quota) |
 
 **Example: granting access to an external accounts package**
 
@@ -147,9 +180,9 @@ This is a multi-step workflow involving a Synthetic, a human (for 2FA), and a br
 ```ruby
 # User model
 def has_unlocked_security_pass_for?(command_name, on: resource)
-  resource.security_passes
+  resource.all_security_passes
     .where(subject: self)  # or groups the user belongs to
-    .any? { |pass| pass.allows?(command_name) }
+    .any? { |pass| pass.unlocked_for?(self) }
 end
 ```
 
