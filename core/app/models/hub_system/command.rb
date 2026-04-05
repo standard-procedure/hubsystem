@@ -3,19 +3,26 @@
 module HubSystem::Command
   Unauthorised = Class.new(StandardError)
 
-  def self.call(command_class, definition:, actor:, **params)
+  def self.call(command_class, definition:, actor:, **params, &blk)
     raise Unauthorised, "Not authorised to run #{command_class.name}" unless definition.authorisation_block.call(actor)
+
+    # Instantiate the Literal::Struct to apply defaults and type checking
+    instance = command_class.new(**params)
+    resolved_params = command_class.literal_properties
+      .select(&:keyword?)
+      .to_h { |p| [p.name, instance.public_send(p.name)] }
 
     entry = HubSystem::CommandLogEntry.create!(
       command_class: command_class.name,
       actor: actor,
-      params: serialise_params(params),
+      params: serialise_params(resolved_params),
       status: :started
     )
 
-    instance = command_class.new
-    instance.extend(definition.call_module)
-    result = instance.call(**params)
+    # The call_module contains the user-defined call method
+    executor = Object.new
+    executor.extend(definition.call_module)
+    result = executor.call(**resolved_params, &blk)
     entry.update!(status: :completed, result: result.to_s)
     result
   rescue Unauthorised

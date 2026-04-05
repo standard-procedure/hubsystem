@@ -29,6 +29,33 @@ RSpec.describe HubSystem::HasCommands do
         widget
       end
     end
+
+    Widget.command :with_defaults do
+      description "A command with default values"
+      param :widget, Widget
+      param :label, String, default: "default_label"
+      param :count, Integer, default: 1
+
+      authorisation { |_user| true }
+
+      def call(widget:, label:, count:)
+        widget.update!(name: "#{label}-#{count}")
+        widget
+      end
+    end
+
+    Widget.command :with_block do
+      description "A command that accepts a block"
+      param :widget, Widget
+      param :callback, Proc, :&
+
+      authorisation { |_user| true }
+
+      def call(widget:, &callback)
+        callback&.call(widget)
+        widget
+      end
+    end
   end
 
   let(:user) { User.create!(name: "Alice") }
@@ -42,6 +69,10 @@ RSpec.describe HubSystem::HasCommands do
     it "creates a constant on the model" do
       expect(defined?(Widget::Frobnicate)).to eq("constant")
     end
+
+    it "creates a Literal::Struct subclass" do
+      expect(Widget::Frobnicate.ancestors).to include(Literal::Struct)
+    end
   end
 
   describe "command catalogue" do
@@ -49,9 +80,31 @@ RSpec.describe HubSystem::HasCommands do
       definition = Widget.commands[:frobnicate]
       expect(definition).to be_a(HubSystem::CommandDefinition)
       expect(definition.description_text).to eq("Frobnicate the widget")
-      expect(definition.params).to eq({widget: Widget, name: String})
       expect(definition.return_types).to eq([Widget])
       expect(definition.exception_types).to eq([ArgumentError])
+    end
+
+    it "exposes param metadata via literal_properties" do
+      props = Widget::Frobnicate.literal_properties
+      names = props.map(&:name)
+      expect(names).to include(:widget, :name)
+    end
+
+    it "exposes param types via literal_properties" do
+      prop = Widget::Frobnicate.literal_properties.find { |p| p.name == :name }
+      expect(prop.type).to eq(String)
+    end
+  end
+
+  describe "default values" do
+    it "uses defaults when params are not provided" do
+      result = widget.with_defaults(actor: user)
+      expect(widget.reload.name).to eq("default_label-1")
+    end
+
+    it "overrides defaults when params are provided" do
+      result = widget.with_defaults(actor: user, label: "custom", count: 5)
+      expect(widget.reload.name).to eq("custom-5")
     end
   end
 

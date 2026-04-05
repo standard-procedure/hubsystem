@@ -17,11 +17,6 @@ RSpec.describe HubSystem::CommandDefinition do
       expect(definition.name).to eq(:frobnicate)
     end
 
-    it "stores params" do
-      definition = described_class.new(name: :frobnicate, params: {widget: Widget, name: String}, call_module: call_module)
-      expect(definition.params).to eq({widget: Widget, name: String})
-    end
-
     it "stores description" do
       definition = described_class.new(name: :frobnicate, description_text: "Do the thing", call_module: call_module)
       expect(definition.description_text).to eq("Do the thing")
@@ -52,17 +47,6 @@ RSpec.describe HubSystem::CommandDefinition do
 end
 
 RSpec.describe HubSystem::CommandDefinition::Builder do
-  it "captures params" do
-    builder = described_class.new(:frobnicate)
-    builder.param :widget, Widget
-    builder.param :name, String
-
-    call_mod = Module.new { def call(**); end }
-    definition = builder.build(call_mod)
-
-    expect(definition.params).to eq({widget: Widget, name: String})
-  end
-
   it "captures description" do
     builder = described_class.new(:frobnicate)
     builder.description "Do the thing"
