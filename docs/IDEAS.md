@@ -86,3 +86,92 @@ server/  (horizontally scaled Rails — stateless behind a load balancer)
 The key invariant that makes this work: `server/` is the only source of truth. All persistent state — conversations, tasks, memories, Governor events — lives there. World containers are stateless workers. A Synthetic can be moved between world containers (or restarted on a different host) by updating the service declaration; it re-establishes its WebSocket connection and carries on.
 
 This also means world containers can be sized independently of `server/` — more LLM-heavy workloads get bigger world containers; `server/` scales on request throughput instead.
+
+---
+
+## SynthRunner: event feeds and API clients
+
+Synthetics in `world/` communicate with `server/` via two channels: the JSON API (for actions) and a real-time event feed (for notifications). The SynthRunner sketch uses a queue-based architecture:
+
+```
+hub_system feed  ──→  queue  ──→  execute_loop  ──→  pre_process / respond / post_process
+local_system feed ──→  queue  ──↗
+```
+
+**Event feed transport: SSE vs WebSocket**
+
+Server currently publishes via ActionCable (WebSocket). For Synthetic consumers, Server-Sent Events (SSE) may be a better fit:
+
+- SSE is unidirectional (server→client) which matches the feed pattern — Synthetics push actions via REST, not through the socket
+- SSE auto-reconnects natively in HTTP clients; WebSocket reconnection needs manual handling
+- SSE is simpler to authenticate (Bearer token in the initial HTTP request) vs WebSocket auth via cookies or connection params
+- SSE works through HTTP proxies and load balancers without special configuration
+
+A dedicated SSE endpoint (e.g. `GET /api/v1/events`) could stream events as they're published, with the Synthetic's Bearer token scoping the feed to their conversations and tasks. The existing WebSocket channel (`SyntheticsChannel`) could remain for web browser clients where bidirectional communication is useful.
+
+**API client design**
+
+The `HubSystem::Session` class wraps the API for a single Synthetic:
+
+```ruby
+session = HubSystem::Session.new(base_url: "http://server:3000", token: "BEARER_TOKEN")
+session.conversations                    # GET /api/v1/conversations
+session.conversation(id)                 # GET /api/v1/conversations/:id
+session.send_message(conversation, text) # POST /api/v1/conversations/:id/messages
+session.update_status(badge:, message:)  # PATCH /api/v1/users/:id (or dedicated endpoint)
+session.events { |feed| ... }            # SSE connection
+```
+
+This keeps all HTTP/auth concerns in one place. The SynthRunner never constructs URLs or handles tokens directly.
+
+---
+
+## Superintendent: architecture decision
+
+The Superintendent is an ultra-privileged Synthetic that manages system administration — user creation, OAuth token issuance, security pass assignment. It lives **inside `server/`**, not in `world/`.
+
+**Why it's different from other Synthetics:**
+
+| Concern | Regular Synthetic | Superintendent |
+|---------|------------------|----------------|
+| Runtime | SynthWorld (long-lived async process) | Server (background job per conversation turn) |
+| State | Emotional arc, fatigue, memory pipeline | One context window per conversation, stateless between turns |
+| Autonomy | Pulls events, initiates actions | Reactive only — responds when asked |
+| Model access | Via HTTP API | Direct ActiveRecord (User, Doorkeeper::AccessToken, etc.) |
+| Pre-processing | Threat assessment, memory retrieval, emotional reaction (parallel) | None |
+| Post-processing | Memory storage, emotional processing (parallel) | None |
+| Governor | Yes (on responses) | **Yes** (on responses — critical given its power) |
+
+**Why not in SynthWorld:**
+
+Putting it in SynthWorld would require exposing admin API endpoints (create user, issue OAuth token, revoke security pass) as HTTP surface area. These are dangerous operations that should never be available over the network. By living inside Server, the Superintendent calls ActiveRecord directly — no API, no attack surface.
+
+The CLAUDE.md rule "no synthetic runtime logic in Server" refers to the autonomous agent pipeline (emotions, fatigue, threat assessment, SynthRunner supervision). The Superintendent has none of that. It's a tool-using LLM conversation handler with a Governor check — architecturally closer to a standard Rails + LLM integration than to a SynthWorld agent.
+
+**Implementation sketch:**
+
+```ruby
+# server/app/models/superintendent.rb
+class Superintendent
+  include HasGovernor
+
+  TOOLS = [
+    CreateUser, RevokeUser,
+    IssueAccessToken, RevokeAccessToken,
+    AssignSecurityPass, RevokeSecurityPass
+  ].freeze
+
+  def respond_to(conversation)
+    context = conversation.messages.order(:created_at).map { |m| {role: m.sender.superintendent? ? "assistant" : "user", content: m.contents} }
+    response = llm.chat(system: system_prompt, messages: context, tools: TOOLS)
+    governor.assess(response)  # Governor check before any action is taken
+    response
+  end
+end
+```
+
+Each tool is a simple class that wraps an ActiveRecord operation. The Governor reviews every response before execution — this is the safety check that prevents the Superintendent from, say, revoking all access tokens in one go because someone asked it to "clean up".
+
+**The Governor is non-negotiable** for the Superintendent. Its power makes Governor oversight more important, not less. The Governor prompt for the Superintendent should be specifically tuned to administrative risks: bulk operations, privilege escalation, self-modification.
+
+**Triggering:** When a message arrives in a conversation involving the Superintendent, a background job calls `Superintendent#respond_to` with the conversation context. The response is posted back as a message from the Superintendent user. No event feed, no queue, no SynthRunner — just a job per turn.
