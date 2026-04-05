@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HubSystem::CommandDefinition < Literal::Object
+class HubSystem::CommandDefinition < Literal::Data
   prop :name, Symbol, reader: :public
   prop :params, Hash, reader: :public, default: {}.freeze
   prop :description_text, _String?, reader: :public, default: nil
@@ -22,17 +22,17 @@ class HubSystem::CommandDefinition < Literal::Object
     def param(name, type) = @params[name] = type
     def description(text) = @description_text = text
     def authorisation(&block) = @authorisation_block = block
-    def returns(*types) = @return_types = types
-    def raises(*types) = @exception_types = types
+    def returns(*types) = @return_types = types.flatten
+    def raises(*types) = @exception_types = types.flatten
 
     def build(call_module)
       HubSystem::CommandDefinition.new(
         name: @name,
-        params: @params.freeze,
+        params: @params,
         description_text: @description_text,
         authorisation_block: @authorisation_block,
-        return_types: @return_types.freeze,
-        exception_types: @exception_types.freeze,
+        return_types: @return_types,
+        exception_types: @exception_types,
         call_module: call_module
       )
     end
