@@ -373,7 +373,7 @@ def create
     # CLI format: participant_slugs + initial_message
     recipients = Participant.where(slug: conversation_params[:participant_slugs])
     if recipients.empty?
-      return render json: { error: "No participants found for given slugs" }, status: :unprocessable_entity
+      return render json: { error: "No participants found for given slugs" }, status: :unprocessable_content
     end
 
     message = conversation.messages.build(
@@ -402,7 +402,7 @@ def create
     )
 
     to_participant = Participant.find_by(id: conversation_params.dig(:message, :to_id))
-    return render json: { error: "to_id is required" }, status: :unprocessable_entity unless to_participant
+    return render json: { error: "to_id is required" }, status: :unprocessable_content unless to_participant
 
     message.to = to_participant
     conversation.conversation_memberships.build(participant: @current_participant)
@@ -424,7 +424,7 @@ def create
       subject: conversation.subject
     }, status: :created
   else
-    render json: { errors: conversation.errors.full_messages }, status: :unprocessable_entity
+    render json: { errors: conversation.errors.full_messages }, status: :unprocessable_content
   end
 end
 ```

@@ -14,7 +14,7 @@ module ErrorHandlers
     end
 
     private def invalid_data(error)
-      render json: {error: "invalid_data", errors: error.record.errors.full_messages}, status: :unprocessable_entity
+      render json: {error: "invalid_data", errors: error.record.errors.full_messages}, status: :unprocessable_content
     end
 
     private def not_found

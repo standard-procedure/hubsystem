@@ -28,7 +28,7 @@ class Api::V1::TasksController < Api::V1::BaseController
     if task.save
       render json: task_json(task), status: :created
     else
-      render json: {errors: task.errors.full_messages}, status: :unprocessable_entity
+      render json: {errors: task.errors.full_messages}, status: :unprocessable_content
     end
   end
 

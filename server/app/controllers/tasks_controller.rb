@@ -32,7 +32,7 @@ class TasksController < ApplicationController
     if @task.save
       redirect_to task_path(@task)
     else
-      render Views::Tasks::New.new(user: Current.user, parent: @task.parent), status: :unprocessable_entity
+      render Views::Tasks::New.new(user: Current.user, parent: @task.parent), status: :unprocessable_content
     end
   end
 end

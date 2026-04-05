@@ -119,7 +119,7 @@ RSpec.describe "API V1 Conversations", type: :request do
       post api_v1_conversations_path, params: {
         conversation: {subject: "", message: "", participant_ids: []}
       }, headers: headers, as: :json
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       body = JSON.parse(response.body)
       expect(body["errors"]).to be_an(Array)
     end
