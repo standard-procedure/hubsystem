@@ -33,6 +33,12 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Test app generated files
+/spec/test_app/log/
+/spec/test_app/storage/
+/spec/test_app/tmp/
+/spec/test_app/db/schema.rb
+
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
