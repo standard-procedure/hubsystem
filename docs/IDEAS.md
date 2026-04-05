@@ -163,6 +163,24 @@ def self.call(command, actor:, **params)
 end
 ```
 
+### SecureResource across the system boundary
+
+`SecureResource` is a protocol, not a Rails-specific concern. Both Server and SynthWorld have resources worth protecting — what differs is what's being secured.
+
+| System | Secure Resources | Example commands |
+|--------|-----------------|------------------|
+| Server | Projects, Documents, Conversations, Users | `:add_document`, `:archive`, `:send_message` |
+| SynthWorld | Browser tools, sandbox folders, external process handles, API credentials | `:browse`, `:screenshot`, `:read_folder`, `:execute` |
+
+The security pass model is identical in both: subject, resource, time window, allowed actions. A Synthetic asking to use the Playwright browser tool goes through the same pass-check as a human asking to add a document to a project.
+
+This means:
+- **Tool handover is a security pass grant.** When the accounts example says "hand the browser tool to the subject", that's the Superintendent (or the evaluating Synthetic) issuing a `BasicSecurityPass` on the browser tool resource with a 15-minute window and the subject as grantee.
+- **Shared sandbox folders are secure resources.** A Synthetic's home directory is private by default. Granting another Synthetic read access is a security pass on the folder resource with `commands: [:read_folder]`. Write access adds `:write_folder`.
+- **External process handles are secure resources.** A running database connection, an authenticated API session, a spawned subprocess — each can be wrapped as a `SecureResource` with passes controlling who can interact with it and for how long.
+
+The `SecureResource` concern needs to live in a shared library (or be simple enough to implement independently in both codebases with the same interface). The `SecurityPass` records themselves live in Server as the source of truth — SynthWorld checks passes via the API.
+
 ### The Superintendent's role
 
 The Superintendent is the primary issuer of security passes. Users request access via conversation; the Superintendent evaluates the request (with Governor oversight) and grants or denies the pass. This keeps all access decisions:
