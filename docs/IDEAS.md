@@ -181,6 +181,26 @@ This means:
 
 The `SecureResource` concern needs to live in a shared library (or be simple enough to implement independently in both codebases with the same interface). The `SecurityPass` records themselves live in Server as the source of truth — SynthWorld checks passes via the API.
 
+### Unified authorisation pattern
+
+The authorisation check is identical in both systems:
+
+```ruby
+# Server: Command#call
+def call(actor:, project:, document:)
+  raise Command::Unauthorised unless actor.has_unlocked_security_pass_for?(:add_document, on: project)
+  # ... execute
+end
+
+# SynthWorld: Tool#execute
+def execute(caller:, url:)
+  raise Tool::Unauthorised unless caller.has_unlocked_security_pass_for?(:browse, on: browser_tool)
+  # ... execute
+end
+```
+
+Same gate, same pass model, different sides of the HTTP boundary. A command's `authorisation` block and a tool's `execute` preamble both resolve to the same question: does this actor have an unlocked security pass for this action on this resource right now?
+
 ### The Superintendent's role
 
 The Superintendent is the primary issuer of security passes. Users request access via conversation; the Superintendent evaluates the request (with Governor oversight) and grants or denies the pass. This keeps all access decisions:
