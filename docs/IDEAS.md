@@ -193,6 +193,52 @@ CommandRouter.mount(Project) # generates routes from Project.commands
 
 This is a future direction — hand-written controllers work fine initially and the registry can power generation later when the command count warrants it.
 
+### Full command definition
+
+```ruby
+class Project < ApplicationRecord
+  include HasCommands
+
+  command :add_document do
+    description "Add a document to this project"
+
+    param :project, Project
+    param :document, Document
+
+    authorisation { |user| user.has_unlocked_security_pass_for?(:adding_documents, to: :project) }
+
+    returns Document
+    raises Project::DocumentCannotBeAdded
+
+    def call(project:, document:)
+      raise Project::DocumentCannotBeAdded unless project.accepts_documents?
+      project.documents << document
+      document
+    end
+  end
+end
+```
+
+**`authorisation`** — block that receives the acting user and returns true/false. **Defaults to false** (fail closed). Every command must explicitly declare who can run it. The security pass model is capability-based: the Superintendent grants passes, the Governor can revoke them, and the command checks at execution time.
+
+**`returns`** — declares the type(s) the command returns on success. Used by OpenAPI generation for response schemas and by the dynamic UI to know what to render after execution.
+
+**`raises`** — declares domain-specific exceptions. Used by OpenAPI generation for error response schemas. The command runner catches these and logs them distinctly from unexpected errors.
+
+**`description`** — human-readable text used in OpenAPI docs, dynamic UI tooltips, and LLM tool descriptions.
+
+Together these declarations make the command definition the single source of truth for:
+- What the action does (description + call)
+- Who can do it (authorisation)
+- What it needs (params with types)
+- What it produces (returns)
+- What can go wrong (raises)
+- The API endpoint (auto-generated)
+- The OpenAPI spec (auto-generated)
+- The LLM tool definition (via adapter)
+
+If the web UI uses a command, the API automatically exposes it — no separate API controllers, no separate API step definitions, no separate OpenAPI maintenance.
+
 ### Relationship to LLM tool calls
 
 Commands and RubyLLM tool calls are structurally similar (typed params, call method, registry) but serve different concerns. Commands own logging, authorization, and audit. Tool calls own JSON schema serialisation for the LLM's function calling format. Unifying them couples every command to LLM serialisation and every tool call to audit logging.
