@@ -28,3 +28,745 @@ Generating image variants require the image_processing gem. Please add `gem "ima
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:25:20.287587"], ["name", "Alice"], ["updated_at", "2026-04-05 14:25:20.287587"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:25:20.291496"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:25:20.291496"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.1ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: something broke"], ["status", -1], ["updated_at", "2026-04-05 14:25:20.291856"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:25:20.295341"], ["name", "Alice"], ["updated_at", "2026-04-05 14:25:20.295341"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:25:20.295592"], ["error", nil], ["params", "{\"widget_id\":1,\"name\":\"test\"}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:25:20.295592"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:25:20.296012"], ["name", "Alice"], ["updated_at", "2026-04-05 14:25:20.296012"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:25:20.296236"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:25:20.296236"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "Widget#1"], ["status", 1], ["updated_at", "2026-04-05 14:25:20.296485"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:29:57.179683"], ["name", "Alice"], ["updated_at", "2026-04-05 14:29:57.179683"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:29:57.183015"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:29:57.183015"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.1ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "Widget#1"], ["status", 1], ["updated_at", "2026-04-05 14:29:57.183346"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:29:57.185517"], ["name", "Alice"], ["updated_at", "2026-04-05 14:29:57.185517"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:29:57.185775"], ["error", nil], ["params", "{\"widget_id\":1,\"name\":\"test\"}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:29:57.185775"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:29:57.186214"], ["name", "Alice"], ["updated_at", "2026-04-05 14:29:57.186214"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:29:57.186431"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:29:57.186431"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: something broke"], ["status", -1], ["updated_at", "2026-04-05 14:29:57.186673"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:30:51.573151"], ["name", "Alice"], ["updated_at", "2026-04-05 14:30:51.573151"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:30:51.576437"], ["error", nil], ["params", "{\"widget_id\":1,\"name\":\"test\"}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:30:51.576437"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:30:51.577208"], ["name", "Alice"], ["updated_at", "2026-04-05 14:30:51.577208"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:30:51.577459"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:30:51.577459"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "Widget#1"], ["status", 1], ["updated_at", "2026-04-05 14:30:51.577721"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:30:51.579831"], ["name", "Alice"], ["updated_at", "2026-04-05 14:30:51.579831"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:30:51.580062"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:30:51.580062"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: something broke"], ["status", -1], ["updated_at", "2026-04-05 14:30:51.580294"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:31:40.206253"], ["name", "Alice"], ["updated_at", "2026-04-05 14:31:40.206253"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:31:40.209624"], ["error", nil], ["params", "{\"widget_id\":1,\"name\":\"test\"}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:31:40.209624"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:31:40.215440"], ["name", "Alice"], ["updated_at", "2026-04-05 14:31:40.215440"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:31:40.215773"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:31:40.215773"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.1ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "Widget#1"], ["status", 1], ["updated_at", "2026-04-05 14:31:40.216034"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:31:40.218034"], ["name", "Alice"], ["updated_at", "2026-04-05 14:31:40.218034"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:31:40.218267"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:31:40.218267"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: something broke"], ["status", -1], ["updated_at", "2026-04-05 14:31:40.218496"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.076906"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:18.076906"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.078396"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:18.078396"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:34:18.081105"], ["error", nil], ["params", "{\"name\":\"Logged\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:18.081105"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Logged"], ["updated_at", "2026-04-05 14:34:18.081431"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x0000000127834988>"], ["status", 1], ["updated_at", "2026-04-05 14:34:18.081965"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mHubSystem::CommandLogEntry Load (0.0ms)[0m  [1m[34mSELECT "hub_system_command_log_entries".* FROM "hub_system_command_log_entries" ORDER BY "hub_system_command_log_entries"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.088330"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:18.088330"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.088554"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:18.088554"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:34:18.088787"], ["error", nil], ["params", "{\"name\":\"Frobbed\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:18.088787"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Frobbed"], ["updated_at", "2026-04-05 14:34:18.089038"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x00000001276f08d8>"], ["status", 1], ["updated_at", "2026-04-05 14:34:18.089268"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWidget Load (0.0ms)[0m  [1m[34mSELECT "widgets".* FROM "widgets" WHERE "widgets"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.091476"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:18.091476"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.091711"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:18.091711"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:34:18.091928"], ["error", nil], ["params", "{\"name\":\"Allowed\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:18.091928"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Allowed"], ["updated_at", "2026-04-05 14:34:18.092147"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x0000000127b5c958>"], ["status", 1], ["updated_at", "2026-04-05 14:34:18.092348"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.092704"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:18.092704"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.092931"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:18.092931"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.093408"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:18.093408"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.093633"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:18.093633"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.098352"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:18.098352"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:18.098638"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:18.098638"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Exploding"], ["created_at", "2026-04-05 14:34:18.098911"], ["error", nil], ["params", "{\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:18.098911"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: Boom!"], ["status", -1], ["updated_at", "2026-04-05 14:34:18.099174"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mHubSystem::CommandLogEntry Load (0.0ms)[0m  [1m[34mSELECT "hub_system_command_log_entries".* FROM "hub_system_command_log_entries" ORDER BY "hub_system_command_log_entries"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.123297"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:46.123297"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.124764"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:46.124764"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Exploding"], ["created_at", "2026-04-05 14:34:46.127518"], ["error", nil], ["params", "{\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:46.127518"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: Boom!"], ["status", -1], ["updated_at", "2026-04-05 14:34:46.127855"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mHubSystem::CommandLogEntry Load (0.0ms)[0m  [1m[34mSELECT "hub_system_command_log_entries".* FROM "hub_system_command_log_entries" ORDER BY "hub_system_command_log_entries"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.134358"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:46.134358"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.134653"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:46.134653"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Exploding"], ["created_at", "2026-04-05 14:34:46.134917"], ["error", nil], ["params", "{\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:46.134917"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: Boom!"], ["status", -1], ["updated_at", "2026-04-05 14:34:46.135185"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.136051"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:46.136051"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.136274"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:46.136274"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:34:46.136500"], ["error", nil], ["params", "{\"name\":\"Frobbed\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:46.136500"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Frobbed"], ["updated_at", "2026-04-05 14:34:46.136732"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x000000012739e388>"], ["status", 1], ["updated_at", "2026-04-05 14:34:46.136950"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWidget Load (0.0ms)[0m  [1m[34mSELECT "widgets".* FROM "widgets" WHERE "widgets"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.0ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.137557"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:46.137557"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.137768"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:46.137768"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:34:46.137978"], ["error", nil], ["params", "{\"name\":\"Logged\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:46.137978"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Logged"], ["updated_at", "2026-04-05 14:34:46.138193"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x000000012739b688>"], ["status", 1], ["updated_at", "2026-04-05 14:34:46.138391"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mHubSystem::CommandLogEntry Load (0.0ms)[0m  [1m[34mSELECT "hub_system_command_log_entries".* FROM "hub_system_command_log_entries" ORDER BY "hub_system_command_log_entries"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.0ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.140013"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:46.140013"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.140212"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:46.140212"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:34:46.140420"], ["error", nil], ["params", "{\"name\":\"Allowed\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:34:46.140420"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Allowed"], ["updated_at", "2026-04-05 14:34:46.140655"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x0000000127397588>"], ["status", 1], ["updated_at", "2026-04-05 14:34:46.140851"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.0ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.141180"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:34:46.141180"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:34:46.141367"], ["name", "Alice"], ["updated_at", "2026-04-05 14:34:46.141367"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+Generating image variants require the image_processing gem. Please add `gem "image_processing", "~> 1.2"` to your Gemfile or set `config.active_storage.variant_processor = :disabled`.
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.638999"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:35:56.638999"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.640474"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.640474"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:35:56.643257"], ["error", nil], ["params", "{\"name\":\"Allowed\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.643257"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.1ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Allowed"], ["updated_at", "2026-04-05 14:35:56.643587"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x0000000124579638>"], ["status", 1], ["updated_at", "2026-04-05 14:35:56.645369"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.650616"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:35:56.650616"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.650882"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.650882"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.1ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.651879"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:35:56.651879"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.652084"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.652084"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.1ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Exploding"], ["created_at", "2026-04-05 14:35:56.652315"], ["error", nil], ["params", "{\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.652315"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: Boom!"], ["status", -1], ["updated_at", "2026-04-05 14:35:56.652570"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mHubSystem::CommandLogEntry Load (0.0ms)[0m  [1m[34mSELECT "hub_system_command_log_entries".* FROM "hub_system_command_log_entries" ORDER BY "hub_system_command_log_entries"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.0ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.653986"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:35:56.653986"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.654190"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.654190"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Exploding"], ["created_at", "2026-04-05 14:35:56.654404"], ["error", nil], ["params", "{\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.654404"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: Boom!"], ["status", -1], ["updated_at", "2026-04-05 14:35:56.654667"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.0ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.655129"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:35:56.655129"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.655323"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.655323"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:35:56.655554"], ["error", nil], ["params", "{\"name\":\"Logged\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.655554"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Logged"], ["updated_at", "2026-04-05 14:35:56.655779"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x00000001221e7940>"], ["status", 1], ["updated_at", "2026-04-05 14:35:56.656000"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "hub_system_command_log_entries"[0m
+  [1m[36mHubSystem::CommandLogEntry Load (0.0ms)[0m  [1m[34mSELECT "hub_system_command_log_entries".* FROM "hub_system_command_log_entries" ORDER BY "hub_system_command_log_entries"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Create (0.0ms)[0m  [1m[32mINSERT INTO "widgets" ("created_at", "name", "size", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.657414"], ["name", "Original"], ["size", 0], ["updated_at", "2026-04-05 14:35:56.657414"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.657615"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.657615"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:35:56.657819"], ["error", nil], ["params", "{\"name\":\"Frobbed\",\"widget\":{\"class\":\"Widget\",\"id\":1}}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.657819"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWidget Update (0.0ms)[0m  [1m[33mUPDATE "widgets" SET "name" = ?, "updated_at" = ? WHERE "widgets"."id" = ?[0m  [["name", "Frobbed"], ["updated_at", "2026-04-05 14:35:56.658033"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "#<Widget:0x00000001221e3ac0>"], ["status", 1], ["updated_at", "2026-04-05 14:35:56.658226"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWidget Load (0.0ms)[0m  [1m[34mSELECT "widgets".* FROM "widgets" WHERE "widgets"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.661607"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.661607"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:35:56.661829"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.661829"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "result" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["result", "Widget#1"], ["status", 1], ["updated_at", "2026-04-05 14:35:56.662072"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.662420"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.662420"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:35:56.662628"], ["error", nil], ["params", "{\"widget_id\":1,\"name\":\"test\"}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.662628"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.0ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "name", "updated_at") VALUES (?, ?, ?) RETURNING "id"[0m  [["created_at", "2026-04-05 14:35:56.663019"], ["name", "Alice"], ["updated_at", "2026-04-05 14:35:56.663019"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Create (0.0ms)[0m  [1m[32mINSERT INTO "hub_system_command_log_entries" ("actor_id", "actor_type", "command_class", "created_at", "error", "params", "result", "status", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["actor_id", 1], ["actor_type", "User"], ["command_class", "Widget::Frobnicate"], ["created_at", "2026-04-05 14:35:56.663224"], ["error", nil], ["params", "{}"], ["result", nil], ["status", 0], ["updated_at", "2026-04-05 14:35:56.663224"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHubSystem::CommandLogEntry Update (0.0ms)[0m  [1m[33mUPDATE "hub_system_command_log_entries" SET "error" = ?, "status" = ?, "updated_at" = ? WHERE "hub_system_command_log_entries"."id" = ?[0m  [["error", "RuntimeError: something broke"], ["status", -1], ["updated_at", "2026-04-05 14:35:56.663444"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
