@@ -89,6 +89,98 @@ This also means world containers can be sized independently of `server/` — mor
 
 ---
 
+## Commands: action registry, audit trail, and tool discovery
+
+Every action in HubSystem — human or synthetic — needs to be logged. The system is full of non-deterministic, potentially unreliable actors, so a complete audit trail is essential. Beyond logging, an explicit command registry serves as the tool catalogue for Synthetics and drives dynamic UIs ("what can I do with this Project?").
+
+### Design: `HasCommands` concern with `command` DSL
+
+Commands are declared on the model they operate on, using a class-level DSL:
+
+```ruby
+class Project < ApplicationRecord
+  include HasCommands
+
+  command :add_document do
+    param :project, Project
+    param :document, Document
+
+    def call(project:, document:)
+      project.documents << document
+      project
+    end
+  end
+end
+```
+
+The `command` macro:
+1. Defines a `Literal::Struct` subclass (e.g. `Project::AddDocument`) with typed params
+2. Registers it in the model's command catalogue (`Project.commands` → `[:add_document, ...]`)
+3. Adds an instance method on the model that wraps the command with logging:
+
+```ruby
+# These are equivalent:
+@project.add_document(user: Current.user, document: @document)
+Command.call(Project::AddDocument, user: Current.user, project: @project, document: @document)
+
+# Both:
+# 1. Type-check params via Literal
+# 2. Create a Command::LogEntry (actor, command class, params, status: :started)
+# 3. Call the command's #call method
+# 4. Update the log entry (status: :completed or :failed, result/error)
+# 5. Return the result (or raise)
+```
+
+### Command::LogEntry (the audit record)
+
+```ruby
+# Schema
+create_table :command_log_entries do |t|
+  t.string :command_class, null: false        # "Project::AddDocument"
+  t.references :actor, polymorphic: true      # User (human or synthetic)
+  t.jsonb :params, default: {}                # {project_id: 1, document_id: 2}
+  t.string :status, default: "started"        # started, completed, failed
+  t.text :result                              # return value summary
+  t.text :error                               # error message + class on failure
+  t.timestamps
+end
+```
+
+Commands are `Literal::Struct` (not ActiveRecord) — they're fast, type-safe, and have no database overhead themselves. Only the log entry touches the database. The log write is synchronous before execution (so the entry exists even if the process crashes mid-command).
+
+### Command catalogue for tool discovery
+
+Because commands are registered on models, Synthetics can discover available actions:
+
+```ruby
+Project.commands          # => [:add_document, :remove_document, :archive, ...]
+Project::AddDocument      # => the Literal::Struct class
+Project::AddDocument.params # => {project: Project, document: Document}
+```
+
+This drives:
+- **Superintendent tools** — each tool maps to a command class
+- **SynthRunner action discovery** — "what can I do with this conversation/task/project?"
+- **Web UI** — render available actions dynamically based on the model's command catalogue
+- **API** — expose available commands as a discoverable endpoint
+
+### Relationship to other patterns
+
+**vs Rails Pulse:** Pulse provides operational observability (request timing, error rates). Commands provide domain-level audit (who did what, with what intent). They're complementary — Pulse for ops, Commands for audit.
+
+**vs Event Sourcing:** Commands can emit domain events after execution, bridging to the event bus (see above). The log entry records the *intent*; the event records the *outcome*. If/when the event bus materialises, the command runner gains a `publish` step:
+
+```ruby
+# After successful execution:
+EventBus.publish(DocumentAdded.new(project: project, document: document, actor: actor))
+```
+
+This unifies commands, the event bus, and the workflow engine into one chain: Command → Event → Workflow → (more Commands).
+
+**vs Collabor8 Command model:** The Collabor8 approach used STI ActiveRecord for commands, which was slow (every command writes to the DB on construction) and required complex associations. This design keeps commands as plain Ruby structs — only the log entry is ActiveRecord. Test suites stay fast because commands can be tested without touching the database.
+
+---
+
 ## SynthRunner: event feeds and API clients
 
 Synthetics in `world/` communicate with `server/` via two channels: the JSON API (for actions) and a real-time event feed (for notifications). The SynthRunner sketch uses a queue-based architecture:
