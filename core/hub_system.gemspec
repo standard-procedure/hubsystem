@@ -12,4 +12,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", "~> 8.1"
   spec.add_dependency "literal", "~> 1.9"
+  spec.add_dependency "standard_procedure_has_attributes"
 end
