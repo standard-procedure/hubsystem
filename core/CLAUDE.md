@@ -89,6 +89,43 @@ _check value, is: proc { _1 > 0 } # custom constraint
 
 Available as both class and instance method.
 
+### Security Passes (`HubSystem::SecurityPass`)
+
+Capability-based access control using the metaphor of "giving someone a security pass". A pass is attached to a resource and a user, grants access to specific commands, and subclasses implement `authorised?` to determine if access should be allowed.
+
+```ruby
+# Create a pass granting read/write access for a date range
+pass = HubSystem::BasicSecurityPass.create!(
+  resource: project,
+  user: alice,
+  data: {
+    from_date: Date.current.to_s,
+    until_date: 30.days.from_now.to_date.to_s,
+    commands: '["read", "write"]'
+  }
+)
+
+# Unlock the pass — authorise, yield resource, re-lock via ensure
+pass.unlock("read") do |project|
+  project.documents  # access granted for the block's duration
+end
+# pass is automatically re-locked here, even if the block raised
+```
+
+#### The unlock protocol
+
+`pass.unlock(*requests, &block)`:
+1. Calls `authorise!(*requests)` — raises `SecurityPass::Unauthorised` if denied
+2. Sets status to `:unlocked`
+3. Yields the resource to the block
+4. Re-locks via `ensure` — always, even on exception
+
+#### Subclasses implement `authorised?`
+
+- **`BasicSecurityPass`** — checks date range (`from_date`/`until_date`) AND command allowlist. Uses HasAttributes to store dates in JSON.
+- **`AdvancedSecurityPass`** (future) — LLM-evaluated authorisation via prompt
+- Subclass-specific data stored in `data` JSON column via `standard_procedure_has_attributes` gem — no schema changes needed per subclass
+
 ## Key directories
 
 ```
@@ -97,8 +134,10 @@ core/
     hub_system/
       application_record.rb     Base AR class for engine models
       command.rb                Command runner (call, authorise, log)
-      command_definition.rb     Literal::Object for command metadata + Builder
+      command_definition.rb     Literal::Data for command metadata + Builder
       command_log_entry.rb      ActiveRecord audit trail
+      security_pass.rb          Base class — unlock protocol, authorise!, allows?
+      basic_security_pass.rb    Date range + commands authorisation
     concerns/hub_system/
       has_commands.rb           The command DSL macro
       has_type_checks.rb        Runtime type assertions
@@ -120,8 +159,8 @@ Uses a minimal Rails app in `spec/test_app/` with SQLite. Test models (`Widget`,
 
 ## Future additions
 
-- **SecurityPass** — capability-based access control (`BasicSecurityPass`, `AdvancedSecurityPass`)
-- **SecureResource** — concern for models protected by security passes
+- **SecureResource** — concern for models protected by security passes (`authorises?`, `passes_for`, `grant_access_to` command)
+- **AdvancedSecurityPass** — LLM-evaluated authorisation with prompt and cached results
 - **HasGovernor** — safety checks on command execution
 - **Dynamic API generation** — automatic controllers from command catalogues
 - **LLM tool adapter** — maps command catalogue to LLM function calling schemas

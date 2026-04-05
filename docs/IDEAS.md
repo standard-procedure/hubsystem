@@ -66,6 +66,7 @@ module SecureResource
   included do
     has_many :all_security_passes, dependent: :destroy
     has_many :security_passes, -> { unlocked }, class_name: "SecurityPass"
+    scope :visible_to, ->(user) { joins(:security_passes).where(security_passes: { user: user })}  
   end
 
   def passes_for(user, *requests) = security_passes.select { |pass| (pass.user == user) && pass.allows?(*requests) }
@@ -89,65 +90,9 @@ module SecureResource
 end
 ```
 
-### SecurityPass base class and `unlock_for`
+### SecurityPass and BasicSecurityPass — IMPLEMENTED
 
-```ruby
-class SecurityPass < ApplicationRecord
-  # Schema: resource (polymorphic), user,
-  #         type (STI), commands (text array), data (JSON - for subclasses to use)
-
-  belongs_to :resource, polymorphic: true
-  belongs_to :user 
-  enum :status, locked: 0, unlocked: 100
-
-  command :unlock do 
-    param :requests, _Array, default: [].freeze, 
-    param :then, _Callable, :&
-    returns _Any 
-
-    def call requests, then
-      Async do 
-        authorise! *requests
-        unlocked!
-        then.call resource
-      ensure
-        locked!
-      end
-    end
-  end
-
-  def authorise!(*requests)
-    raise Unauthorised.new(user, *requests) unless authorised?(*requests)
-  end
-
-  def allows?(*requests) = (requests - commands).empty?
-
-  def authorised?(*requests)
-    raise NotImplementedError, "subclasses must implement authorise_for!"
-  end
-end
-```
-
-`unlock(*requests, &)` is the single caller interface. 
-
-The pass is only unlocked for the duration of the block — `ensure` guarantees re-locking even if the block raises. This eliminates the "forgot to revoke" class of security bugs. And because `unlock` is a command, the entire lifecycle (who unlocked what, when, for how long, did it succeed or fail) is logged automatically.
-
-The caller never knows or cares how authorisation works — date check, LLM prompt, external API call, or something not yet imagined. The unlocked block is in a separate fiber - meaning that authorisation may take a while but it does not block.  Subclasses implement the strategy by overriding `authorise?(*requests)`:
-
-### BasicSecurityPass
-
-```ruby
-class BasicSecurityPass < SecurityPass
-  # Additional schema: from_date (date), until_date (date)
-
-  def authorise!(*requests)
-    Date.current.between?(from_date, until_date) && allows?(*requests)
-  end
-end
-```
-
-- Evaluation cost: microseconds
-- SQL-filterable via `currently_valid` scope for bulk queries
+See `core/CLAUDE.md` for documentation. The base class (`HubSystem::SecurityPass`) and `HubSystem::BasicSecurityPass` (date range + commands) are implemented in the engine with 28 specs.
 
 ### AdvancedSecurityPass (future)
 
