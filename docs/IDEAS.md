@@ -212,7 +212,75 @@ This means:
 - **Shared sandbox folders are secure resources.** A Synthetic's home directory is private by default. Granting another Synthetic read access is a security pass on the folder resource with `commands: [:read_folder]`. Write access adds `:write_folder`.
 - **External process handles are secure resources.** A running database connection, an authenticated API session, a spawned subprocess — each can be wrapped as a `SecureResource` with passes controlling who can interact with it and for how long.
 
-The `SecureResource` concern needs to live in a shared library (or be simple enough to implement independently in both codebases with the same interface). The `SecurityPass` records themselves live in Server as the source of truth — SynthWorld checks passes via the API.
+### Shared engine: `hubsystem-core`
+
+The cross-cutting concepts shared between Server and SynthWorld belong in a Rails engine gem:
+
+```
+hubsystem-core/
+  app/
+    models/
+      security_pass.rb              # base class + STI
+      basic_security_pass.rb
+      advanced_security_pass.rb
+      command/log_entry.rb
+    models/concerns/
+      secure_resource.rb
+      has_commands.rb
+      has_type_checks.rb
+      has_governor.rb
+  db/migrate/
+    create_security_passes.rb
+    create_command_log_entries.rb
+```
+
+Both `server/` and `world/` add `gem "hubsystem-core", path: "../core"` to their Gemfiles. The engine owns the migrations and the shared protocol; each app includes the concerns into its own models and provides its own subclasses where needed.
+
+### SecurityPass unlock lifecycle
+
+The security pass `unlock` command wraps the entire access lifecycle:
+
+```ruby
+class SecurityPass < ApplicationRecord
+  belongs_to :subject, polymorphic: true
+  belongs_to :resource, polymorphic: true
+
+  command :unlock do
+    param :then, _Callable, :&
+
+    authorise { |user| (subject == user) || (user.security_groups.include? subject) }
+
+    def call(&then)
+      Async do
+        check_unlock_conditions!
+        unlocked!
+        then&.call
+      ensure
+        locked!
+      end
+    end
+  end
+end
+```
+
+The pass is only unlocked for the duration of the block — `ensure` guarantees re-locking even if the block raises. This eliminates the "forgot to revoke" class of security bugs. And because `unlock` is a command, the entire lifecycle (who unlocked what, when, for how long, did it succeed or fail) is logged automatically.
+
+The `Async` wrapper means the unlock evaluation (which might be an LLM call or a workflow for AdvancedSecurityPass) doesn't block the caller. Subclasses override `check_unlock_conditions!`:
+
+```ruby
+class BasicSecurityPass < SecurityPass
+  def check_unlock_conditions!
+    raise SecurityPass::Denied unless Date.current.between?(from_date, until_date)
+  end
+end
+
+class AdvancedSecurityPass < SecurityPass
+  def check_unlock_conditions!
+    result = evaluate_prompt(actor: Current.user)
+    raise SecurityPass::Denied unless result.granted?
+  end
+end
+```
 
 ### Unified authorisation pattern
 
