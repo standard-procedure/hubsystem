@@ -30,6 +30,9 @@ Example — ticket lifecycle:
 - State machine could be something like `state_machines` gem or a simple JSONB column with explicit transition methods
 - "Ask a user for input" could be modelled as a conversation turn — the workflow parks itself waiting for a reply event
 
+Implementation note:
+This can be handled by monitoring the Commands as they are written to the Command Log Entries table
+
 ---
 
 ## Security Passes: capability-based access control
@@ -48,7 +51,7 @@ class Project < ApplicationRecord
   command :add_document do
     param :project, Project
     param :document, Document
-    authorisation { |user| user.has_unlocked_security_pass_for?(:add_document, on: project) }
+    authorisation { |user| user.can? :add_document, to: project }
     # ...
   end
 end
@@ -61,9 +64,12 @@ module SecureResource
   extend ActiveSupport::Concern
 
   included do
-    has_many :security_passes, -> { unlocked }, class_name: "SecurityPass"
     has_many :all_security_passes, dependent: :destroy
+    has_many :security_passes, -> { unlocked }, class_name: "SecurityPass"
   end
+
+  def passes_for(user, *requests) = security_passes.select { |pass| (pass.user == user) && pass.allows?(*requests) }
+  def authorises?(user, *requests) = passes_for(user, *requests).any?
 
   command :grant_access_to do
     description "Grant a security pass to a user or group"
@@ -87,27 +93,46 @@ end
 
 ```ruby
 class SecurityPass < ApplicationRecord
-  # Schema: resource (polymorphic), subject (polymorphic),
-  #         type (STI), commands (text array)
+  # Schema: resource (polymorphic), user,
+  #         type (STI), commands (text array), data (JSON - for subclasses to use)
 
   belongs_to :resource, polymorphic: true
-  belongs_to :subject, polymorphic: true  # User or UserGroup
+  belongs_to :user 
+  enum :status, locked: 0, unlocked: 100
 
-  def unlock_for(actor)
-    raise NotImplementedError, "subclasses must implement unlock_for"
+  command :unlock do 
+    param :requests, _Array, default: [].freeze, 
+    param :then, _Callable, :&
+    returns _Any 
+
+    def call requests, then
+      Async do 
+        authorise! *requests
+        unlocked!
+        then.call resource
+      ensure
+        locked!
+      end
+    end
   end
 
-  def unlocked_for?(actor)
-    unlock_for(actor) && allows_commands?(requested_commands)
+  def authorise!(*requests)
+    raise Unauthorised.new(user, *requests) unless authorised?(*requests)
   end
 
-  private def allows_commands?(command_names)
-    commands.empty? || command_names.all? { |c| commands.include?(c.to_s) }
+  def allows?(*requests) = (requests - commands).empty?
+
+  def authorised?(*requests)
+    raise NotImplementedError, "subclasses must implement authorise_for!"
   end
 end
 ```
 
-`unlock_for(actor)` is the single interface. The caller never knows or cares how the evaluation works — date check, LLM prompt, external API call, or something not yet imagined. Subclasses implement the strategy:
+`unlock(*requests, &)` is the single caller interface. 
+
+The pass is only unlocked for the duration of the block — `ensure` guarantees re-locking even if the block raises. This eliminates the "forgot to revoke" class of security bugs. And because `unlock` is a command, the entire lifecycle (who unlocked what, when, for how long, did it succeed or fail) is logged automatically.
+
+The caller never knows or cares how authorisation works — date check, LLM prompt, external API call, or something not yet imagined. The unlocked block is in a separate fiber - meaning that authorisation may take a while but it does not block.  Subclasses implement the strategy by overriding `authorise?(*requests)`:
 
 ### BasicSecurityPass
 
@@ -115,10 +140,8 @@ end
 class BasicSecurityPass < SecurityPass
   # Additional schema: from_date (date), until_date (date)
 
-  scope :currently_valid, -> { where("from_date <= ? AND until_date >= ?", Date.current, Date.current) }
-
-  def unlock_for(actor)
-    Date.current.between?(from_date, until_date)
+  def authorise!(*requests)
+    Date.current.between?(from_date, until_date) && allows?(*requests)
   end
 end
 ```
@@ -134,18 +157,17 @@ Instead of date ranges, contains an **LLM prompt** that evaluates whether access
 class AdvancedSecurityPass < SecurityPass
   # Additional schema: prompt (text), cached_status (string), cached_until (datetime)
 
-  def unlock_for(actor)
-    refresh_evaluation(actor) if stale?
-    cached_status == "unlocked"
+  def authorise!(*requests)
+    security_llm.with_instructions(system_prompt).evaluate_request(generate_authorisation_prompt_for(user, *requests)) == "ALLOW"
   end
 end
 ```
 
 ### Other subclass possibilities
 
-The `unlock_for` contract is open for extension:
+The `authorise!` contract is open for extension:
 
-| Subclass | `unlock_for` strategy | Use case |
+| Subclass | `authorise?` strategy | Use case |
 |----------|----------------------|----------|
 | `BasicSecurityPass` | Date range check | Standard time-limited access |
 | `AdvancedSecurityPass` | LLM prompt evaluation | Complex conditional access, external system auth |
@@ -179,10 +201,8 @@ This is a multi-step workflow involving a Synthetic, a human (for 2FA), and a br
 
 ```ruby
 # User model
-def has_unlocked_security_pass_for?(command_name, on: resource)
-  resource.all_security_passes
-    .where(subject: self)  # or groups the user belongs to
-    .any? { |pass| pass.unlocked_for?(self) }
+def can? *requests, on: nil, to: nil # choose your preposition
+  (on || to).authorises? self, *requests
 end
 ```
 
@@ -190,8 +210,8 @@ The command runner checks authorisation before execution:
 
 ```ruby
 # In Command::Runner
-def self.call(command, actor:, **params)
-  raise Command::Unauthorised unless command.authorised?(actor)
+def self.call(command, user:, **params)
+  raise Command::Unauthorised unless command.authorised?(user)
   # ... logging, execution, etc.
 end
 ```
@@ -235,72 +255,6 @@ hubsystem-core/
 ```
 
 Both `server/` and `world/` add `gem "hubsystem-core", path: "../core"` to their Gemfiles. The engine owns the migrations and the shared protocol; each app includes the concerns into its own models and provides its own subclasses where needed.
-
-### SecurityPass unlock lifecycle
-
-The security pass `unlock` command wraps the entire access lifecycle:
-
-```ruby
-class SecurityPass < ApplicationRecord
-  belongs_to :subject, polymorphic: true
-  belongs_to :resource, polymorphic: true
-
-  command :unlock do
-    param :then, _Callable, :&
-
-    authorise { |user| (subject == user) || (user.security_groups.include? subject) }
-
-    def call(&then)
-      Async do
-        check_unlock_conditions!
-        unlocked!
-        then&.call
-      ensure
-        locked!
-      end
-    end
-  end
-end
-```
-
-The pass is only unlocked for the duration of the block — `ensure` guarantees re-locking even if the block raises. This eliminates the "forgot to revoke" class of security bugs. And because `unlock` is a command, the entire lifecycle (who unlocked what, when, for how long, did it succeed or fail) is logged automatically.
-
-The `Async` wrapper means the unlock evaluation (which might be an LLM call or a workflow for AdvancedSecurityPass) doesn't block the caller. Subclasses override `check_unlock_conditions!`:
-
-```ruby
-class BasicSecurityPass < SecurityPass
-  def check_unlock_conditions!
-    raise SecurityPass::Denied unless Date.current.between?(from_date, until_date)
-  end
-end
-
-class AdvancedSecurityPass < SecurityPass
-  def check_unlock_conditions!
-    result = evaluate_prompt(actor: Current.user)
-    raise SecurityPass::Denied unless result.granted?
-  end
-end
-```
-
-### Unified authorisation pattern
-
-The authorisation check is identical in both systems:
-
-```ruby
-# Server: Command#call
-def call(actor:, project:, document:)
-  raise Command::Unauthorised unless actor.has_unlocked_security_pass_for?(:add_document, on: project)
-  # ... execute
-end
-
-# SynthWorld: Tool#execute
-def execute(caller:, url:)
-  raise Tool::Unauthorised unless caller.has_unlocked_security_pass_for?(:browse, on: browser_tool)
-  # ... execute
-end
-```
-
-Same gate, same pass model, different sides of the HTTP boundary. A command's `authorisation` block and a tool's `execute` preamble both resolve to the same question: does this actor have an unlocked security pass for this action on this resource right now?
 
 ### The Superintendent's role
 

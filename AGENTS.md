@@ -6,12 +6,21 @@ This repository contains two separate applications that together form HubSystem:
 
 ```
 hubsystem/
+  core/      Rails engine — shared infrastructure (commands, security passes)
   server/    Rails application — the hub (conversations, API, knowledge base)
   world/     Ruby/Async application — the synthetic runtime
   CLAUDE.md  this file
 ```
 
-**The two applications communicate exclusively via HTTP/WebSocket. They share no database and no process space.** Do not introduce direct dependencies between them.
+**`server/` and `world/` communicate exclusively via HTTP/WebSocket. They share no database and no process space.** Both depend on `core/` for shared concerns (commands, type checks, security passes).
+
+## core/
+
+See `core/CLAUDE.md` for full details.
+
+A Rails engine providing shared infrastructure. Key concerns: the `command` DSL (`HubSystem::HasCommands`) for declaring type-safe, audited, authorised actions on models; `HubSystem::HasTypeChecks` for runtime type assertions; `HubSystem::CommandLogEntry` for the audit trail.
+
+**The engine runs on the host** (not in the devcontainer). Tests use SQLite via `spec/test_app/`. Run with `bin/rails spec` from `core/`.
 
 ## server/
 
