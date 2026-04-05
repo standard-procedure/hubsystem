@@ -177,6 +177,28 @@ EventBus.publish(DocumentAdded.new(project: project, document: document, actor: 
 
 This unifies commands, the event bus, and the workflow engine into one chain: Command → Event → Workflow → (more Commands).
 
+### Dynamic API and UI generation
+
+`Model.commands` returns structured metadata — name, typed params, description. This can drive:
+
+- **Dynamic web UI** — render action buttons/forms based on available commands for the current model and user
+- **OpenAPI spec generation** — command metadata maps directly to endpoint definitions
+- **Automatic API controllers** — a `CommandRouter` could mount generic endpoints per model:
+
+```ruby
+# POST /api/v1/projects/:id/add_document  → Project::AddDocument
+# POST /api/v1/projects/:id/archive       → Project::Archive
+CommandRouter.mount(Project) # generates routes from Project.commands
+```
+
+This is a future direction — hand-written controllers work fine initially and the registry can power generation later when the command count warrants it.
+
+### Relationship to LLM tool calls
+
+Commands and RubyLLM tool calls are structurally similar (typed params, call method, registry) but serve different concerns. Commands own logging, authorization, and audit. Tool calls own JSON schema serialisation for the LLM's function calling format. Unifying them couples every command to LLM serialisation and every tool call to audit logging.
+
+The right connection point is a thin adapter: Synthetics map their available commands to tool call definitions at runtime. The command catalogue is the source of truth; the adapter formats it for whichever LLM provider is in use.
+
 **vs Collabor8 Command model:** The Collabor8 approach used STI ActiveRecord for commands, which was slow (every command writes to the DB on construction) and required complex associations. This design keeps commands as plain Ruby structs — only the log entry is ActiveRecord. Test suites stay fast because commands can be tested without touching the database.
 
 ---
