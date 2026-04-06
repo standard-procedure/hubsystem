@@ -212,6 +212,125 @@ The Superintendent can also revoke passes — either on request, on a schedule, 
 
 ---
 
+## Automatic command routing and controllers
+
+Commands are self-describing (params, types, description, authorisation, returns, raises). This metadata can drive automatic route generation, controller actions, and OpenAPI documentation — eliminating hand-written API controllers entirely.
+
+### Route DSL: `commands_for`
+
+```ruby
+# config/routes.rb
+shallow do
+  resources :projects do
+    commands_for :project
+    resources :tickets
+  end
+  resources :tickets do
+    commands_for :ticket
+  end
+end
+```
+
+`commands_for :project` reads `Project.commands` and generates a `PATCH` route for each:
+
+```
+PATCH /projects/:project_id/add_document    → ProjectsController#add_document
+PATCH /projects/:project_id/archive         → ProjectsController#archive
+PATCH /tickets/:ticket_id/assign            → TicketsController#assign
+```
+
+`PATCH` because commands mutate state on an existing resource. The route name comes from the command name; the params come from the request body.
+
+### Controller DSL: `with_commands_for`
+
+```ruby
+class ProjectsController < ApplicationController
+  with_commands_for(:project) { Project.find(params[:project_id]) }
+end
+```
+
+`with_commands_for` dynamically defines an action for each command on the model. Each generated action:
+
+1. Finds the resource using the block
+2. Calls the command with `actor: Current.user` and request params
+3. Renders the result
+
+For JSON:
+
+```ruby
+# Generated equivalent:
+def add_document
+  project = Project.find(params[:project_id])
+  result = project.add_document(actor: Current.user, **command_params)
+  render json: result
+end
+```
+
+For HTML, the generated actions would need rendering/redirect clauses — this could be an optional block per command:
+
+```ruby
+with_commands_for(:project) { Project.find(params[:project_id]) } do |on|
+  on.add_document { |result| redirect_to result, notice: "Document added" }
+  on.archive { redirect_to projects_path }
+end
+```
+
+Or a convention: JSON by default, HTML opt-in per command. JSON API consumers (Synthetics) get automatic coverage; web controllers add HTML handling where needed.
+
+### OpenAPI generation
+
+Since commands declare params (with Literal types), returns, raises, and description, the route generator can produce OpenAPI specs automatically:
+
+```yaml
+/projects/{project_id}/add_document:
+  patch:
+    summary: "Add a document to this project"
+    parameters:
+      - name: project_id
+        in: path
+        required: true
+        schema: { type: integer }
+    requestBody:
+      content:
+        application/json:
+          schema:
+            properties:
+              document_id: { type: integer }
+    responses:
+      200: { description: "Document" }
+      401: { description: "Unauthorised" }
+      422: { description: "DocumentCannotBeAdded" }
+```
+
+This could hook into `rspec-openapi` — the generated controller actions produce request/response pairs that rspec-openapi captures as specs. Or generate the OpenAPI schema directly from command metadata without needing to run tests at all.
+
+### Automatic RSpec generation
+
+If the commands themselves are tested (which they are, in the engine), the routing layer only needs integration-level coverage: "does the route exist and call the right command?" This could be generated:
+
+```ruby
+# Auto-generated spec
+RSpec.describe "PATCH /projects/:id/add_document" do
+  it "calls Project::AddDocument for the authenticated user" do
+    patch project_add_document_path(project), params: {document_id: doc.id}, headers: auth
+    expect(response).to have_http_status(:ok)
+  end
+end
+```
+
+### Relationship to LLM tool calls
+
+The command catalogue already serves as the tool registry for Synthetics. Automatic routing means the API a Synthetic calls is derived from the same source as the tools it discovers — no drift between "what tools does the LLM see?" and "what endpoints exist?"
+
+### When to implement
+
+Hand-written controllers work fine at the current scale. This becomes valuable when:
+- The command count grows beyond ~20 and maintaining parallel API controllers is tedious
+- Multiple apps (server, world) need the same API surface from the same commands
+- OpenAPI spec maintenance becomes a burden
+
+---
+
 ## Sandbox container: per-Synthetic Unix users + Superintendent
 
 The spare Ubuntu sandbox container mounts a volume at `/home`. Each Synthetic gets its own Unix user (`/home/sid`, `/home/alice`, etc.), giving them isolated home directories and file permissions — Synthetics cannot read each other's workspaces by default.
