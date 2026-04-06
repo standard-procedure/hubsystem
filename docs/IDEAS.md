@@ -214,7 +214,9 @@ The Superintendent can also revoke passes — either on request, on a schedule, 
 
 ## Automatic command routing and controllers
 
-Commands are self-describing (params, types, description, authorisation, returns, raises). This metadata can drive automatic route generation, controller actions, and OpenAPI documentation — eliminating hand-written API controllers entirely.
+Commands are self-describing (params, types, description, authorisation, returns, raises). This metadata can drive automatic route generation, controller actions, and OpenAPI documentation — eliminating hand-written **API** controllers entirely.
+
+**This is API-only.** HTML controllers stay hand-written — they call the same commands but own their own forms, views, and redirects. The same command might need a file upload form on the project page, a drag-and-drop zone on the folder view, and a simple selector in admin. The command knows *what* to do, not *how to present the option*. And API versioning needs to be independent of UI changes — mixing JSON and HTML in one controller makes it tempting to change both together.
 
 ### Route DSL: `commands_for`
 
@@ -265,17 +267,6 @@ def add_document
   render json: result
 end
 ```
-
-For HTML, the generated actions would need rendering/redirect clauses — this could be an optional block per command:
-
-```ruby
-with_commands_for(:project) { Project.find(params[:project_id]) } do |on|
-  on.add_document { |result| redirect_to result, notice: "Document added" }
-  on.archive { redirect_to projects_path }
-end
-```
-
-Or a convention: JSON by default, HTML opt-in per command. JSON API consumers (Synthetics) get automatic coverage; web controllers add HTML handling where needed.
 
 ### OpenAPI generation
 
