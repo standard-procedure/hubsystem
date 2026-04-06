@@ -322,6 +322,16 @@ Hand-written controllers work fine at the current scale. This becomes valuable w
 
 ---
 
+## Extract Commands + SecurityPasses as a standalone gem
+
+HasCommands, SecurityPass, HasTypeChecks, and the automatic routing DSL have no dependency on HubSystem's domain (conversations, messages, synthetics). They're generic infrastructure for any Rails app that needs audited, authorised, self-describing actions.
+
+When a second consumer appears (or when publishing makes sense), extract as a standalone gem (e.g. `standard_procedure_commands`). The `hubsystem-core` engine then depends on the extracted gem and adds HubSystem-specific concerns (Governor, SecureResource with conversation-based approval, Superintendent integration).
+
+**Not now** — extracting before there's a second consumer is premature. But keep the code generic: no HubSystem domain assumptions in HasCommands or SecurityPass.
+
+---
+
 ## Sandbox container: per-Synthetic Unix users + Superintendent
 
 The spare Ubuntu sandbox container mounts a volume at `/home`. Each Synthetic gets its own Unix user (`/home/sid`, `/home/alice`, etc.), giving them isolated home directories and file permissions — Synthetics cannot read each other's workspaces by default.
