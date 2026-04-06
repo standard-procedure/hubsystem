@@ -4,13 +4,13 @@ module HubSystem::HasCommands
   extend ActiveSupport::Concern
 
   class_methods do
-    def command(name, &block)
-      # Create a Literal::Data subclass as the command class — param calls
+    def command(name, async: false, &block)
+      # Create a Literal::Struct subclass as the command class — param calls
       # forward to prop, giving us Literal's full type system for free
       command_class = Class.new(Literal::Struct)
       const_set(name.to_s.camelize, command_class)
 
-      builder = HubSystem::CommandDefinition::Builder.new(name)
+      builder = HubSystem::CommandDefinition::Builder.new(name, async: async)
       capture = CallCapture.new(builder, command_class)
       capture.instance_exec(&block)
 
@@ -46,7 +46,7 @@ module HubSystem::HasCommands
   end
 
   # Evaluates the command block. Forwards:
-  # - param → Literal::Data.prop on the command class (full Literal type system)
+  # - param → Literal::Struct.prop on the command class (full Literal type system)
   # - description, authorisation, returns, raises → Builder
   # - def call → captured as singleton method for extraction
   class CallCapture

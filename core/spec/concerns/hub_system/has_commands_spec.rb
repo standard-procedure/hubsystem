@@ -56,6 +56,18 @@ RSpec.describe HubSystem::HasCommands do
         widget
       end
     end
+
+    Widget.command :async_rename, async: true do
+      description "Rename the widget asynchronously"
+      param :widget, Widget
+      param :name, String
+      authorisation { |_user| true }
+
+      def call(widget:, name:)
+        widget.update!(name: name)
+        widget
+      end
+    end
   end
 
   let(:user) { User.create!(name: "Alice") }
@@ -166,6 +178,37 @@ RSpec.describe HubSystem::HasCommands do
       expect {
         widget.exploding(actor: user)
       }.to raise_error(RuntimeError, "Boom!")
+    end
+  end
+
+  describe "async commands" do
+    it "returns an Async::Task" do
+      result = widget.async_rename(actor: user, name: "Async Name")
+      expect(result).to be_a(Async::Task)
+    end
+
+    it "executes the command when awaited" do
+      await { widget.async_rename(actor: user, name: "Awaited Name") }
+      expect(widget.reload.name).to eq("Awaited Name")
+    end
+
+    it "creates a command log entry" do
+      expect {
+        await { widget.async_rename(actor: user, name: "Logged Async") }
+      }.to change(HubSystem::CommandLogEntry, :count).by(1)
+
+      entry = HubSystem::CommandLogEntry.last
+      expect(entry).to be_completed
+    end
+
+    it "marks the definition as async" do
+      definition = Widget.commands[:async_rename]
+      expect(definition.async).to be true
+    end
+
+    it "marks synchronous commands as not async" do
+      definition = Widget.commands[:frobnicate]
+      expect(definition.async).to be false
     end
   end
 end

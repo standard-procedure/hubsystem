@@ -6,11 +6,13 @@ class HubSystem::CommandDefinition < Literal::Data
   prop :authorisation_block, Proc, reader: :public, default: -> { ->(_user) { false } }
   prop :return_types, Array, reader: :public, default: [].freeze
   prop :exception_types, Array, reader: :public, default: [].freeze
+  prop :async, _Boolean, reader: :public, default: false
   prop :call_module, Module, reader: :public
 
   class Builder
-    def initialize(name)
+    def initialize(name, async: false)
       @name = name
+      @async = async
       @authorisation_block = ->(_user) { false }
       @return_types = []
       @exception_types = []
@@ -29,6 +31,7 @@ class HubSystem::CommandDefinition < Literal::Data
         authorisation_block: @authorisation_block,
         return_types: @return_types,
         exception_types: @exception_types,
+        async: @async,
         call_module: call_module
       )
     end
